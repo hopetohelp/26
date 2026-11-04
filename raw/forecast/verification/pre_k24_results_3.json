@@ -22,6 +22,17 @@
   "note": "103FM 03/11/2020 (Panels Politics/Menachem Lazar for Sheva Tesha, conducted yesterday Mon): Likud 29, Yamina 22, Yesh Atid-Telem 19, Joint List 12, Blue&White 9, Shas 8, Yisrael Beytenu 8, UTJ 7, Meretz 6 — all match. 534 Panel4All respondents, max error 4.4%."
  },
  {
+  "id": "k24-2020-11-10-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://t.me/amitsegal/8666 (via https://t.me/s/amitsegal/8666, image of Direct Polls results table)",
+  "differences": [],
+  "fieldEndSource": "2020-11-10",
+  "sample": 710,
+  "moe": null,
+  "note": "Amit Segal Telegram 11.11.2020 posting Direct Polls table \"סקר 10.11.20, 710 נדגמים\": Likud 30, Joint List 13, Blue&White 9, UTJ 8, Yamina 20, Yesh Atid-Telem 18, Yisrael Beytenu 9, Meretz 5, Shas 8; below threshold Derekh Eretz 1.6%, Labor 1.50%, Otzma Yehudit 0.3%, Gesher 0.2% — all match. Undecided 13.5%."
+ },
+ {
   "id": "k24-2020-11-12-maagar-mochot-103fm",
   "status": "match",
   "sourceLevel": "primary",
@@ -64,5 +75,49 @@
   "sample": null,
   "moe": null,
   "note": "Kikar HaShabbat 17.11.20 citing Camil Fuchs poll on Channel 13 (aired Tue): Likud 29, Yamina 22, Yesh Atid-Telem 20, Joint List 11, Blue&White 10, Shas 8, Meretz 7, Yisrael Beytenu 7, UTJ 6; rest below threshold — all match."
+ },
+ {
+  "id": "k24-2020-11-26-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IEHGLH&c41t4nzVQ=EL",
+  "differences": [],
+  "fieldEndSource": "2020-11-26",
+  "sample": 503,
+  "moe": "4.4%",
+  "note": "103FM 27/11/2020 (Maagar Mochot/Prof. Yitzhak Katz for Nissim Mishal; conducted Wed-Thu): Likud 30, Yamina 22, Yesh Atid-Telem 17, Joint List 13, Blue&White 9, Shas 9, UTJ 8, Yisrael Beytenu 7, Meretz 5; Labor below threshold — all match. 503 respondents, error 4.4% at 95%."
+ },
+ {
+  "id": "k24-2020-12-01-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IEHLGD&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2020-12-01",
+  "sample": 523,
+  "moe": "4.4%",
+  "note": "103FM 02/12/2020 (Panels Politics/Menachem Lazar, conducted last night Tue): Likud 29, Yamina 23, Yesh Atid-Telem 18, Joint List 12, Blue&White 10, Shas 8, Yisrael Beytenu 8, UTJ 7, Meretz 5; Labor below threshold — all match. 523 respondents, error 4.4%."
+ },
+ {
+  "id": "k24-2020-12-08-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IEIJFM&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2020-12-08",
+  "sample": null,
+  "moe": "4.4%",
+  "note": "103FM 09/12/2020 (Panels Politics/Menachem Lazar for Sheva Tesha, conducted after Saar announcement on Tue night): Likud 25, Yamina 19, New Hope (Saar) 17, Yesh Atid-Telem 14, Joint List 11, Shas 9, Yisrael Beytenu 7, UTJ 7, Blue&White 6, Meretz 5 — all match. Article says once \"אמש (ג׳)\" and once \"אמש (ד׳)\"; Tue 8.12 is consistent with publication 09/12. Sample size not stated; max error 4.4%."
+ },
+ {
+  "id": "k24-2020-12-15-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IEJHEI&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2020-12-15",
+  "sample": 521,
+  "moe": "4.4%",
+  "note": "103FM 16/12/2020 (Panels Politics/Menachem Lazar for Sheva Tesha, conducted last night Tue): Likud 27, New Hope 20, Yesh Atid-Telem 15, Yamina 14, Joint List 11, UTJ 8, Shas 8, Yisrael Beytenu 7, Blue&White 5, Meretz 5 — all match. 521 Panel4All respondents, error 4.4%."
  }
 ]

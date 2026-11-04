@@ -193,6 +193,28 @@
   "note": "Maariv 24/07/2020 (Panels Politics/Menachem Lazar for Maariv-Sofhashavua): Likud 32, Yesh Atid-Telem 18, Joint List 15, Yamina 12, Shas 10, Blue&White 9, Yisrael Beytenu 9, UTJ 8, Meretz 7; below threshold: Otzma Yehudit 1.8%, Labor 1.2%, Jewish Home 0.8%, Derekh Eretz 0.5%. Field date not stated; no sample/MoE in article text."
  },
  {
+  "id": "k24-2020-07-23-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://news.walla.co.il/item/3375739 (mako link returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Walla 23/07/2020 reporting the Channel 12 poll broadcast that evening: Likud 32, Yesh Atid-Telem 18, Yamina 15, Joint List 15, Blue&White 9, Meretz 8, Shas 8, UTJ 8, Yisrael Beytenu 7 — all seats match. Labor, Gesher, Derekh Eretz 'do not pass threshold' with no percentages (Wikipedia Labor 1.8%, DE 0.3%, Gesher 0.2%, Jewish Home 0.0% unverified)."
+ },
+ {
+  "id": "k24-2020-07-23-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://news.walla.co.il/item/3375739 (13news.co.il link returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Walla 23/07/2020 reporting the Channel 13 poll broadcast that evening: Likud 31, Yesh Atid-Telem 19, Yamina 16, Joint List 15, Blue&White 11, Yisrael Beytenu 8, Meretz 7, UTJ 7, Shas 6 — all match; Labor, Gesher, Derekh Eretz below threshold."
+ },
+ {
   "id": "k24-2020-07-28-panels-politics-103fm",
   "status": "match",
   "sourceLevel": "primary",
