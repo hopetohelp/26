@@ -507,5 +507,324 @@
    }
   ],
   "note": "כל המנדטים תואמים לכתבת i24NEWS. בכתבה 'עוצמה יהודית' מופיעה פעמיים (6 ו-4) — ה-4 הוא הציונות הדתית (טעות הקלדה; הסכום 120). 513 נדגמים."
+ },
+ {
+  "id": "2025-07-01-midgam-r-c-hahadashot-12-b",
+  "status": "partial",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-07-01T21:05:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 502,
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   }
+  ],
+  "note": "תרחיש 'איזנקוט בראש מפלגה חדשה' מאותו סקר. בכתבה: איזנקוט 8, הליכוד 26, בנט 22, הדמוקרטים 10, יש עתיד 7; גנץ וליברמן 'מאבדים מנדט כל אחד' (5 ו-9) — תואם. שאר הרשימות ואחוזי צ\"ד/בל\"ד אינם מפורטים בכתבה.",
+  "scenarioOf": "2025-07-01-midgam-r-c-hahadashot-12",
+  "foundUrl": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+ },
+ {
+  "id": "2025-07-01-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-07-01T21:05:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 502,
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-caa1f02bcd6c791027.htm"
+   }
+  ],
+  "note": "מנדטי כל הרשימות תואמים לכתבת mako (סכום 120). אחוזי צ\"ד ובל\"ד לא פורסמו ('מתחת לאחוז החסימה') — לא אומתו. 502 משיבים, איסוף 1.7.2025."
+ },
+ {
+  "id": "2025-06-24-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-24T21:45:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "fieldwork": "2025-06-24..2025-06-24",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 502,
+    "source": "https://www.mako.co.il/news-politics/2025_q2/Article-e351b60d792a791027.htm"
+   }
+  ],
+  "note": "מנדטי כל הרשימות תואמים לכתבת mako (סכום 120). 502 משיבים, איסוף 24.6.2025."
+ },
+ {
+  "id": "2025-07-01-mm-sn-channel-13-b",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/lk35y-904649157/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-07-01",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/lk35y-904649157/"
+   }
+  },
+  "details": {
+   "sample_respondents": null,
+   "moe": null,
+   "population": null,
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מאגר מוחות (יצחק כ\"ץ) + סטט-נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "תרחיש 'איזנקוט רץ עצמאית' — זה התרחיש שבתרשים כתבת חדשות 13; כל המנדטים תואמים (סכום 120). כחול לבן מתחת לחסימה '(2.4%)' בכתבה. גודל מדגם, תאריכי שדה וטעות דגימה לא צוינו.",
+  "scenarioOf": "2025-07-01-mm-sn-channel-13",
+  "foundUrl": "https://13tv.co.il/item/news/politics/politics/lk35y-904649157/"
+ },
+ {
+  "id": "2025-07-01-mm-sn-channel-13",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": "2025-07-01",
+  "fields": {},
+  "details": {
+   "sample_respondents": null,
+   "moe": null,
+   "population": null,
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "מאגר מוחות + סטט-נט",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "הקישור בנתונים מוביל לכתבה שמפרטת רק שלושה תרחישי איזנקוט (עצמאי — תואם לסקר -b; עם בנט; עם לפיד). התרחיש הבסיסי בלי איזנקוט (בנט 23, ישראל ביתנו 12, כחול לבן 4) אינו מופיע בה, ולא נמצא דיווח אחר."
+ },
+ {
+  "id": "2025-07-01-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/603517/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-07-01T18:30:30+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/603517/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/603517/"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.zman.co.il/603517/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8%",
+   "population": "יהודים וערבים",
+   "fieldwork": "2025-07-01..2025-07-01",
+   "pollster": "יוסי טטיקה (טטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/603517/"
+   }
+  ],
+  "note": "הנתונים תואמים לתרחיש 'איזנקוט בראש מפלגה חדשה' בכתבת זמן ישראל (בכתבה גם תרחישי איזנקוט עם בנט ובראש יש עתיד). כל המנדטים תואמים; 'המחנה הממלכתי' 4 = כחול לבן. 404 משיבים, 'סטיית תקן' 4.8%."
+ },
+ {
+  "id": "2025-06-24-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/602275/",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-26T17:01:24+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/602275/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/602275/"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.zman.co.il/602275/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8%",
+   "population": "יהודים וערבים",
+   "fieldwork": "2025-06-23..2025-06-24",
+   "pollster": "יוסי טטיקה (טטיקה מחקרים ומדיה)",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/602275/"
+   }
+  ],
+  "note": "כל המנדטים תואמים לטבלה בכתבת זמן ישראל (צ\"ד 2.72%, בל\"ד 1.24% — לא בנתונים). נערך 23–24 ביוני, 404 משיבים."
  }
 ]
