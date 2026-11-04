@@ -14,6 +14,7 @@ import { quality } from "./quality";
 import { blocAssignment } from "./electionBlocs";
 import { MODEL_AVERAGE, SOURCE_OPTIONS } from "./dataResolver";
 import { K26_ID, previousElection } from "./election";
+import { hasFlowFile } from "./flowFiles";
 import { eveSnapshot, historyBlocs, type Cycle, type ElectionResult, type HistPoll } from "./history";
 
 export interface ElectionResultSeats {
@@ -147,11 +148,8 @@ export function electionData(id: string): ElectionData {
   return d;
 }
 
-/**
- * מעבר מצביעים מוכן להצגה למערכת. כרגע רק 2022 ⇐ 2026 (src/data/flow2026.json). כשסשן ג יוסיף `src/data/flows/kNN.json`
- * (מבנה flow2026.json), מכלילים כאן את קריאת הקובץ — המסך כבר מציג "נתון חסר" בכל מערכת אחרת ולא ישתנה.
- */
-export const hasVoterFlow = (id: string) => id === K26_ID;
+/** מעבר מצביעים מוכן להצגה למערכת: 2026 (flow2026.json) וכל מערכת שיש לה src/data/flows/kNN.json (src/lib/flowFiles.ts) */
+export const hasVoterFlow = hasFlowFile;
 
 /** סכום הגוש בתוצאת האמת */
 export const resultBloc = (d: ElectionData, lists: readonly string[]) => d.result ? lists.reduce((t, x) => t + (d.result!.seats[x] ?? 0), 0) : null;

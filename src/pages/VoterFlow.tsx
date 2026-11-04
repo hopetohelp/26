@@ -1,9 +1,9 @@
-import { lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from "react";
+import { createContext, lazy, Suspense, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useRegisterNavShare } from "../lib/navShare";
 import Explained from "../components/Explained";
 import { Fold } from "../components/ui";
 import RotatingPromo from "../components/RotatingPromo";
-import { BLOC_GRAPH, FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, bloc2022, bloc2026, flow, flowsFor, overview, overviewOf, blocYears, partyYears, groupYears, GROUPS, SAME, smallPct, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
+import { FLOW_SHARE_CTA, FLOW_SHARE_MESSAGES, blocGraph, flowCtx2026, flowCtxFrom, flowsFor, overview, overviewOf, partyYears, groupYears, smallPct, type FlowCtx, type FlowFile, type Group, type FlowRow, type YearNumbers } from "../lib/voterFlow";
 import ParamCard, { Delta, PARAM_NAMES, type ParamRow } from "../components/ParamCard";
 import OverviewCards from "../components/OverviewCards";
 import { changeOf } from "../lib/changeMark";
@@ -14,6 +14,7 @@ import LocalityResults from "../components/LocalityResults";
 import { results } from "../lib/data";
 import { K26_ID, electionOption, previousElection } from "../lib/election";
 import { hasVoterFlow } from "../lib/electionData";
+import { loadHistoryFlow } from "../lib/flowFiles";
 
 const BallotLookup = lazy(() => import("../components/BallotLookup"));
 const FlowShare = lazy(() => import("../components/FlowShare"));
@@ -23,24 +24,26 @@ import FlowExplain from "../components/FlowExplain";
 type View = "from" | "to";
 /** חלק קטן מ-3% מצטרף לשורה "אחרים" — כדי שכל כרטיס יישאר קריא */
 const MIN_SHARE = 3;
-/** רשימות שמוצגות תמיד בשורה נפרדת, גם מתחת ל-3% (הכרעת בעלים 28.10.2026) */
-const ALWAYS = new Set(["reservists", "amcha", "code_black", "haredi_public", "noam"]);
+/** המערכת שמוצגת: הקובץ, השמות, הגושים והנתונים לכל שנה (src/lib/voterFlow.ts, FlowCtx). רשימות שמוצגות תמיד בשורה נפרדת,
+ * גם מתחת ל-3% — ctx.always (2026; הכרעת בעלים 28.10.2026) */
+const Ctx = createContext<FlowCtx | null>(null);
+const useFlowCtx = () => useContext(Ctx) ?? flowCtx2026();
 
 /** צבע הגוש מטוקני האתר (--bloc-1..4 לפי סדר SIMPLE_BLOCS); בגזרה הטוקנים מתחלפים לצבעי הגזרה (הכרעת בעלים 28.10.2026) */
-const BLOC_TOKEN: Record<string, string> = { netanyahu: "--bloc-1", haredi: "--bloc-2", arab: "--bloc-3", eisenkot: "--bloc-4" };
+const BLOC_TOKEN: Record<string, string> = { netanyahu: "--bloc-1", haredi: "--bloc-2", arab: "--bloc-3", eisenkot: "--bloc-4", none: "--accent" };
 const blocFill = (bloc: string) => `rgb(var(${BLOC_TOKEN[bloc] ?? "--bloc-miss"}))`;
 /** תמונת יו"ר לרשימת 2022 — רק כשזו אותה מפלגה ואותו יו"ר כמו ב-2026 */
 const IMG_2022: Record<string, string> = { "מחל": "likud", "שס": "shas", "ג": "utj", "ל": "yb", "ט": "rzp", "עם": "raam", "כן": "bluewhite" };
-const LETTER_2026 = Object.fromEntries(Object.entries(flow.letters26).map(([letters, id]) => [id, letters]));
 
 /** גוף הכרטיס: מספר המצביעים והפסים — בלי השם (השם והתמונה פעם אחת לכל שורה) */
 function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; colorOf: (id: string) => string; total?: boolean }) {
+  const { always: ALWAYS, prevLabel, curLabel } = useFlowCtx();
   const shown = (p: FlowRow["parts"][number]) => p.share >= MIN_SHARE || (ALWAYS.has(p.id) && smallPct(p.share) !== null);
   const main = row.parts.filter(shown);
   const rest = row.parts.filter((p) => !shown(p)).reduce((a, p) => a + p.share, 0);
   return (
     <div className="min-w-0 w-full">
-      {total && <p className="text-xs text-ink-soft mb-2">{view === "from" ? "קולות ב-2026" : "קולות ב-2022"}: {num(row.total)}</p>}
+      {total && <p className="text-xs text-ink-soft mb-2">{view === "from" ? `קולות ב-${curLabel}` : `קולות ב-${prevLabel}`}: {num(row.total)}</p>}
       <ul className="space-y-1">
         {main.map((p) => (
           <li key={p.id} className="grid grid-cols-[minmax(3.5rem,9rem)_minmax(0,1fr)_2.75rem] items-center gap-2 text-sm">
@@ -64,6 +67,7 @@ function Body({ row, view, colorOf, total = true }: { row: FlowRow; view: View; 
 /** ארבעת הפרמטרים ככרטיס (מפלגה או גוש); ברצף: מצביעים, מזכות בחירה, מהכשרים, מנדטים. רצה רק באחת מהמערכות — טור אחד */
 function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y2026: YearNumbers | null }; what: string; head: ReactNode }) {
   const { y2022, y2026 } = years;
+  const { prevLabel, curLabel } = useFlowCtx();
   if (!y2022 && !y2026) return null;
   const row = (key: keyof typeof PARAM_NAMES, get: (y: YearNumbers) => number | null, fmt: (n: number) => string, kind: "count" | "pct"): ParamRow =>
     ({ key, label: PARAM_NAMES[key], v22: y2022 ? get(y2022) : null, v26: y2026 ? get(y2026) : null, fmt, kind });
@@ -71,14 +75,14 @@ function Stats({ years, what, head }: { years: { y2022: YearNumbers | null; y202
   if (!y2022 || !y2026) {
     const y = (y2022 ?? y2026)!;
     const items: [string, string][] = [[num(y.votes), PARAM_NAMES.votes], ...(y.ofEligible === null ? [] : [[pctOne(y.ofEligible), PARAM_NAMES.ofEligible] as [string, string]]), [pctOne(y.ofValid), PARAM_NAMES.ofValid], [String(y.seats), PARAM_NAMES.seats]];
-    return <div className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 h-full flex flex-col justify-center gap-1 text-xs md:text-sm" aria-label={`${what}: ${y2022 ? "2022" : "2026"}`}>
+    return <div className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 h-full flex flex-col justify-center gap-1 text-xs md:text-sm" aria-label={`${what}: ${y2022 ? prevLabel : curLabel}`}>
       {/* תמונה, שם ושנה (הכרעת בעלים 29.10.2026) */}
-      <div className="flex flex-col items-center text-center gap-0.5 mb-1">{head}<span className="text-xs font-bold text-accent">{y2022 ? "2022" : "2026"}</span></div>
+      <div className="flex flex-col items-center text-center gap-0.5 mb-1">{head}<span className="text-xs font-bold text-accent">{y2022 ? prevLabel : curLabel}</span></div>
       {items.map(([v, l]) => <span key={l} className="whitespace-nowrap text-center"><bdi dir="ltr" className="font-bold tabular-nums">{v}</bdi> <span className="text-ink-soft">{l}</span></span>)}
     </div>;
   }
   const rows = [row("votes", (y) => y.votes, num, "count"), row("ofEligible", (y) => y.ofEligible, pctOne, "pct"), row("ofValid", (y) => y.ofValid, pctOne, "pct"), row("seats", (y) => y.seats, String, "count")];
-  return <ParamCard rows={rows} compact corner={head} caption={`ארבעת הפרמטרים של ${what}: 2022, 2026 והפער`} className="min-w-0 w-full md:h-full" />;
+  return <ParamCard rows={rows} compact corner={head} caption={`ארבעת הפרמטרים של ${what}: ${prevLabel}, ${curLabel} והפער`} years={[prevLabel, curLabel]} className="min-w-0 w-full md:h-full" />;
 }
 
 /** חץ צף למעלה (הכרעת בעלים 29.10.2026): עולה לראש המגירה הפתוחה שבה הקורא נמצא; מופיע רק אחרי גלילה לתוכה */
@@ -107,24 +111,23 @@ function DrawerTop() {
 
 /** מפלגה אמיתית (לא ״אחרים״, ״לא הצביעו״ או ״יישובים חדשים״). */
 const isParty = (id: string) => !["other", "abstain", "new"].includes(id);
-const SAME_ROW: Record<string, string> = { ...SAME, other: "other", abstain: "abstain" };
 const RETIRED: Record<string, string> = {};
 type Rows = { cameFrom: FlowRow[]; wentTo: FlowRow[] };
 interface PairedRow { key: string; img: string; name: string; sub?: string; id26: string | null; letters22: string | null; from?: FlowRow; to?: FlowRow }
 
 /** אותו איחוד רשימות לכל המכשירים, כולל רשימות שהתמודדו רק ב־2022. */
-function pairedRows(rows: Rows, same: (id: string) => string | undefined, stats: boolean): PairedRow[] {
+function pairedRows(rows: Rows, same: (id: string) => string | undefined, stats: boolean, c: FlowCtx): PairedRow[] {
   const used = new Set<string>();
   const lines: PairedRow[] = rows.cameFrom.map((r) => {
     const old = rows.wentTo.find((w) => w.id === same(r.id));
     if (old) used.add(old.id);
     const show = stats && isParty(r.id);
-    return { key: r.id, img: r.id, name: r.name, sub: old && old.name !== r.name ? old.name : undefined,
+    return { key: r.id, img: c.img(r.id), name: r.name, sub: old && old.name !== r.name ? old.name : undefined,
       id26: show ? r.id : null, letters22: show ? old?.id ?? null : null, from: r, to: old };
   });
   for (const w of rows.wentTo.filter((w) => !used.has(w.id))) {
     const retired = RETIRED[w.id], show = stats && isParty(w.id);
-    lines.push({ key: `2022:${w.id}`, img: IMG_2022[w.id] ?? "", name: retired ?? w.name, sub: retired ? w.name : undefined,
+    lines.push({ key: `2022:${w.id}`, img: c.id === K26_ID ? IMG_2022[w.id] ?? "" : "", name: retired ?? w.name, sub: retired ? w.name : undefined,
       id26: null, letters22: show ? w.id : null, to: w });
   }
   return lines;
@@ -142,11 +145,12 @@ const toTitle = (kind: Kind, row?: FlowRow) => (kind === "party" && row ? `לא�
 
 /** תמונה ושם בפינה הימנית העליונה של טבלת הנתונים (הכרעת בעלים 29.10.2026); שם של כמה מילים — מילה בשורה */
 function Head({ line, center = false }: { line: PairedRow; center?: boolean }) {
+  const c = useFlowCtx();
   const avatar = !!(line.id26 || line.letters22);
   return <div className={`flex flex-col gap-0.5 ${center ? "items-center" : "items-start"}`}>
-    {avatar && <PartyAvatar id={line.img} size={28} fallback={line.letters22 ?? LETTER_2026[line.id26 ?? ""] ?? "…"} />}
+    {avatar && <PartyAvatar id={line.img} size={28} fallback={line.letters22 ?? (line.id26 ? c.letterOf(line.id26) : "…")} />}
     <h3 className="font-bold leading-tight text-[11px] md:text-xs">{line.name.split(" ").map((w, i) => <span key={i} className="block">{w}</span>)}</h3>
-    {line.sub && <span className="text-[10px] font-normal text-ink-soft leading-tight">ב־2022: {line.sub}</span>}
+    {line.sub && <span className="text-[10px] font-normal text-ink-soft leading-tight">ב־{c.prevLabel}: {line.sub}</span>}
   </div>;
 }
 
@@ -165,7 +169,8 @@ function FlowCard({ title, data, view, colorOf, className = "", narrow = false }
  */
 function Line({ line, kind, fromColor, toColor }: { line: PairedRow; kind: Kind; fromColor: (id: string) => string; toColor: (id: string) => string }) {
   const one = !line.from || !line.to;
-  const years = kind === "party" ? (line.id26 || line.letters22 ? partyYears(line.id26, line.letters22) : null) : BLOCS.has(line.key) ? blocYears(line.key) : null;
+  const c = useFlowCtx();
+  const years = kind === "party" ? (line.id26 || line.letters22 ? c.partyYears(line.id26, line.letters22) : null) : BLOCS.has(line.key) ? c.blocYears(line.key) : null;
   const stats = years
     ? <Stats years={years} what={line.name} head={<Head line={line} center={one} />} />
     : <div className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 h-full flex items-center justify-center"><Head line={line} center /></div>;
@@ -228,7 +233,7 @@ function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Ro
   }
   const r26 = from[0];
   const head = <div className="flex flex-col items-start gap-0.5">
-    {r26 && <PartyAvatar id={r26.id} size={24} fallback={LETTER_2026[r26.id] ?? "…"} />}
+    {r26 && <PartyAvatar id={r26.id} size={24} fallback={flowCtx2026().letterOf(r26.id)} />}
     <h3 className="font-bold leading-tight text-[11px] md:text-xs">{r26?.name}</h3>
     <span className="text-[10px] font-normal text-ink-soft leading-tight">איחוד של {names22} (2022)</span>
   </div>;
@@ -247,11 +252,12 @@ function GroupLine({ group, rows, fromColor, toColor }: { group: Group; rows: Ro
 }
 
 function Lines({ rows, kind, same, fromColor, toColor }: { rows: Rows; kind: Kind; same: (id: string) => string | undefined; fromColor: (id: string) => string; toColor: (id: string) => string }) {
-  if (kind !== "party") return <ul className="mt-2">{pairedRows(rows, same, false).map((line) => <Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />)}</ul>;
+  const c = useFlowCtx(), GROUPS = c.groups;
+  if (kind !== "party") return <ul className="mt-2">{pairedRows(rows, same, false, c).map((line) => <Line key={line.key} line={line} kind={kind} fromColor={fromColor} toColor={toColor} />)}</ul>;
   // משפחות של פיצול או איחוד — שורה אחת במקום הרשימה הראשונה שלהן; השאר כמו קודם
   const group26 = new Map(GROUPS.flatMap((g) => g.ids26.map((id) => [id, g] as const)));
   const letters = new Set(GROUPS.flatMap((g) => g.letters22));
-  const singles = new Map(pairedRows({ cameFrom: rows.cameFrom.filter((r) => !group26.has(r.id)), wentTo: rows.wentTo.filter((w) => !letters.has(w.id)) }, same, true).map((l) => [l.key, l]));
+  const singles = new Map(pairedRows({ cameFrom: rows.cameFrom.filter((r) => !group26.has(r.id)), wentTo: rows.wentTo.filter((w) => !letters.has(w.id)) }, same, true, c).map((l) => [l.key, l]));
   const out: ReactNode[] = [];
   const seen = new Set<string>();
   for (const r of rows.cameFrom) {
@@ -283,12 +289,22 @@ function overviewPair(id: string) {
  */
 export default function VoterFlow({ id = K26_ID, afterHeader }: { id?: string; afterHeader?: ReactNode } = {}) {
   const withFlow = hasVoterFlow(id);
+  // מערכת קודמת: הקובץ נטען לפי דרישה (src/lib/flowFiles.ts); 2026 — מיד
+  const [loaded, setLoaded] = useState<{ id: string; ctx: FlowCtx } | null>(null);
+  useEffect(() => {
+    if (id === K26_ID || !withFlow) return;
+    let live = true;
+    loadHistoryFlow(id)?.then((f) => { if (live) setLoaded({ id, ctx: flowCtxFrom(f as FlowFile) }); });
+    return () => { live = false; };
+  }, [id, withFlow]);
+  const ctx = id === K26_ID ? flowCtx2026() : loaded?.id === id ? loaded.ctx : null;
   const [sharing, setSharing] = useState(false);
   const openSharing = useCallback(() => setSharing(true), []);
-  // כפתור השיתוף של המסך — יצירת הפוסט ממעבר המצביעים; בלי מעבר — השיתוף הכללי של האתר
-  useRegisterNavShare(openSharing, false, withFlow);
+  // כפתור השיתוף של המסך — יצירת הפוסט ממעבר המצביעים (2026); בלי — השיתוף הכללי של האתר
+  useRegisterNavShare(openSharing, false, withFlow && id === K26_ID);
   const prevLabel = previousElection(id)?.label ?? "הבחירות הקודמות";
-  return withFlow ? <FlowScreen id={id} prevLabel={prevLabel} afterHeader={afterHeader} openSharing={openSharing} sharing={sharing} closeSharing={() => setSharing(false)} />
+  if (withFlow && !ctx) return <p className="text-ink-soft">טוען…</p>;
+  return withFlow && ctx ? <Ctx.Provider value={ctx}><FlowScreen id={id} prevLabel={prevLabel} afterHeader={afterHeader} openSharing={openSharing} sharing={sharing} closeSharing={() => setSharing(false)} /></Ctx.Provider>
     : <Shell id={id} prevLabel={prevLabel} afterHeader={afterHeader} />;
 }
 
@@ -313,35 +329,42 @@ function Shell({ id, prevLabel, afterHeader }: { id: string; prevLabel: string; 
 }
 
 function FlowScreen({ id, prevLabel, afterHeader, openSharing, sharing, closeSharing }: { id: string; prevLabel: string; afterHeader?: ReactNode; openSharing: () => void; sharing: boolean; closeSharing: () => void }) {
-  const raw = flowsFor();
-  const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: without(raw.blocs, ["other"]) };
+  const c = useFlowCtx(), is26 = id === K26_ID;
+  const raw = flowsFor(c);
+  const data = { lists: without(raw.lists, ["other", "abstain"]), blocs: raw.blocs ? without(raw.blocs, ["other"]) : null };
+  const sameRow: Record<string, string> = { ...c.same, other: "other", abstain: "abstain" };
+  // בלי שיוך גושים (עד שיתווסף ל-results.json) — הפסים בצבע אחיד של האתר (--accent)
+  const fromColor = c.hasBlocs ? c.blocOld : () => "none", toColor = c.hasBlocs ? c.blocNew : () => "none";
+  const years: [string, string] = [c.prevLabel, c.curLabel];
   return (
     <div>
       {/* חלון ההסבר בראש המסך (הכרעת בעלים 30.10.2026) */}
-      <div className="mb-3"><FlowExplain /></div>
-      <RotatingPromo messages={FLOW_SHARE_MESSAGES} callToAction={FLOW_SHARE_CTA} label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />
+      {/* חלון ההסבר ויצירת הפוסט — של 2026 (הנתונים והתמונות שלהם הם של 2022⇐2026) */}
+      {is26 && <div className="mb-3"><FlowExplain /></div>}
+      {is26 && <RotatingPromo messages={FLOW_SHARE_MESSAGES} callToAction={FLOW_SHARE_CTA} label="יצירת תמונה או פוסט מותאם אישית — לחצו וצרו פוסט מעוצב בדיוק על מה שמעניין אתכם!" onClick={openSharing} />}
       {/* הכותרת ככרטיס עם ארבעת הנתונים הכלליים, כל אחד בכרטיס (הכרעת בעלים 29.10.2026); חלון ההסבר שבראש המסך הוא ההסבר היחיד (02.11.2026) */}
       <Header id={id} prevLabel={prevLabel} />
       {afterHeader}
       <Explained
         kind="השוואה"
-        source="תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)"
+        source={is26 ? "תוצאות האמת לפי קלפי: 2022 (data.gov.il) ו-2026 (ועדת הבחירות המרכזית)" : `תוצאות האמת לפי קלפי של ועדת הבחירות המרכזית: ${c.prevLabel} ו-${c.curLabel}`}
         asOf="התוצאות הסופיות"
-        assumption="כל קלפי מושווית לאותה קלפי; קלפי שחלוקתה השתנתה — לפי הקלפי השלמה, אחר כך לפי מיקום הקלפי, ולבסוף לפי היישוב. הסכום של כל מפלגה הוא הספירה הרשמית; קלפיות שעדיין לא נספרו ב-2026 — לפי השינוי באותו יישוב; יישוב בלי קלפי ב-2022 — ״יישובים חדשים״. אין שימוש בסקרים."
+        assumption={is26 ? "כל קלפי מושווית לאותה קלפי; קלפי שחלוקתה השתנתה — לפי הקלפי השלמה, אחר כך לפי מיקום הקלפי, ולבסוף לפי היישוב. הסכום של כל מפלגה הוא הספירה הרשמית; קלפיות שעדיין לא נספרו ב-2026 — לפי השינוי באותו יישוב; יישוב בלי קלפי ב-2022 — ״יישובים חדשים״. אין שימוש בסקרים."
+          : `כל קלפי מושווית לאותה קלפי; קלפי שחלוקתה השתנתה — לפי מיקום הקלפי כשהוא בקובץ, ולבסוף לפי היישוב. הסכום של כל מפלגה הוא הספירה הרשמית; יישוב בלי קלפי ב-${c.prevLabel} — ״יישובים חדשים״. נקודת המוצא אחידה, בלי שיוך מוקדם בין הרשימות. אין שימוש בסקרים.`}
         methodAnchor="voter-flow"
         inFooter
       >
         {/* שלושה חלקים נפתחים (הכרעת בעלים 29.10.2026) */}
         <Fold title="מעבר בין מפלגות">
           {/* כפתור "הצגה בגרף" — גרף זרימה במקום הכרטיסים (הכרעת בעלים 30.10.2026) */}
-          <GraphSwitch defaultOn graph={{}}><Lines rows={data.lists} kind="party" same={(id) => SAME_ROW[id]} fromColor={bloc2022} toColor={bloc2026} /></GraphSwitch>
+          <GraphSwitch defaultOn graph={is26 ? {} : { T: c.file.national.flowsTo, oldIds: c.file.old, newIds: c.file.new, oldName: c.oldName, newName: c.newName, years }}><Lines rows={data.lists} kind="party" same={(id) => sameRow[id]} fromColor={fromColor} toColor={toColor} /></GraphSwitch>
         </Fold>
         <Fold title="מעבר בין גושים">
-          <GraphSwitch defaultOn graph={BLOC_GRAPH}><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></GraphSwitch>
+          {data.blocs ? <GraphSwitch defaultOn graph={{ ...blocGraph(c), years }}><Lines rows={data.blocs} kind="bloc" same={(id) => id} fromColor={(id) => id} toColor={(id) => id} /></GraphSwitch> : <Missing what="המעבר בין גושים" />}
         </Fold>
         {/* ״איך זה חושב?״ בתחתית העמוד (הכרעת בעלים 29.10.2026) */}
         <Fold title="חיפוש לפי עיר או קלפי">
-          <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense>
+          {is26 ? <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense> : <Missing what="תוצאות לפי קלפי" />}
         </Fold>
         <Fold title="תוצאות לפי יישוב"><LocalityResults key={id} electionId={id} /></Fold>
       </Explained>
