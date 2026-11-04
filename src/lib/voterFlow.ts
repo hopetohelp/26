@@ -90,10 +90,11 @@ const countedOf = () => (flow as unknown as { counted?: { pct: number; time: str
 /** בעלי זכות הבחירה בקלפיות שנספרו ב-2026 (המכנה של "מזכות בחירה"; pipeline/voter_flow.py, השדה counted.eligible); null = לא ידוע */
 export const eligible2026 = (): number | null => countedOf()?.eligible || null;
 
-/** "מאיפה הגיעו" בעיר — רק בעיר עם מספיק יחידות השוואה (pipeline: MIN_CITY_UNITS) */
-export function cityFlows(code: string) {
-  const c = (flow as unknown as { cities?: Record<string, { units: number; flows: number[][]; flowsTo?: number[][] }> }).cities?.[code];
-  return c ? { units: c.units, flowsTo: c.flowsTo ?? c.flows, lists: rows(c.flows, c.flowsTo ?? c.flows, flow.old, flow.new, oldName, newName) } : null;
+/** "מאיפה הגיעו" בעיר — רק בעיר עם מספיק יחידות השוואה (pipeline: MIN_CITY_UNITS); ctx — המערכת (ברירת המחדל 2026) */
+export function cityFlows(code: string, ctx?: FlowCtx) {
+  const f = ctx?.file ?? (flow as FlowFile), on = ctx?.oldName ?? oldName, nn = ctx?.newName ?? newName;
+  const c = f.cities?.[code];
+  return c ? { units: c.units, flowsTo: c.flowsTo ?? c.flows, lists: rows(c.flows, c.flowsTo ?? c.flows, f.old, f.new, on, nn) } : null;
 }
 
 /** המטריצה של המתג, מסוכמת לפי קבוצת רשימות של 2026 (מפלגה אחת או "חרדים") ⇐ מאיפה הגיעו המצביעים שלה */
@@ -235,6 +236,10 @@ export interface FlowCtx {
   partyYears: (idNew: string | null, lettersOld: string | null) => Years; blocYears: (bloc: string) => Years;
   /** תמונת הרשימה (מזהה של partyImages; "" = האותיות) */
   img: (idNew: string) => string; letterOf: (idNew: string) => string; always: Set<string>;
+  /** המנדטים הארציים של רשימה במערכת הנוכחית (למפלגה המובילה בחיפוש הקלפי) */
+  seatsOf: (idNew: string) => number;
+  /** קובץ התוצאות לפי קלפי של שתי המערכות (public/) לחיפוש לפי עיר או קלפי */
+  unitsPath: string;
 }
 
 let ctx26: FlowCtx | null = null;
@@ -244,7 +249,7 @@ export function flowCtx2026(): FlowCtx {
   const letters = LETTERS_OF_2026();
   ctx26 = { id: K26_ID, prevLabel: "2022", curLabel: "2026", file: flow as FlowFile, oldName, newName, blocOld: bloc2022, blocNew: bloc2026, hasBlocs: true,
     same: SAME, groups: GROUPS, partyYears, blocYears, img: (id) => id, letterOf: (id) => letters[id] ?? "…",
-    always: new Set(["reservists", "amcha", "code_black", "haredi_public", "noam"]) };
+    always: new Set(["reservists", "amcha", "code_black", "haredi_public", "noam"]), seatsOf: (id) => results2026.seats?.[id] ?? 0, unitsPath: "flow-units.json" };
   return ctx26;
 }
 
@@ -274,7 +279,7 @@ export function flowCtxFrom(file: FlowFile): FlowCtx {
     blocOld: bp.of, blocNew: bc.of, hasBlocs: bp.has && bc.has, same, groups: [],
     partyYears: (idNew, lettersOld) => ({ y2022: lettersOld ? yearOf(prev, [lettersOld]) : null, y2026: idNew ? yearOf(cur, [idNew]) : null }),
     blocYears: (bloc) => ({ y2022: yearOf(prev, bp.lists(bloc)), y2026: yearOf(cur, bc.lists(bloc)) }),
-    img: () => "", letterOf: (l) => l, always: new Set() };
+    img: () => "", letterOf: (l) => l, always: new Set(), seatsOf: (l) => cur.lists.find((x) => x.letters === l)?.seats ?? 0, unitsPath: `flows/${cur.id}-units.json` };
 }
 
 /** גרף הגושים של מערכת */

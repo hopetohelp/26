@@ -1,5 +1,4 @@
-import { flow, newName, oldName, SAME } from "./voterFlow";
-import { results2026 } from "./guessAccuracyData";
+import { flowCtx2026, type FlowCtx } from "./voterFlow";
 import { largestRemainder } from "./fillAll";
 
 /** public/flow-units.json: מספר, מרכז קלפיות, בעלי זכות, מצביעים, קולות לפי letters. */
@@ -39,7 +38,8 @@ export function ballotOptions(places: [string, BallotPlace][], query: string, lo
       if (sub && subNumber(row[0]) !== sub.trim()) continue;
       if (!grouped.has(number)) grouped.set(number, new Set());
       const current = addresses.get(`${code}:${number}`), old = locations?.locations22?.[`${code}:${Number(row[0])}`];
-      const texts = code === "9999" ? ["מעטפות כפולות — ללא מיקום גאוגרפי"] : current ? [...current] : [old ? `${old} (2022)` : `מרכז קלפיות ${row[1]} (2022)`];
+      // בלי קובץ מיקומים (מערכות קודמות) — מספר מרכז הקלפיות כשהוא בקובץ
+      const texts = code === "9999" ? ["מעטפות כפולות — ללא מיקום גאוגרפי"] : current ? [...current] : locations ? [old ? `${old} (2022)` : `מרכז קלפיות ${row[1]} (2022)`] : row[1] ? [`מרכז קלפיות ${row[1]}`] : [];
       for (const text of texts) grouped.get(number)!.add(text);
     }
     return [...grouped].map(([number, centers]) => ({
@@ -96,7 +96,7 @@ export interface BallotComparisonStatus {
 }
 
 /** "מדויק" הוא התאמת מספרי היחידה בתוך אותו יישוב, ולא ידיעה איך הצביע כל אדם. */
-export function ballotComparisonStatus(units: BallotUnits, filter: BallotFilter): BallotComparisonStatus {
+export function ballotComparisonStatus(units: BallotUnits, filter: BallotFilter, years: [string, string] = ["2022", "2026"]): BallotComparisonStatus {
   const places = matchingPlaces(units, filter.city), selected = filterBallots(units, filter);
   let totalBallots = 0, exactBallots = 0;
   for (const [, p] of places) {
@@ -105,13 +105,13 @@ export function ballotComparisonStatus(units: BallotUnits, filter: BallotFilter)
     exactBallots += [...current].filter((n) => old.has(n)).length;
   }
   const counts = { totalBallots, exactBallots };
-  if (!selected.y26.length) return { ...counts, level: "unavailable", label: "אין השוואה", reason: "אין נתוני 2026 ליחידה שנבחרה בקובץ התוצאות" };
+  if (!selected.y26.length) return { ...counts, level: "unavailable", label: "אין השוואה", reason: `אין נתוני ${years[1]} ליחידה שנבחרה בקובץ התוצאות` };
   if (!filter.ballot.trim()) {
     const exactPercent = totalBallots ? Math.round(exactBallots / totalBallots * 100) : 0;
     return { ...counts, level: "city", label: `(${exactPercent}% לפי הקלפי, ${100 - exactPercent}% לפי היישוב)`, reason: "" };
   }
   const groups = comparisonGroups(units, filter);
-  if (groups.some((g) => g.estimated && !g.old.some((r) => r[2] > 0))) return { ...counts, level: "unavailable", label: "אין השוואה", reason: "אין נתוני בעלי זכות בחירה ב־2022 לחישוב אומדן" };
+  if (groups.some((g) => g.estimated && !g.old.some((r) => r[2] > 0))) return { ...counts, level: "unavailable", label: "אין השוואה", reason: `אין נתוני בעלי זכות בחירה ב־${years[0]} לחישוב אומדן` };
   const hasSub = !!filter.sub.trim();
   if (groups.some((g) => g.level === "city")) return { ...counts, level: "city", label: "לפי עיר", reason: hasSub ? "תת קלפי וקלפי שלמה חדשות" : "קלפי חדשה" };
   if (groups.some((g) => g.level === "ballot")) return { ...counts, level: "ballot", label: "לפי קלפי", reason: "תת קלפי חדשה" };
@@ -130,8 +130,8 @@ function estimateBaseline(old: Ballot[], current: Ballot[], letters: string[]): 
   return [current[0][0], current[0][1], eligible, voters, ...letters.map((l) => votes[l])];
 }
 
-export function comparisonBallots(units: BallotUnits, filter: BallotFilter) {
-  const selected = filterBallots(units, filter), status = ballotComparisonStatus(units, filter);
+export function comparisonBallots(units: BallotUnits, filter: BallotFilter, years?: [string, string]) {
+  const selected = filterBallots(units, filter), status = ballotComparisonStatus(units, filter, years);
   if (!filter.ballot.trim() || !selected.y26.length) return { ...selected, estimated: false, status };
   const groups = comparisonGroups(units, filter);
   const baseline: Ballot[] = [];
@@ -157,19 +157,19 @@ export function ballotSummary(rows: Ballot[], letters: string[]) {
 }
 
 /** הרשימות בפועל, לפי SAME במסך המעברים; אין חלוקה מומצאת של רשימה שהתפצלה. */
-export function ballotPartyRows(units: BallotUnits, rows22: Ballot[], rows26: Ballot[]) {
+export function ballotPartyRows(units: BallotUnits, rows22: Ballot[], rows26: Ballot[], c: FlowCtx = flowCtx2026()) {
   const used = new Set<string>();
   const at22 = (l: string) => sumBallotVotes(rows22, [units.letters22.indexOf(l)]);
-  const image22: Record<string, string> = { "כן": "bluewhite" };
+  const image22: Record<string, string> = c.id === flowCtx2026().id ? { "כן": "bluewhite" } : {};
   const result = units.letters26.map((letter, k) => {
-    const id = flow.letters26[letter] ?? letter, previous = letter === "other" ? "other" : SAME[id];
+    const id = c.file.letters26[letter] ?? letter, previous = letter === "other" ? "other" : c.same[id];
     if (previous) used.add(previous);
-    return { id, letters: letter, name: newName(id), previousName: previous ? oldName(previous) : undefined, image: id,
+    return { id, letters: letter, name: c.newName(id), previousName: previous ? c.oldName(previous) : undefined, image: c.img(id),
       votes22: previous && units.letters22.includes(previous) && rows22.length ? at22(previous) : null,
       votes26: rows26.length ? sumBallotVotes(rows26, [k]) : null };
   });
   for (const letter of units.letters22.filter((l) => !used.has(l))) {
-    result.push({ id: `2022:${letter}`, letters: letter, name: oldName(letter), previousName: undefined, image: image22[letter] ?? "",
+    result.push({ id: `2022:${letter}`, letters: letter, name: c.oldName(letter), previousName: undefined, image: image22[letter] ?? "",
       votes22: rows22.length ? at22(letter) : null, votes26: null });
   }
   return result.filter((r) => (r.votes22 ?? 0) > 0 || (r.votes26 ?? 0) > 0)
@@ -180,9 +180,9 @@ type BallotSummary = ReturnType<typeof ballotSummary>;
 type PartyRow = ReturnType<typeof ballotPartyRows>[number];
 /** השוואת 2022 מול 2026 ליחידה אחת: הבסיס, הסיכומים ושורות המפלגות — מקור אחד לכרטיס העיר/הקלפי ולשורה הקומפקטית ברשימה */
 export interface BallotView { selected: ReturnType<typeof comparisonBallots>; old: BallotSummary; now: BallotSummary; rows: PartyRow[] }
-export function ballotView(units: BallotUnits, filter: BallotFilter): BallotView {
-  const selected = comparisonBallots(units, filter);
-  return { selected, old: ballotSummary(selected.y22, units.letters22), now: ballotSummary(selected.y26, units.letters26), rows: ballotPartyRows(units, selected.y22, selected.y26) };
+export function ballotView(units: BallotUnits, filter: BallotFilter, c: FlowCtx = flowCtx2026()): BallotView {
+  const selected = comparisonBallots(units, filter, [c.prevLabel, c.curLabel]);
+  return { selected, old: ballotSummary(selected.y22, units.letters22), now: ballotSummary(selected.y26, units.letters26), rows: ballotPartyRows(units, selected.y22, selected.y26, c) };
 }
 
 /** שלושת הפרמטרים של מפלגה ביחידה (מנדטים אינם קיימים ברמת עיר וקלפי): מצביעים, מזכות בחירה (מבעלי זכות הבחירה ביחידה), מהכשרים */
@@ -197,10 +197,10 @@ export function partyParams(view: BallotView, row: PartyRow) {
 
 /** המפלגה המובילה ביחידה (הכרעת בעלים 29.10.2026): שם, אחוז מהכשרים והמנדטים הארציים שלה — מי שלא עברה (0 מנדטים) מוצגת באחוז */
 export interface LeadParty { id: string; name: string; ofValid: number; seats: number }
-export function leadParty(view: BallotView): LeadParty | null {
+export function leadParty(view: BallotView, c: FlowCtx = flowCtx2026()): LeadParty | null {
   const top = view.rows.find((r) => (r.votes26 ?? 0) > 0 && r.id !== "other" && !r.id.startsWith("2022:"));
   if (!top || !view.now.valid) return null;
-  return { id: top.id, name: top.name, ofValid: ((top.votes26 ?? 0) / view.now.valid) * 100, seats: results2026.seats[top.id] ?? 0 };
+  return { id: top.id, name: top.name, ofValid: ((top.votes26 ?? 0) / view.now.valid) * 100, seats: c.seatsOf(top.id) };
 }
 
 export type LookupLevel = "city" | "ballot" | "sub";
@@ -224,7 +224,7 @@ export function subBallotOptions(places: [string, BallotPlace][], ballot: string
     return [...rows].map(([fullNumber, row]) => {
       const address = locations?.locations[`${code}:${fullNumber}`], old = locations?.locations22?.[`${code}:${fullNumber}`];
       return { id: `${code}:${fullNumber}`, code, place: p.name, number: baseNumber(fullNumber), fullNumber, sub: subNumber(fullNumber),
-        location: code === "9999" ? "מעטפות כפולות — ללא מיקום גאוגרפי" : address ? [address.venue, address.address].filter(Boolean).join(" · ") : old ? `${old} (2022)` : `מרכז קלפיות ${row[1]} (2022)` };
+        location: code === "9999" ? "מעטפות כפולות — ללא מיקום גאוגרפי" : address ? [address.venue, address.address].filter(Boolean).join(" · ") : locations ? (old ? `${old} (2022)` : `מרכז קלפיות ${row[1]} (2022)`) : row[1] ? `מרכז קלפיות ${row[1]}` : "" };
     });
   }).sort((a, b) => a.place.localeCompare(b.place, "he") || numericOrder(a.fullNumber, b.fullNumber));
 }
