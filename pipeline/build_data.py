@@ -636,7 +636,8 @@ HISTORY = {
 # 21: 65 ח"כים · 22: 55 · 23: 58 · 24: 52 · 25: 64 (ויקיפדיה העברית, ערכי הבחירות; דיווחי התקשורת על ההתייעצויות)
 # הרשימות שהמליצו לנשיא על נתניהו אחרי כל מערכת, וחלוקת הגושים — raw/blocs.json (מקור אחד)
 BLOCS_RAW = json.loads((RAW / "blocs.json").read_text(encoding="utf-8"))["elections"]
-RECOMMENDED_NETANYAHU = {int(n): b["recommendedNetanyahu"] for n, b in BLOCS_RAW.items()}
+# "26" — מפלגות־קודמות בלבד (הגושים של 2026 בקוד, src/lib/electionBlocs.ts)
+RECOMMENDED_NETANYAHU = {int(n): b["recommendedNetanyahu"] for n, b in BLOCS_RAW.items() if "recommendedNetanyahu" in b}
 
 
 def election_blocs(n: int, lists: list[dict]) -> dict | None:

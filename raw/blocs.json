@@ -678,6 +678,116 @@
           "source": "https://en.wikipedia.org/wiki/Zionist_Spirit"
         }
       }
+    },
+    "26": {
+      "note": "2026: מפלגות־קודמות בסקרים שלפני הגשת הרשימות (מזהי polls.json). הגוש מחושב בקוד מהרשימות הממשיכות (src/lib/electionBlocs.ts, BLOC_MEMBERS) — רק כשכולן באותו גוש; רשימה שפרשה (כחול לבן) אינה בגוש. השדה bloc נבדק מול החישוב (src/lib/electionBlocs.test.ts).",
+      "predecessors": {
+        "yesh_atid": {
+          "successors": [
+            "together"
+          ],
+          "why": "ביחד = יש עתיד ובנט 2026 (אפריל 2026)",
+          "source": "raw/lineage.json (משפחה together)",
+          "bloc": "eisenkot"
+        },
+        "bennett": {
+          "successors": [
+            "together"
+          ],
+          "why": "ביחד = יש עתיד ובנט 2026 (אפריל 2026)",
+          "source": "raw/lineage.json (משפחה together)",
+          "bloc": "eisenkot"
+        },
+        "labor": {
+          "successors": [
+            "democrats"
+          ],
+          "why": "העבודה ומרצ התאחדו ב-2024 לדמוקרטים",
+          "source": "raw/lineage.json (משפחה democrats)",
+          "bloc": "eisenkot"
+        },
+        "meretz": {
+          "successors": [
+            "democrats"
+          ],
+          "why": "העבודה ומרצ התאחדו ב-2024 לדמוקרטים",
+          "source": "raw/lineage.json (משפחה democrats)",
+          "bloc": "eisenkot"
+        },
+        "labor_meretz": {
+          "successors": [
+            "democrats"
+          ],
+          "why": "העבודה ומרצ התאחדו ב-2024 לדמוקרטים",
+          "source": "raw/lineage.json (משפחה democrats)",
+          "bloc": "eisenkot"
+        },
+        "hadash_taal": {
+          "successors": [
+            "joint"
+          ],
+          "why": "חד\"ש-תע\"ל ובל\"ד מתמודדות ב-2026 ברשימה המשותפת",
+          "source": "raw/lineage.json (משפחה joint)",
+          "bloc": "arab"
+        },
+        "balad": {
+          "successors": [
+            "joint"
+          ],
+          "why": "חד\"ש-תע\"ל ובל\"ד מתמודדות ב-2026 ברשימה המשותפת",
+          "source": "raw/lineage.json (משפחה joint)",
+          "bloc": "arab"
+        },
+        "joint_with_raam": {
+          "successors": [
+            "joint",
+            "raam"
+          ],
+          "why": "תרחיש רשימה משותפת עם רע\"ם; ב-2026 — הרשימה המשותפת ורע\"ם בנפרד",
+          "source": "raw/lineage.json (משפחות joint, raam)",
+          "bloc": "arab"
+        },
+        "rzp_otzma": {
+          "successors": [
+            "rzp",
+            "otzma"
+          ],
+          "why": "הציונות הדתית ועוצמה יהודית מתמודדות ב-2026 בנפרד",
+          "source": "raw/lineage.json (משפחה rzp)",
+          "bloc": "netanyahu"
+        },
+        "zehut": {
+          "successors": [
+            "rzp"
+          ],
+          "why": "רצה ב-2026 ברשימת הציונות הדתית-זהות",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party",
+          "bloc": "netanyahu"
+        },
+        "new_hope": {
+          "successors": [
+            "likud"
+          ],
+          "why": "התאחדה עם הליכוד ב-2024",
+          "source": "raw/lineage.json (משפחה likud)",
+          "bloc": "netanyahu"
+        },
+        "national_unity": {
+          "successors": [
+            "bluewhite",
+            "yashar"
+          ],
+          "why": "המחנה הממלכתי ⇐ כחול לבן (פרשה מהמרוץ 19.10.2026, בלי רשימה ממשיכה) וישר! — לא חד־משמעי",
+          "source": "raw/lineage.json (משפחה nu_camp)",
+          "bloc": null
+        },
+        "unity": {
+          "successors": [],
+          "why": "האחדות (ארדן ואדלשטיין) פרשה מהמרוץ בתחילת ספטמבר 2026, בלי רשימה ממשיכה",
+          "source": "https://en.wikipedia.org/wiki/Unity_(Israel)",
+          "bloc": null
+        }
+      }
     }
   },
   "statusNote": "cross_checked = מספר הממליצים וזהות הסיעות אומתו מול דיווח בתקשורת או ויקיפדיה (בדיקה 04.11.2026); הודעת בית הנשיא עצמה לא אותרה בעמוד נגיש. reportedTotal = מספר הממליצים שדווח, ונבדק מול סכום המנדטים (src/lib/history.test.ts).",

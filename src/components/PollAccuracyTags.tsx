@@ -1,13 +1,14 @@
 import { seatTags, type SeatTags, type Seats } from "../lib/guessAccuracy";
 import { hasResults, results2026 } from "../lib/guessAccuracyData";
-import { SIMPLE_BLOCS } from "../lib/simpleSources";
+import { blocAssignment } from "../lib/electionBlocs";
+import { K26_ID } from "../lib/election";
 
 /**
  * תגיות הדיוק על סקר או מדגם (הכרעת בעלים 02.11.2026): מנדטים מדויקים · מפלגות מדויקות · גושים.
  * בלי `tags` — מחושב מול תוצאות 2026 בארבעת הגושים (seatTags, מקור אחד). לפני הספירה הראשונה — לא מוצג.
  */
 export default function PollAccuracyTags({ values, tags, className = "" }: { values?: Seats; tags?: SeatTags; className?: string }) {
-  const t = tags ?? (values && hasResults() ? seatTags(values, results2026.seats, SIMPLE_BLOCS) : null);
+  const t = tags ?? (values && hasResults() ? seatTags(values, results2026.seats, blocAssignment(K26_ID)!) : null);
   if (!t) return null;
   const pill = "inline-flex items-baseline gap-1 rounded-full bg-accent-soft px-2 py-0.5 text-xs font-bold text-ink whitespace-nowrap";
   return <span className={`inline-flex flex-wrap gap-1 ${className}`} aria-label={`דיוק מול התוצאה: ${t.seats} מנדטים מדויקים, ${t.exact} מפלגות מדויקות, ${t.blocs} מנדטים מדויקים בגושים`}>
