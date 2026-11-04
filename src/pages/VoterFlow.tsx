@@ -367,7 +367,7 @@ function FlowScreen({ id, prevLabel, afterHeader, openSharing, sharing, closeSha
         </Fold>
         {/* ״איך זה חושב?״ בתחתית העמוד (הכרעת בעלים 29.10.2026) */}
         <Fold title="חיפוש לפי עיר או קלפי">
-          {is26 ? <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup /></Suspense> : <Missing what="תוצאות לפי קלפי" />}
+          <Suspense fallback={<p className="text-ink-soft">טוען…</p>}><BallotLookup key={id} ctx={c} /></Suspense>
         </Fold>
         <Fold title="תוצאות לפי יישוב"><LocalityResults key={id} electionId={id} /></Fold>
       </Explained>

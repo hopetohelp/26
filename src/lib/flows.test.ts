@@ -28,3 +28,18 @@ it("המסך: לכל מערכת עם קובץ — שמות בעברית, תוו�
     expect(lists.cameFrom.reduce((a, r) => a + r.total, 0)).toBe(total);
   }
 });
+
+import { readFileSync } from "node:fs";
+import { ballotView, leadParty, type BallotUnits } from "./ballotLookup";
+
+it("חיפוש לפי עיר בכל מערכת קודמת: שתי השנים, שמות בעברית, והמפלגה המובילה עם מנדטיה הארציים", () => {
+  for (const { default: f } of Object.values(files)) {
+    const c = flowCtxFrom(f as unknown as FlowFile);
+    const units = JSON.parse(readFileSync(`public/${c.unitsPath}`, "utf8")) as BallotUnits;
+    const view = ballotView(units, { city: "חיפה", ballot: "", sub: "" }, c);
+    expect(view.old.present && view.now.present, c.id).toBe(true);
+    for (const r of view.rows) expect(r.name, `${c.id} ${r.id}`).toMatch(/[א-ת]/);
+    const lead = leadParty(view, c)!;
+    expect(lead.seats, `${c.id} ${lead.name}`).toBe(results.find((e) => e.id === c.id)!.lists.find((l) => l.letters === lead.id)!.seats);
+  }
+});
