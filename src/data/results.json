@@ -887,6 +887,21 @@
     "votes": 0
    }
   ],
+  "predecessorBlocs": {
+   "arab": [
+    "Joint List",
+    "Ta'al"
+   ],
+   "eisenkot": [
+    "Hosen",
+    "Hosen- Telem",
+    "Yesh Atid",
+    "Zionist Union"
+   ],
+   "netanyahu": [
+    "The Jewish Home"
+   ]
+  },
   "source": {
    "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-21, פרק הסכמי עודפים",
    "sha256": "b67688faca4fb74588b673f4c75aa148cd702112b01309a990e034b26d0ba02b",
@@ -1166,6 +1181,22 @@
     "votes": 0
    }
   ],
+  "predecessorBlocs": {
+   "arab": [
+    "Hadash",
+    "United Arab List"
+   ],
+   "eisenkot": [
+    "Democratic Israel",
+    "Gesher (2019 political party)",
+    "Israeli Labor Party",
+    "Meretz"
+   ],
+   "netanyahu": [
+    "Kulanu",
+    "New Right (Israel)"
+   ]
+  },
   "source": {
    "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-22, פרק הסכמי עודפים",
    "sha256": "369c635c788210a1507aba2bd80437a9ed36714c83950a1eb00c53c475ada5c7",
@@ -1426,6 +1457,21 @@
     "votes": 0
    }
   ],
+  "predecessorBlocs": {
+   "eisenkot": [
+    "Democratic Union (Israel)",
+    "Israeli Labor Party",
+    "Israeli Labor Party+Democratic Union (Israel)"
+   ],
+   "netanyahu": [
+    "New Right (Israel)",
+    "New Right (Israel)+Tkuma (political party)",
+    "New Right (Israel)+Tkuma (political party)+The Jewish Home",
+    "The Jewish Home",
+    "The Jewish Home+New Right (Israel)",
+    "Tkuma (political party)"
+   ]
+  },
   "source": {
    "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-23, פרק הסכמי עודפים",
    "sha256": "d4ad7c1167d142f94af4301f824a50e691fdddab3bbef9ac73c95b295636da60",
@@ -1766,6 +1812,28 @@
     "votes": 0
    }
   ],
+  "predecessorBlocs": {
+   "arab": [
+    "Joint List",
+    "Joint List+Ta'al",
+    "Joint List+Ta'al+United Arab List"
+   ],
+   "eisenkot": [
+    "Blue and White (political alliance)",
+    "Derekh Eretz",
+    "Israeli Labor Party+Meretz",
+    "The Jewish Home",
+    "Yesh Atid -Telem"
+   ],
+   "netanyahu": [
+    "Gesher (2019 political party)",
+    "Otzma Yehudit",
+    "Otzma Yehudit -Noam",
+    "RZ",
+    "RZ+Otzma Yehudit -Noam",
+    "Religious Zionism"
+   ]
+  },
   "source": {
    "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-24, פרק הסכמי עודפים",
    "sha256": "948d4d40701c0c39cd0a942d598133b7ea21cb07ccd8e111eec47be65bc56283",
@@ -2082,6 +2150,21 @@
     "votes": 153
    }
   ],
+  "predecessorBlocs": {
+   "arab": [
+    "Joint List"
+   ],
+   "eisenkot": [
+    "Blue and White (political alliance)",
+    "New Hope (Israel)"
+   ],
+   "netanyahu": [
+    "Otzma Yehudit",
+    "Religious Zionist Party",
+    "Zionist Spirit",
+    "Zionist Spirit/Yamina"
+   ]
+  },
   "source": {
    "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-25, פרק הסכמי עודפים",
    "sha256": "7c69c1b2137a171f0e07b6ee99511dbae5252bdeb103ade8ffd2829a18803759",
