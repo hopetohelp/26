@@ -1,0 +1,511 @@
+[
+ {
+  "id": "2025-07-03-lri-p4a-maariv-b",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1211519",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-07-04T05:59:41+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   }
+  },
+  "details": {
+   "sample_respondents": 511,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-07-02..2025-07-03",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 511,
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   }
+  ],
+  "note": "תרחיש 'עם אייזנקוט' מאותו סקר; כל המנדטים והאחוזים (צ\"ד 2.9%, בל\"ד 2.0%) תואמים לטבלת infogram בכתבת מעריב (tSMMaqIUQZWnuDw9WRi7). 'המחנה הממלכתי' בטבלה = כחול לבן. נוסף מספר המשיבים.",
+  "scenarioOf": "2025-07-03-lri-p4a-maariv",
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1211519"
+ },
+ {
+  "id": "2025-07-03-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1211519",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-07-04T05:59:41+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   }
+  },
+  "details": {
+   "sample_respondents": 511,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-07-02..2025-07-03",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 511,
+    "source": "https://www.maariv.co.il/news/politics/article-1211519"
+   }
+  ],
+  "note": "כל המנדטים תואמים לטקסט הכתבה ולטבלת infogram (צ\"ד 2.6%, בל\"ד 1.9%); הסקר נערך 2–3 ביולי, 511 משיבים. נוסף מספר המשיבים."
+ },
+ {
+  "id": "2025-06-26-lri-p4a-maariv-b",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1209304",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-27T06:00:10+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-06-25..2025-06-26",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 501,
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   }
+  ],
+  "note": "תרחיש בנט + מילואימניקים מאותו סקר; כל המנדטים והאחוזים תואמים לטבלת infogram בכתבה (DuSpFCnH6sgYu5SHxUBs). נוסף מספר המשיבים.",
+  "scenarioOf": "2025-06-26-lri-p4a-maariv",
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1209304"
+ },
+ {
+  "id": "2025-06-26-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1209304",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-27T06:00:10+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   }
+  },
+  "details": {
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-06-25..2025-06-26",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 501,
+    "source": "https://www.maariv.co.il/news/politics/article-1209304"
+   }
+  ],
+  "note": "כל המנדטים והאחוזים תואמים לטבלת infogram בכתבה (6QGdTX8uLJQNGWEvtg0N); נערך 25–26 ביוני, 501 משיבים. נוסף מספר המשיבים."
+ },
+ {
+  "id": "2025-06-20-lri-p4a-maariv-c",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1207193",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-20T05:59:39+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-06-18..2025-06-19",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   {
+    "field": "start",
+    "from": "2025-06-20",
+    "to": "2025-06-18",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   {
+    "field": "end",
+    "from": "2025-06-20",
+    "to": "2025-06-19",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  ],
+  "note": "תרחיש בנט + מילואימניקים מאותו סקר; כל המנדטים והאחוזים תואמים לטקסט הכתבה. פער: הסקר נערך 18–19 ביוני (לא 20). נוסף מספר המשיבים.",
+  "scenarioOf": "2025-06-20-lri-p4a-maariv",
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1207193"
+ },
+ {
+  "id": "2025-06-20-lri-p4a-maariv-b",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1207193",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-20T05:59:39+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-06-18..2025-06-19",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   {
+    "field": "start",
+    "from": "2025-06-20",
+    "to": "2025-06-18",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   {
+    "field": "end",
+    "from": "2025-06-20",
+    "to": "2025-06-19",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  ],
+  "note": "תרחיש 'מפלגה בראשות בנט' מאותו סקר; כל המנדטים והאחוזים תואמים לטקסט הכתבה. פער: הסקר נערך 18–19 ביוני. נוסף מספר המשיבים.",
+  "scenarioOf": "2025-06-20-lri-p4a-maariv",
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1207193"
+ },
+ {
+  "id": "2025-06-20-lri-p4a-maariv",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1207193",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-20T05:59:39+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "dates": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-06-18..2025-06-19",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 500,
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   {
+    "field": "start",
+    "from": "2025-06-20",
+    "to": "2025-06-18",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   },
+   {
+    "field": "end",
+    "from": "2025-06-20",
+    "to": "2025-06-19",
+    "source": "https://www.maariv.co.il/news/politics/article-1207193"
+   }
+  ],
+  "note": "כל המנדטים והאחוזים (צ\"ד 2.7%, בל\"ד 1.9%) תואמים לטקסט הכתבה. פער: הסקר נערך 18–19 ביוני (לא 20). נוסף מספר המשיבים."
+ },
+ {
+  "id": "2025-06-25-lri-p4a-walla",
+  "status": "mismatch",
+  "source": "https://news.walla.co.il/item/3760280",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-25T12:17:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://news.walla.co.il/item/3760280"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3760280"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://news.walla.co.il/item/3760280"
+   }
+  },
+  "details": {
+   "sample_respondents": 583,
+   "moe": "4.3%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "פאנל אינטרנטי",
+   "fieldwork": "2025-06-24..2025-06-25",
+   "pollster": "לזר מחקרים בשיתוף Panel4All",
+   "commissioner": "וואלה"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 583,
+    "source": "https://news.walla.co.il/item/3760280"
+   },
+   {
+    "field": "values.democrats.s",
+    "from": 11,
+    "to": 12,
+    "source": "https://news.walla.co.il/item/3760280"
+   }
+  ],
+  "note": "תרשים המנדטים בכתבת וואלה והטקסט: הדמוקרטים 12 (בנתונים 11; עם 12 הסכום 120, עם 11 — 119). שאר הרשימות תואמות. 583 משיבים, טעות 4.3%."
+ },
+ {
+  "id": "2025-06-26-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-06-26T21:16:53+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a"
+   },
+   "sample": {
+    "status": "conflict",
+    "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a"
+   }
+  },
+  "details": {
+   "sample_respondents": 513,
+   "moe": "4.4%",
+   "population": "בוגרים 18+, האוכלוסייה הכללית בישראל",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-06-26..2025-06-26",
+   "pollster": "דיירקט פולס",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 513,
+    "source": "https://www.i24news.tv/he/news/israel-at-war/artc-c9043c1a"
+   }
+  ],
+  "note": "כל המנדטים תואמים לכתבת i24NEWS. בכתבה 'עוצמה יהודית' מופיעה פעמיים (6 ו-4) — ה-4 הוא הציונות הדתית (טעות הקלדה; הסכום 120). 513 נדגמים."
+ }
+]

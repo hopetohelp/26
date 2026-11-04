@@ -45,6 +45,86 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-08-29-trendzone-x",
+  "status": "secondary",
+  "source": "https://www.srugim.co.il/1243028",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.srugim.co.il/1243028"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.srugim.co.il/1243028"
+   }
+  },
+  "details": {
+   "sample_respondents": 802,
+   "moe": "3.5%",
+   "method": "פנייה ישירה באמצעים דיגיטליים",
+   "pollster": "Trendzone"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 802,
+    "source": "https://www.srugim.co.il/1243028"
+   }
+  ],
+  "note": "הקישור בנתונים הוא פרק פודקאסט בספוטיפיי (שמע בלבד, לא נקרא). מנדטי כל הרשימות (תרחיש 'המפלגות הנוכחיות') זהים לדיווח סרוגים (3.9.2025); שם גם הציונות הדתית 2.37% וכחול לבן 2.21% שאינם בנתונים. 802 נשאלים, טעות ±3.5%; ימי שדה לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-28-trendzone-x",
+  "status": "secondary",
+  "source": "https://www.srugim.co.il/1243028",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.srugim.co.il/1243028"
+   }
+  },
+  "details": {
+   "sample_respondents": 802,
+   "moe": "3.5%",
+   "pollster": "Trendzone"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "foundUrl": "https://www.srugim.co.il/1243028",
+  "duplicateOf": "2025-08-29-trendzone-x",
+  "note": "ככל הנראה כפילות של סקר Trendzone מ-29.8 (10 רשימות זהות); בפרסום ה-4 מנדטים הם של יש עתיד, וכחול לבן מתחת לחסימה (2.21%). דיווח סרוגים בלבד.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-08-28-midgam-r-c-hahadashot-12",
   "status": "match",
   "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7cef7e67f61f891026.htm",
@@ -190,6 +270,38 @@
   },
   "diffs": [],
   "note": "מנדטי כל הרשימות זהים לטבלת infogram המוטמעת בכתבת מעריב (שאלת בנט בלבד). בכתבה אין ימי שדה, מדגם או טעות דגימה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-28-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1081663",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-08-28T21:00:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1081663"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). מנדטי כל הרשימות זהים לדיווח אייס (סכום 120); אחוז בל\"ד וימי שדה אינם בדיווח.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -440,6 +552,51 @@
    }
   ],
   "note": "מנדטי כל הרשימות זהים לטבלת infogram בכתבה (שאלת בנט). ימי שדה 20–21.8, 509 משיבים, טעות 4.4% — תואמים. שם המכון אינו בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-21-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1080688",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-08-21T22:14:07+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1080688"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1080688"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14",
+   "sample_respondents": 524,
+   "population": "מדגם מייצג של כלל האוכלוסייה"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 524,
+    "source": "https://www.ice.co.il/research/news/article/1080688"
+   }
+  ],
+  "note": "c14.co.il חסום (403). מנדטי כל הרשימות זהים לדיווח אייס (סכום 120); 524 נשאלים; אחוז בל\"ד וימי שדה אינם בדיווח.",
   "checkedAt": "2026-11-04"
  },
  {
@@ -695,6 +852,51 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-08-14-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1079642",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-08-14T21:32:07+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1079642"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1079642"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14",
+   "sample_respondents": 639,
+   "population": "מדגם מייצג של כלל האוכלוסייה"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 639,
+    "source": "https://www.ice.co.il/research/news/article/1079642"
+   }
+  ],
+  "note": "c14.co.il חסום (403). מנדטי כל הרשימות זהים לדיווח אייס (סכום 120); 639 נשאלים; אחוז בל\"ד וימי שדה אינם בדיווח.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-08-13-yossi-tatika-zman-israel",
   "status": "match",
   "source": "https://www.zman.co.il/615863/",
@@ -746,6 +948,30 @@
   "checkedAt": "2026-11-04"
  },
  {
+  "id": "2025-08-10-kantar-kan-11",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "kan.org.il מחזיר 403 (curl ו-WebFetch). בחיפוש לא נמצא דיווח עצמאי על סקר כאן/קנטאר מ-10.8.2025 — לא אומת.",
+  "checkedAt": "2026-11-04"
+ },
+ {
   "id": "2025-08-07-lri-p4a-maariv",
   "status": "match",
   "source": "https://www.maariv.co.il/news/politics/article-1222088",
@@ -793,6 +1019,38 @@
    }
   ],
   "note": "הנתונים הם שאלת בנט+אייזנקוט (הטבלה היחידה בכתבה) — זהים לטבלת infogram בכל הרשימות. ימי שדה 6–7.8, 504 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-07-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1078466",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-08-07T21:20:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1078466"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "c14.co.il חסום (403). מנדטי כל הרשימות זהים לדיווח אייס (סכום 120); אחוז בל\"ד וימי שדה אינם בדיווח.",
   "checkedAt": "2026-11-04"
  },
  {
