@@ -1,0 +1,211 @@
+[
+ {
+  "id": "k24-2020-08-07-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2020_q3/Article-3bbdcbacdc9c371027.htm (+ graphic http://img.mako.co.il/2020/08/07/seker1.png)",
+  "differences": [],
+  "fieldEndSource": "2020-08-07",
+  "sample": 512,
+  "moe": "4.4%",
+  "note": "N12/Mako (Amit Segal, 07.08.20; Midgam/Mano Geva; field 6-7/8/2020): graphic Likud 31, Yesh Atid-Telem 18, Yamina 16, Joint List 15, Blue&White 11, Shas 8, UTJ 8, Yisrael Beytenu 7, Meretz 6 - all seats match. Below threshold: text names Labor, Derekh Eretz, Jewish Home, and Gesher 'with zero percent' (Gesher 0.0 matches); Labor 1.9 / Derekh Eretz 0.6 / Jewish Home 0.4 percentages not given in source."
+ },
+ {
+  "id": "k24-2020-08-10-geocartography-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-782852 (articleBody in page JSON-LD)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 580,
+  "moe": null,
+  "note": "Maariv 10/08/2020 (Geocartography, Prof. Avi Degani; phone, 580 respondents): Likud 29, Yesh Atid-Telem 19, Yamina 14, Joint List 14, Blue&White 13, UTJ 9, Meretz 8, Shas 7, Yisrael Beytenu 7; 'the other lists do not pass the threshold' - all match. Field date not stated."
+ },
+ {
+  "id": "k24-2020-08-12-direct-polls-makor-rishon",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1097560-סקר-מנדטים-הליכוד-מתאושש-ימינה-נבלמת---רוב-בציבור-תומך-בפר/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 12/08/20 citing the Direct Polls poll published today in Makor Rishon ('about two thousand respondents'): Likud 32, Yesh Atid 18, Joint List 15, Yamina 14, Blue&White 10, Shas 9, Yisrael Beytenu 9, UTJ 8, Meretz 5 - all match. Original Makor Rishon article not checked."
+ },
+ {
+  "id": "k24-2020-08-13-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-783529 (articleBody in page JSON-LD)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1003,
+  "moe": null,
+  "note": "Maariv 13/08/2020 (Panels Politics/Menachem Lazar, 'this week', 1,003 respondents): Likud 27, Yesh Atid-Telem 20, Yamina 18, Joint List 15, Blue&White 9, Yisrael Beytenu 9, Shas 8, UTJ 7, Meretz 7 - all match. Exact field date not stated."
+ },
+ {
+  "id": "k24-2020-08-16-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2020_q3/Article-759e558c238f371027.htm",
+  "differences": [],
+  "fieldEndSource": "2020-08-16",
+  "sample": 509,
+  "moe": "4.4%",
+  "note": "N12 (Dafna Liel; Midgam/Mano Geva with iPanel; field 16/08/2020): Likud 30, Yamina 18, Yesh Atid-Telem 16, Joint List 15, Blue&White 12, UTJ 8, Yisrael Beytenu 8, Shas 7, Meretz 6; below threshold Labor 1.8%, Derekh Eretz 0.5%, Gesher 0.2%, Jewish Home 0.2% - all match."
+ },
+ {
+  "id": "k24-2020-08-19-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-784944 (articleBody in page JSON-LD)",
+  "differences": [],
+  "fieldEndSource": "2020-08-19",
+  "sample": 527,
+  "moe": "4.4%",
+  "note": "Maariv 20/08/2020 (Panels Politics/Lazar; 'conducted yesterday'; Panel4All 527): Likud 29, Yesh Atid-Telem 20, Yamina 19, Joint List 14, Blue&White 9, Yisrael Beytenu 9, Shas 8, UTJ 7, Meretz 5; Labor 2.1%, Otzma Yehudit 1.9%, Gesher 0.3%, Jewish Home 0.2%, Derekh Eretz 0.2% - all match."
+ },
+ {
+  "id": "k24-2020-08-21-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-785120 (+ graphic https://images.maariv.co.il/image/upload/f_auto,fl_lossy/589439)",
+  "differences": [],
+  "fieldEndSource": "2020-08-21",
+  "sample": null,
+  "moe": null,
+  "note": "Maariv/103FM 21/08/2020, Maagar Mochot (Prof. Yitzhak Katz) for Nissim Mishal's 103FM show; graphic dated 21.08.2020: Likud 32, Yesh Atid 19, Joint List 15, Yamina 15, Blue&White 10, UTJ 8, Yisrael Beytenu 8, Shas 8, Meretz 5 - all match. Labor, Derekh Eretz, Jewish Home, Gesher below threshold (no %). No sample size in article."
+ },
+ {
+  "id": "k24-2020-08-27-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-786333 (articleBody in page JSON-LD)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv 27/08/2020 (Panels Politics/Lazar): Likud 28, Yesh Atid-Telem 20, Yamina 17, Joint List 14, Blue&White 10, Yisrael Beytenu 9, Shas 8, UTJ 7, Meretz 7; Labor 1.9%, Otzma Yehudit 1.2%, Jewish Home 0.7%, Derekh Eretz 0.2%, Gesher 0.4% - all match. Field date/sample not stated."
+ },
+ {
+  "id": "k24-2020-09-04-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2020_q3/Article-f5bc91d251f5471026.htm",
+  "differences": [],
+  "fieldEndSource": "2020-09-04",
+  "sample": null,
+  "moe": "4.4%",
+  "note": "N12 'Meet the Press' 05.09.20 (Midgam/Mano Geva with iPanel, conducted 4.9): Likud 31, Yamina 19, Yesh Atid 15, Joint List 15, Blue&White 11, Yisrael Beytenu 8, Shas 8, UTJ 7, Meretz 6 - all match. Labor, Derekh Eretz, Jewish Home, Gesher below threshold (no %)."
+ },
+ {
+  "id": "k24-2020-09-12-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IDKGMK&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 556,
+  "moe": "4.4%",
+  "note": "103FM 13/09/2020 (Menachem Lazar, Panels Politics, for 'Sheva Tesha'; conducted over the weekend, Panel4All 556 respondents): Yamina 21, Likud 30, Shas 9, UTJ 7, Yesh Atid-Telem 16, Blue&White 8, Meretz 6, Joint List 15, Yisrael Beytenu 8 - all match. Exact field end date not stated ('during the weekend')."
+ },
+ {
+  "id": "k24-2020-09-16-direct-polls-arutz-sheva",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/287584",
+  "differences": [],
+  "fieldEndSource": "2020-09-16",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva/INN 'Poll: Likud 30, Yamina 20' (Direct Polls, conducted September 16th): Likud 30, Yamina 20, Yesh Atid-Telem 17, Joint List 14, Yisrael Beytenu 9, Shas 9, UTJ 7, Blue&White 8, Meretz 6 - all seats match. 'Labor, Gesher, Derech Eretz, Otzma Yehudit, and Jewish Home all failed to cross the threshold' - percentages (1.1/0.3/1.0/0.3/0.4) not given."
+ },
+ {
+  "id": "k24-2020-09-23-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2020_q3/Article-8db13b1d8abb471026.htm",
+  "differences": [],
+  "fieldEndSource": "2020-09-23",
+  "sample": 512,
+  "moe": "4.4%",
+  "note": "N12 23.09.20 (Midgam/Mano Geva with iPanel; field 23/9/2020): Likud 29, Yamina 21, Yesh Atid-Telem 17, Joint List 15, Blue&White 9, Shas 9, Yisrael Beytenu 8, UTJ 7, Meretz 5; Labor 1.8%, Jewish Home 0.6%, Gesher 0.5%, Derekh Eretz 0.6% - all match."
+ },
+ {
+  "id": "k24-2020-10-06-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2020_q4/Article-1c6feab90def471027.htm",
+  "differences": [],
+  "fieldEndSource": "2020-10-06",
+  "sample": 503,
+  "moe": "4.4%",
+  "note": "N12 06.10.20 (Midgam/Mano Geva; field 6/10/2020): Likud 26, Yamina 23, Yesh Atid-Telem 18, Joint List 15, Blue&White 9, Shas 9, Yisrael Beytenu 8, UTJ 7, Meretz 5; Labor 2.0%, Jewish Home 0.8%, Gesher 0.5%, Derekh Eretz 0.1% - all match."
+ },
+ {
+  "id": "k24-2020-10-06-direct-polls-ice",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "http://www.ice.co.il/hotnews/news/article/787625 (+ Direct Polls graphic https://img.ice.co.il/giflib/tools/EjqEngzXYAEhIRt.jpg)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "ice 6/10/2020: Direct Polls graphic 'המפה הפוליטית 2020': Likud 31, Yamina 20, Yesh Atid-Telem 18, Joint List 13, Shas 9, Yisrael Beytenu 9, Blue&White 7, UTJ 7, Meretz 6; Derekh Eretz 2.5%, Labor 0.7%, Otzma Yehudit 0.6%, Jewish Home 0.3%, Gesher 0.2% - all match. Article text says Likud 30 (typo: text sums to 119 and its right-haredi bloc of 67 implies 31, as in the graphic)."
+ },
+ {
+  "id": "k24-2020-10-08-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-794565",
+  "differences": [],
+  "fieldEndSource": "2020-10-08",
+  "sample": 515,
+  "moe": "4.4%",
+  "note": "Maariv 09/10/2020 (Panels Politics/Lazar; conducted 8 Oct 2020; Panel4All 515): Likud 27, Yamina 22, Yesh Atid-Telem 16, Joint List 15, Blue&White 10, Shas 9, Yisrael Beytenu 9, UTJ 7, Meretz 5; Otzma Yehudit 1.5%, Labor 1.0%, Jewish Home 0.5%, Derekh Eretz 0.5%, Gesher 0.0% - all match (Eisenkot-Huldai scenario reported separately)."
+ },
+ {
+  "id": "k24-2020-10-12-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-795946",
+  "differences": [],
+  "fieldEndSource": "2020-10-12",
+  "sample": 1033,
+  "moe": "3.1%",
+  "note": "Maariv 16/10/2020 (Panels Politics/Lazar; conducted 11-12 Oct 2020; panel4all 1,033): Likud 28, Yamina 21, Yesh Atid-Telem 17, Joint List 14, Blue&White 9, Yisrael Beytenu 9, Shas 9, UTJ 7, Meretz 6 - all match."
+ },
+ {
+  "id": "k24-2020-10-22-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-797468",
+  "differences": [],
+  "fieldEndSource": "2020-10-22",
+  "sample": 549,
+  "moe": "4.4%",
+  "note": "Maariv 23/10/2020 (Panels Politics/Lazar; conducted 'yesterday and the day before'; Panel4All 549): Likud 30, Yamina 20, Yesh Atid-Telem 18, Joint List 12, Blue&White 9, Shas 9, Yisrael Beytenu 8, Meretz 7, UTJ 7; Otzma Yehudit 1.6%, Labor 1%, Jewish Home 0.5%, Derekh Eretz 0.2%, Gesher 0.2% - all match."
+ },
+ {
+  "id": "k24-2020-10-28-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-798911",
+  "differences": [],
+  "fieldEndSource": "2020-10-28",
+  "sample": null,
+  "moe": "4.4%",
+  "note": "Maariv 30/10/2020 (Panels Politics/Lazar; conducted 28 Oct): Likud 28, Yamina 21, Yesh Atid-Telem 17, Blue&White 10, Joint List 12, Yisrael Beytenu 9, Shas 9, UTJ 8, Meretz 6; Labor 2.0%, Otzma Yehudit 1.3%, Jewish Home 0.5%, Derekh Eretz 0.5%, Gesher 0.3% - all match."
+ },
+ {
+  "id": "k24-2020-10-29-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IEEEFL&c41t4nzVQ=EL (+ table https://103fm.maariv.co.il/download/pictures/SEKER2910201.jpg)",
+  "differences": [],
+  "fieldEndSource": "2020-10-29",
+  "sample": 503,
+  "moe": "4.4%",
+  "note": "103FM 30/10/2020 (Maagar Mochot, Prof. Yitzhak Katz; conducted Wed-Thu, 503 respondents). Table column 'without Huldai list': Likud 28, Blue&White 10, Yesh Atid-Telem 17, UTJ 8, Joint List 14, Yamina 20, Yisrael Beytenu 8, Shas 9, Meretz 6 - all match (Wikipedia uses the no-Huldai scenario; with Huldai 7: YA 14, B&W 9, YB 7, Meretz 4)."
+ }
+]

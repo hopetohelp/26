@@ -1,0 +1,68 @@
+[
+ {
+  "id": "k24-2020-11-01-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/455887",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (1.11.20) citing Channel 13/Camil Fuchs poll aired that evening: Likud 29, Yamina 22, Yesh Atid-Telem 20, Joint List 12, Blue&White 10, Yisrael Beytenu 7, Shas 7, UTJ 7, Meretz 6; Labor, Gesher, Derekh Eretz, Jewish Home below threshold — all match. 13tv original returned 403."
+ },
+ {
+  "id": "k24-2020-11-02-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IEEHJF&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2020-11-02",
+  "sample": 534,
+  "moe": "4.4%",
+  "note": "103FM 03/11/2020 (Panels Politics/Menachem Lazar for Sheva Tesha, conducted yesterday Mon): Likud 29, Yamina 22, Yesh Atid-Telem 19, Joint List 12, Blue&White 9, Shas 8, Yisrael Beytenu 8, UTJ 7, Meretz 6 — all match. 534 Panel4All respondents, max error 4.4%."
+ },
+ {
+  "id": "k24-2020-11-12-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IEFJEI&c41t4nzVQ=EL",
+  "differences": [],
+  "fieldEndSource": "2020-11-12",
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "103FM 13/11/2020 (Maagar Mochot/Prof. Yitzhak Katz for Nissim Mishal; conducted Wed-Thu): Likud 29, Yamina 21, Yesh Atid-Telem 16, Joint List 15, Blue&White 9, Shas 9, UTJ 8, Yisrael Beytenu 8, Meretz 5; Labor below threshold — all match. 500 respondents, error 4.4% at 95%."
+ },
+ {
+  "id": "k24-2020-11-13-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/507443-סקר-מנדטים-נתניהו-ובנט-מתחזקים-גוש-הימ",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim citing Maariv/Panels Politics poll published Friday morning: Likud 30, Yamina 23, Yesh Atid 17, Blue&White 9, Joint List 11, Shas 9, UTJ 8, Yisrael Beytenu 8, Meretz 5 — all match."
+ },
+ {
+  "id": "k24-2020-11-16-geocartography-i24-news",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/508344-סקר-דרמטי-בנט-בשיא-של-כל-הזמנים-ליברמן",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 16.11.20 citing Geocartography for i24news: Likud 28, Yamina 25, Yesh Atid 15, Blue&White 12, Joint List 12, Shas 9, UTJ 8, Meretz 6, Yisrael Beytenu 5 — all match."
+ },
+ {
+  "id": "k24-2020-11-17-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/378903.html",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar HaShabbat 17.11.20 citing Camil Fuchs poll on Channel 13 (aired Tue): Likud 29, Yamina 22, Yesh Atid-Telem 20, Joint List 11, Blue&White 10, Shas 8, Meretz 7, Yisrael Beytenu 7, UTJ 6; rest below threshold — all match."
+ }
+]

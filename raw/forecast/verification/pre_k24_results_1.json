@@ -61,6 +61,17 @@
   "note": "Arutz 7 12.04.2020 (published Sunday) reporting Direct Polls: Likud 38, Hosen L'Yisrael-Labor 16, Joint List 15, Yesh Atid 14, Shas 9, UTJ 8, Lieberman 8, Yamina 7, Meretz 5, Gesher 0.93%, Otzma Yehudit 0.60% — all match. Derekh Eretz (Wikipedia 2.85%) not mentioned in source. No fieldwork date/sample given."
  },
  {
+  "id": "k24-2020-04-23-smith-x",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/441709",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 24.04.20 reporting a new Smith Institute poll: Likud 41, Blue&White+Labor 17, Joint List 16, Yesh Atid-Telem 11, Shas 10, UTJ 7, Yamina 7, Yisrael Beytenu 6, Meretz 5 — all seats match. Gesher, Otzma Yehudit, Derekh Eretz 'each less than 0.5%' (consistent with Wikipedia 0.4% each, exact figures not given). 13% undecided. Original publisher not identified."
+ },
+ {
   "id": "k24-2020-04-30-direct-polls-x",
   "status": "match",
   "sourceLevel": "press",
