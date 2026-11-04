@@ -1,0 +1,849 @@
+[
+ {
+  "id": "2025-09-02-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/vq2ud-904743805/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/vq2ud-904743805/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/vq2ud-904743805/"
+   }
+  },
+  "details": {
+   "sample_respondents": 558,
+   "moe": "4.1%",
+   "pollster": "מאגר מוחות בשיתוף סטטנט",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 558,
+    "source": "https://13tv.co.il/item/news/politics/politics/vq2ud-904743805/"
+   }
+  ],
+  "note": "מנדטי כל הרשימות בתרחיש הראשי זהים לכתבת 13tv (2.9.2025); אחוז בל\"ד (3.0%) אינו בכתבה. 558 משיבים, טעות 4.1%; ימי שדה לא צוינו בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-28-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7cef7e67f61f891026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-28T21:02:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7cef7e67f61f891026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7cef7e67f61f891026.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7cef7e67f61f891026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 509,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של כלל האוכלוסייה בישראל בגילאי 18 ומעלה",
+   "method": "אינטרנטי + טלפוני",
+   "fieldwork": "2025-08-28..2025-08-28",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 509,
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7cef7e67f61f891026.htm"
+   }
+  ],
+  "note": "מנדטי כל הרשימות (התרחיש הראשי, עם אייזנקוט) זהים לכתבת mako; כחול לבן 2.8% תואם; אחוז בל\"ד לא נבדק. איסוף 28.8, 509 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-28-lri-p4a-maariv-c",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1228187",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-29T05:59:54+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1228187"
+   }
+  },
+  "details": {
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1228187",
+  "scenarioOf": "2025-08-28-lri-p4a-maariv",
+  "note": "תרחיש בנט+אייזנקוט+הנדל באותו סקר; זהה לטבלת infogram בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-28-lri-p4a-maariv-b",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1228187",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-29T05:59:54+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1228187"
+   }
+  },
+  "details": {
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "scenarioOf": "2025-08-28-lri-p4a-maariv",
+  "note": "תרחיש בנט+אייזנקוט באותו סקר; זהה לטקסט הכתבה ולטבלת infogram.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-28-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1228187",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-29T05:59:54+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1228187"
+   }
+  },
+  "details": {
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "מנדטי כל הרשימות זהים לטבלת infogram המוטמעת בכתבת מעריב (שאלת בנט בלבד). בכתבה אין ימי שדה, מדגם או טעות דגימה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-26-yossi-tatika-zman-israel",
+  "status": "mismatch",
+  "source": "https://www.zman.co.il/619389/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.zman.co.il/619389/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/619389/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/619389/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8% (מוצג כסטיית תקן)",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2025-08-25..2025-08-26",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) עם פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "values.hadash_taal.s",
+    "from": 6,
+    "to": 4,
+    "source": "https://www.zman.co.il/619389/"
+   },
+   {
+    "field": "values.raam.s",
+    "from": 4,
+    "to": 6,
+    "source": "https://www.zman.co.il/619389/"
+   },
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/619389/"
+   }
+  ],
+  "note": "בטבלת זמן ישראל (פורסם 26.8.2025): רע\"ם 6, חד\"ש-תע\"ל 4 — בנתונים הפוכים (חד\"ש-תע\"ל 6, רע\"ם 4); שאר הרשימות זהות. ימי שדה 25–26.8, 404 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-21-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/618089/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/618089/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/618089/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/618089/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8% (מוצג כסטיית תקן)",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2025-08-20..2025-08-21",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) עם פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/618089/"
+   }
+  ],
+  "note": "מנדטי כל הרשימות זהים לטבלה בכתבת זמן ישראל (פורסם 21.8.2025). ימי שדה תואמים, 404 משיבים; 4.8% מוצג כ'סטיית תקן'.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-21-lri-p4a-maariv-c",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-22T06:00:06+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   }
+  },
+  "details": {
+   "sample_respondents": 509,
+   "moe": "4.4%",
+   "fieldwork": "2025-08-20..2025-08-21",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 509,
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   }
+  ],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1226216",
+  "scenarioOf": "2025-08-21-lri-p4a-maariv",
+  "note": "תרחיש בנט+אייזנקוט+הנדל; זהה לטבלת infogram.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-21-lri-p4a-maariv-b",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-22T06:00:06+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   }
+  },
+  "details": {
+   "sample_respondents": 509,
+   "moe": "4.4%",
+   "fieldwork": "2025-08-20..2025-08-21",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 509,
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   }
+  ],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1226216",
+  "scenarioOf": "2025-08-21-lri-p4a-maariv",
+  "note": "תרחיש בנט+אייזנקוט; זהה לטבלת infogram.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-21-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1226216",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-22T06:00:06+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   }
+  },
+  "details": {
+   "sample_respondents": 509,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18, יהודים וערבים",
+   "fieldwork": "2025-08-20..2025-08-21",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 509,
+    "source": "https://www.maariv.co.il/news/politics/article-1226216"
+   }
+  ],
+  "note": "מנדטי כל הרשימות זהים לטבלת infogram בכתבה (שאלת בנט). ימי שדה 20–21.8, 509 משיבים, טעות 4.4% — תואמים. שם המכון אינו בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-20-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://api.i24news.tv/v2/he/contents/artc-e5ee512d",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-20T20:51:57+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-e5ee512d"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-e5ee512d"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-e5ee512d"
+   }
+  },
+  "details": {
+   "sample_respondents": 542,
+   "moe": "4.1%",
+   "population": "בני 18+",
+   "method": "מערכת דיגיטלית בשילוב פאנל",
+   "fieldwork": "2025-08-20..2025-08-20",
+   "pollster": "דיירקט פולס (צוריאל שרון)",
+   "commissioner": "i24NEWS"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 542,
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-e5ee512d"
+   }
+  ],
+  "note": "התרחיש הראשון (עם המילואימניקים, בלי מפלגת יוסי כהן) — כל הרשימות זהות; כחול לבן ובל\"ד מתחת לחסימה בלי אחוזים בכתבה. בוצע 20.8.2025, 542 נשאלים, טעות 4.1%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-17-midgam-r-c-hahadashot-12-b",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-17T21:20:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 505,
+   "moe": "4.4%",
+   "fieldwork": "2025-08-17..2025-08-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm",
+  "scenarioOf": "2025-08-17-midgam-r-c-hahadashot-12",
+  "note": "תרחיש 4 (אייזנקוט + מפלגת המילואימניקים) באותו סקר — כל הרשימות זהות, כולל כחול לבן 2.7% ובל\"ד 1.9%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-17-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-17T21:20:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm"
+   }
+  },
+  "details": {
+   "sample_respondents": 505,
+   "moe": "4.4%",
+   "population": "מדגם מייצג של בני 18 ומעלה בישראל",
+   "method": "אינטרנטי + טלפוני",
+   "fieldwork": "2025-08-17..2025-08-17",
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 505,
+    "source": "https://www.mako.co.il/news-politics/2025_q3/Article-7c49f197919b891026.htm"
+   }
+  ],
+  "note": "תרחיש 1 (מפלגת אייזנקוט) — כל הרשימות זהות לכתבת mako, כולל כחול לבן 2.9% ובל\"ד 1.9%. איסוף 17.8, 505 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-14-lri-p4a-maariv-b",
+  "status": "mismatch",
+  "source": "https://www.maariv.co.il/news/politics/article-1224152",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-15T06:00:18+03:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://www.maariv.co.il/news/politics/article-1224152"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3773276"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3773276"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18, יהודים וערבים",
+   "fieldwork": "2025-08-13..2025-08-14",
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "values.likud.s",
+    "from": 21,
+    "to": 23,
+    "source": "https://www.maariv.co.il/news/politics/article-1224152"
+   },
+   {
+    "field": "values.bennett.s",
+    "from": 23,
+    "to": 21,
+    "source": "https://www.maariv.co.il/news/politics/article-1224152"
+   },
+   {
+    "field": "sample",
+    "from": null,
+    "to": 502,
+    "source": "https://news.walla.co.il/item/3773276"
+   }
+  ],
+  "foundUrl": "https://www.maariv.co.il/news/politics/article-1224152",
+  "scenarioOf": "2025-08-14-lri-p4a-maariv",
+  "note": "תרחיש בנט+אייזנקוט: בטבלת infogram במעריב ובדיווח וואלה — הליכוד 23, בנט 21 (בנתונים הפוך); שאר הרשימות זהות, וגוש הקואליציה 50 תואם לפרסום. ימי שדה 13–14.8 ו-502 משיבים — מוואלה (בכתבת מעריב אין).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-14-lri-p4a-maariv",
+  "status": "unreachable",
+  "source": null,
+  "access": [
+   "none"
+  ],
+  "published": "2025-08-15T06:00:18+03:00",
+  "fields": {
+   "dates": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3773276"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3773276"
+   }
+  },
+  "details": {
+   "sample_respondents": 502,
+   "moe": "4.4%",
+   "fieldwork": "2025-08-13..2025-08-14",
+   "pollster": "לזר מחקרים + Panel4All",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 502,
+    "source": "https://news.walla.co.il/item/3773276"
+   }
+  ],
+  "note": "בכתבת מעריב (ובדיווח וואלה) מופיעה רק שאלת בנט+אייזנקוט (נקלטה כ-b); תרחיש 'בנט בלבד' (בנט 24, ישראל ביתנו 12) לא נמצא בפרסום — המנדטים לא אומתו. ימי שדה ומדגם מוואלה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-13-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/615863/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/615863/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/615863/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/615863/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8% (מוצג כסטיית תקן)",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2025-08-13..2025-08-13",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) עם פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/615863/"
+   }
+  ],
+  "note": "מנדטי כל הרשימות זהים לטבלה בכתבת זמן ישראל (פורסם 14.8.2025). ימי שדה תואמים, 404 משיבים; 4.8% מוצג כ'סטיית תקן'.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-07-lri-p4a-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/article-1222088",
+  "access": [
+   "primary"
+  ],
+  "published": "2025-08-08T06:00:30+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1222088"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1222088"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/article-1222088"
+   }
+  },
+  "details": {
+   "sample_respondents": 504,
+   "moe": "4.4%",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18, יהודים וערבים",
+   "fieldwork": "2025-08-06..2025-08-07",
+   "commissioner": "מעריב"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 504,
+    "source": "https://www.maariv.co.il/news/politics/article-1222088"
+   }
+  ],
+  "note": "הנתונים הם שאלת בנט+אייזנקוט (הטבלה היחידה בכתבה) — זהים לטבלת infogram בכל הרשימות. ימי שדה 6–7.8, 504 משיבים, טעות 4.4%.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-08-06-yossi-tatika-zman-israel",
+  "status": "match",
+  "source": "https://www.zman.co.il/613653/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/613653/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/613653/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/613653/"
+   }
+  },
+  "details": {
+   "sample_respondents": 404,
+   "moe": "4.8% (מוצג כסטיית תקן)",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2025-08-06..2025-08-06",
+   "pollster": "טאטיקה מחקרים ומדיה (יוסי טאטיקה) עם פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [
+   {
+    "field": "sample",
+    "from": null,
+    "to": 404,
+    "source": "https://www.zman.co.il/613653/"
+   }
+  ],
+  "note": "מנדטי כל הרשימות זהים לטבלה בכתבת זמן ישראל (פורסם 7.8.2025). ימי שדה תואמים, 404 משיבים; 4.8% מוצג כ'סטיית תקן'.",
+  "checkedAt": "2026-11-04"
+ }
+]
