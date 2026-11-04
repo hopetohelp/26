@@ -680,5 +680,284 @@
   "diffs": [],
   "note": "c14.co.il חסום. דיווח אייס (25.12): מנדטי כל 12 הרשימות, בל\"ד 2.3%, כחול לבן 1.1% זהים. בדיווח 657 נשאלים — בנתונים חסר (null).",
   "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-01-22-yossi-tatika-zman-yisrael",
+  "status": "match",
+  "source": "https://www.zman.co.il/658050/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-01-22T17:26:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/658050/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/658050/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/658050/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2026-01-21..2026-01-22",
+   "pollster": "יוסי טטיקה (טאטיקה מחקרים ומדיה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "זמן ישראל (WebFetch): מנדטי כל 13 רשימות (כולל כחול לבן 4 והצ\"ד 4) זהים; 21–22.1, 500 משיבים תואמים. 4.4% מכונה בכתבה \"סטיית התקן\".",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-01-15-yossi-tatika-zman-yisrael",
+  "status": "match",
+  "source": "https://www.zman.co.il/656319/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-01-15T17:40:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/656319/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/656319/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/656319/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2026-01-14..2026-01-15",
+   "pollster": "יוסי טטיקה (טאטיקה מחקרים ומדיה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "זמן ישראל (WebFetch): מנדטי כל 12 הרשימות זהים; 14–15.1, 500 משיבים תואמים. 4.4% מכונה בכתבה \"סטיית התקן\".",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-01-08-yossi-tatika-zman-yisrael",
+  "status": "match",
+  "source": "https://www.zman.co.il/654587/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-01-08T18:17:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/654587/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/654587/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/654587/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2026-01-07..2026-01-08",
+   "pollster": "יוסי טטיקה (טאטיקה מחקרים ומדיה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "זמן ישראל (WebFetch): מנדטי כל 11 הרשימות זהים; 7–8.1, 500 משיבים תואמים. 4.4% מכונה בכתבה \"סטיית התקן\".",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-01-01-yossi-tatika-zman-yisrael",
+  "status": "match",
+  "source": "https://www.zman.co.il/652680/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-01-01T17:02:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.zman.co.il/652680/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.zman.co.il/652680/"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.zman.co.il/652680/"
+   }
+  },
+  "details": {
+   "sample_respondents": 500,
+   "moe": "4.4%",
+   "population": "משיבים יהודים וערבים, פילוח לפי גיל, דת, מגדר ואזור",
+   "fieldwork": "2025-12-31..2026-01-01",
+   "pollster": "יוסי טטיקה (טאטיקה מחקרים ומדיה) בשיתוף פאנל Adgenda",
+   "commissioner": "זמן ישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "זמן ישראל (WebFetch): מנדטי כל 11 הרשימות זהים; 31.12–1.1, 500 משיבים תואמים. 4.4% מכונה בכתבה \"סטיית התקן\".",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-01-20-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/s26xg-904937568/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-01-20T20:25:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/s26xg-904937568/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) וסטט נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "13tv (WebFetch): מנדטי כל 12 הרשימות זהים. אחוזי הצ\"ד, כחול לבן והמילואימניקים לא צוינו; אין מועד, מדגם וטעות דגימה בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-01-07-mm-sn-channel-13",
+  "status": "mismatch",
+  "source": "https://13tv.co.il/item/news/politics/politics/hk2qy-904921108/",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-01-07T20:31:00+02:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://13tv.co.il/item/news/politics/politics/hk2qy-904921108/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) וסטט נט (יוסף מקלדה)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [
+   {
+    "field": "values.democrats.s",
+    "from": 8,
+    "to": 10,
+    "source": "https://13tv.co.il/item/news/politics/politics/hk2qy-904921108/"
+   },
+   {
+    "field": "values.yb.s",
+    "from": 10,
+    "to": 8,
+    "source": "https://13tv.co.il/item/news/politics/politics/hk2qy-904921108/"
+   }
+  ],
+  "note": "13tv (WebFetch, ציטוט): \"הדמוקרטים... מתחזקת אף היא ל-10 מנדטים\", \"ישראל ביתנו נחלשת ל-8\" — בנתונים הפוכים (8/10). שאר 9 הרשימות זהות; סכום 120. אחוזים מתחת לחסימה, מועד ומדגם לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2026-01-15-trendzone-x",
+  "status": "unreachable",
+  "source": "https://open.spotify.com/episode/5O7X9iBDPXM2xoOZQmlH6u",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "pollster": "טרנדזון"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "הקישור הוא פרק פודקאסט בספוטיפיי (\"ברייקינג | סקר מלחמה\") בלי טקסט או מספרים; לא נמצא פרסום כתוב של הסקר בחיפוש. לא אומת.",
+  "checkedAt": "2026-11-04"
  }
 ]

@@ -46,7 +46,10 @@ def main() -> None:
     ver_by = {v["id"]: i for i, v in enumerate(ver)}
     cor_keys = {(c["id"], c["field"]) for c in cor}
     stats = {"new": 0, "replaced": 0, "kept": 0, "corrections": 0, "urls": 0, "skipped_diff": 0, "unknown": 0}
+    only = [a for a in sys.argv[1:] if a.startswith("b")]
     for f in sorted((RAW / "verify26" / "results").glob("b*.json")):
+        if only and f.stem not in only:
+            continue
         for r in load(f):
             pid = r["id"]
             poll = polls.get(pid)
