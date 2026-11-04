@@ -571,23 +571,39 @@ HISTORY = {
                   "Kulanu": "כ", "United Arab List": "דעם", "Shas": "שס", "United Torah Judaism": "ג",
                   "Union of Right-Wing Parties": "טב", "Yisrael Beiteinu": "ל", "Meretz": "מרצ", "Hadash": "ום",
                   "New Right (Israel)": "נ", "Gesher (2019 political party)": "נר", "Zehut": "ז"},
-         "ignore": {"L", "R"}},
+         "ignore": {"L", "R"},
+         # מ-2015 ועד הגשת הרשימות (הטבלה הרביעית בדף — סקר סטודנטים אחרי ההגשה; מהשישית — תרחישים).
+         # הרשימה המשותפת לפני הפיצול, יש עתיד/חוסן לפני כחול לבן, המחנה הציוני, הבית היהודי ⇐ unmapped.
+         "pre": {"tables": [1, 2, 3, 5], "cols": {},
+                 "ignore": {"L", "R", "{{abbr|C|Coalition parties}}", "{{abbr|O|Opposition parties}}"}}},
     22: {"page": "en__Opinion_polling_for_the_September_2019_Israeli_legislative_election.wiki",
          "cols": {"Likud": "מחל", "Blue and White (political alliance)": "פה", "Joint List": "ודעם", "Shas": "שס",
                   "United Torah Judaism": "ג", "Yamina": "טב", "Israeli Labor Party": "אמת", "Yisrael Beiteinu": "ל",
                   "Democratic Union (Israel)": "מרצ", "Otzma Yehudit": "כף"},
-         "ignore": {"Gov.", "Zehut"}},  # זהות פרשה ב-29.8.2019 ולא הופיעה בקלפי
+         "ignore": {"Gov.", "Zehut"},  # זהות פרשה ב-29.8.2019 ולא הופיעה בקלפי
+         # מאפריל 2019 ועד הגשת הרשימות. העבודה לבדה (לפני האיחוד עם גשר, 18.7.2019) ⇐ unmapped.
+         "pre": {"tables": [1, 2, 3, 4, 5], "separate": {3: {"Israeli Labor Party"}, 4: {"Israeli Labor Party"}, 5: {"Israeli Labor Party"}},
+                 "cols": {}, "ignore": {"Gov."}}},
     23: {"page": "en__Opinion_polling_for_the_2020_Israeli_legislative_election.wiki",
          "cols": {"Blue and White (political alliance)": "פה", "Likud": "מחל", "Joint List": "ודעם",
                   "Israeli Labor Party": "אמת", "Shas": "שס", "Yisrael Beiteinu": "ל", "United Torah Judaism": "ג",
                   "Yamina": "טב", "Otzma": "נץ"},
-         "ignore": {"Gov."}},
+         "ignore": {"Gov."},
+         # מספטמבר 2019 ועד הגשת הרשימות (הטבלה החמישית בדף — תרחיש). העבודה לבדה כשהמחנה הדמוקרטי נסקר לחוד ⇐ unmapped.
+         "pre": {"tables": [1, 2, 3, 4, 6], "separate": {2: {"Israeli Labor Party"}, 3: {"Israeli Labor Party"}, 6: {"Israeli Labor Party"}},
+                 "cols": {"Labor-Gesher-Meretz": "אמת", "Otzma Yehudit": "נץ"}, "ignore": {"Gov."}}},
     24: {"page": "en__Opinion_polling_for_the_2021_Israeli_legislative_election.wiki",
          "cols": {"Likud": "מחל", "Yesh Atid": "פה", "Blue and White (political alliance)": "כן", "Joint List": "ודעם",
                   "Shas": "שס", "United Torah Judaism": "ג", "Yisrael Beiteinu": "ל", "Meretz": "מרצ",
                   "United Arab List": "עם", "Yamina": "ב", "New Hope": "ת", "Israeli Labor Party": "אמת",
                   "Religious Zionist": "ט", "New Economic": "יז"},
-         "ignore": set()},
+         "ignore": set(),
+         # ממרץ 2020 ועד הגשת הרשימות. הרשימה המשותפת עם רע"ם (עד 28.1.2021) או בלי תע"ל (טבלה 1) ⇐ unmapped;
+         # כחול לבן לפני הפיצול מיש עתיד–תל"ם, והעבודה–גשר–מרצ (טבלה 7) ⇐ unmapped.
+         "pre": {"tables": [1, 2, 3, 4, 5, 6, 7],
+                 "separate": {1: {"Joint List"}, 2: {"Joint List"}, 3: {"Joint List"}, 4: {"Joint List"}, 5: {"Joint List"},
+                              6: {"Joint List"}, 7: {"Joint List", "Blue and White (political alliance)", "Israeli Labor Party"}},
+                 "cols": {"NEP": "יז"}, "ignore": {"Gov."}}},
     25: {"page": "en__Opinion_polling_for_the_2022_Israeli_legislative_election.wiki",
          "cols": {"Likud": "מחל", "Yesh Atid": "פה", "National Unity Party (Israel)": "כן", "Shas": "שס",
                   "The Jewish Home": "ב", "Israeli Labor Party": "אמת", "United Torah Judaism": "ג",
@@ -641,6 +657,13 @@ HIST_FIRMS = {
     "dialog": ("dialog", "דיאלוג"), "miskar": ("miskar", "מסקר"),
     "shvakim panorama": ("shvakim_panorama", "שווקים פנורמה"),
     "number 10 strategies": ("number_10", "נאמבר 10 סטרטג'יז"),
+    "statnet": ("statnet", "סטטנט"), "panel project hamidgam statnet": ("midgam_project", "פרויקט מדגם"),
+    "geocartographia": ("geocartography", "גיאוקרטוגרפיה"), "geocartography": ("geocartography", "גיאוקרטוגרפיה"),
+    "teleseker": ("kantar", "קנטר"), "panels": ("panels_politics", "פאנלס פוליטיקס"),
+    "panel politics": ("panels_politics", "פאנלס פוליטיקס"), "sarid": ("sarid", "שריד"),
+    "panel hamidgam project": ("midgam_project", "פרויקט מדגם"), "midgam panel statnet": ("midgam_project", "פרויקט מדגם"),
+    "old dialog": ("dialog", "דיאלוג"), "smith poll": ("smith", "סמית'"),
+    "unknown": ("unknown", "מכון לא צוין"),  # בטבלת המקור צוין רק כלי התקשורת
 }
 HIST_PARTNERS = {"statnet", "ipanel"}  # שותפי שטח שמופיעים בתא המכון ("Midgam/iPanel/Channel 12")
 HIST_PUBS = {
@@ -657,6 +680,13 @@ HIST_PUBS = {
     "arutz sheva": "ערוץ 7", "mako": "מאקו", "galei israel": "גלי ישראל", "mako knesset channel": "מאקו וערוץ הכנסת",
     "channel 14": "ערוץ 14", "maariv the jerusalem post": "מעריב וג'רוזלם פוסט",
     "the jerusalem post maariv": "מעריב וג'רוזלם פוסט",
+    "i24 news israel hayom": "ישראל היום ו-i24NEWS", "i24news israel hayom": "ישראל היום ו-i24NEWS",
+    "labor": "מפלגת העבודה", "israel beitenu": "ישראל ביתנו", "saloona": "סלונה",
+    "news company": "חברת החדשות", "channel 10": "חדשות 10", "ten news": "חדשות 10", "channel 2": "ערוץ 2",
+    "channel 2 news": "ערוץ 2", "channel 1": "ערוץ 1", "channel 22": "ערוץ 22", "globes": "גלובס",
+    "kol brama": "קול ברמה", "kol chai": "קול חי", "reshet moreshet": "רשת מורשת",
+    "maariv jerusalem post": "מעריב וג'רוזלם פוסט",
+    "ice": "אייס", "i24 news": "i24NEWS", "kan radio": "כאן — רדיו",
     "jerusalem net": "ירושלים נט", "kikar hashabbat": "כיכר השבת", "srugim": "סרוגים",
 }
 
@@ -701,7 +731,7 @@ def build_history(results: list[dict]) -> dict:
         # הטבלאות הקודמות בדף (מהבחירות הקודמות ועד הגשת הרשימות): מפלגה זהה לרשימה בקלפי ⇐ אותיותיה;
         # מפלגה־קודמת שאינה זהה (לפני איחוד או פיצול) ⇐ unmapped, בלי שיוך ובלי סכום מומצא.
         sources = [(all_tables[0][1], cfg["cols"], cfg["ignore"], False)] + \
-                  [(all_tables[i][1], {k: v for k, v in pre["cols"].items() if k not in pre.get("separate", {}).get(i, set())},
+                  [(all_tables[i][1], {k: v for k, v in {**cfg["cols"], **pre["cols"]}.items() if k not in pre.get("separate", {}).get(i, set())},
                     pre["ignore"], True) for i in pre["tables"]]
         polls, seen = [], {}
         rows = [(d, cols, ignore, lenient) for table, cols, ignore, lenient in sources
@@ -709,10 +739,14 @@ def build_history(results: list[dict]) -> dict:
         for d, cols, ignore, lenient in rows:
             if d["type"] != "poll" or is_not_a_poll(d.get("firm")):
                 continue
+            if not d.get("date") and lenient:
+                continue  # טבלה קודמת: שורות בלי תאריך ("Seats at dissolution") אינן סקר
             if not d.get("date"):
                 raise SystemExit(f"K{n}: שורת סקר בלי תאריך: {d.get('firm')!r}")
             if d["date"]["end"] >= election["date"]:
                 continue  # מדגמי הקלפיות של ערב הבחירות אינם סקר מוקדם
+            if lenient and d["date"]["end"] <= by_n[n - 1]["date"]:
+                continue  # טבלה קודמת: רק מהיום שאחרי הבחירות הקודמות (שורת התוצאות אינה סקר)
             values, unmapped = {}, {}
             for k, v in d["values"].items():
                 parts = k.split("+")
@@ -724,14 +758,28 @@ def build_history(results: list[dict]) -> dict:
                     if not lenient:
                         raise SystemExit(f"K{n}: עמודה לא ממופה {k!r} בסקר {d['date']['end']} {d.get('firm')!r}")
                     if entry:
-                        unmapped[k] = entry
+                        unmapped[re.sub(r"\s+", " ", re.sub(r"\{\{(?:nowrap|abbr\|[^|}]*)\|([^}]*)\}\}", r"\1", k)).strip()] = entry
                     continue
                 if entry:
                     values[cols[k]] = entry
-            firm_key, firm_he, pub_key, pub_he = hist_firm_pub(clean_firm(d.get("firm")), clean_publisher(d.get("publisher")),
+            firm_cell = clean_firm(d.get("firm"))
+            if lenient:  # טבלאות קודמות: תבניות ויקי בתא, ותא שבו צוין רק כלי התקשורת (או "מזמין/מכון")
+                firm_cell = re.sub(r"\{\{dead url[^}]*\}\}", "", re.sub(r"\{\{nowrap\|([^}]*)\}\}", r"\1", firm_cell)).strip()
+                parts = [x.strip() for x in firm_cell.split("/") if x.strip()]
+                if cfg.get("combined") and parts and norm_name(parts[0]) not in HIST_FIRMS:
+                    if len(parts) > 1 and norm_name(parts[1]) in HIST_FIRMS:
+                        parts = [parts[1], parts[0], *parts[2:]]
+                    elif norm_name(firm_cell) in HIST_PUBS or len(parts) == 1:
+                        parts = ["unknown", *parts]
+                firm_cell = "/".join(parts)
+            firm_key, firm_he, pub_key, pub_he = hist_firm_pub(firm_cell, clean_publisher(d.get("publisher")),
                                                                cfg.get("combined", False))
             seat_sum = sum(e.get("s", 0) for e in [*values.values(), *unmapped.values()])
             base = f"k{n}-{d['date']['end']}-{slug(firm_key)}-{slug(pub_key)}"
+            if lenient and not 118 <= seat_sum <= 122:
+                # טבלה קודמת שקריאתה איבדה תאים (תאים מאוחדים): לא מציגים מספרים חלקיים; לתמלול ידני
+                print(f"::warning::K{n}: {base} — סכום {seat_sum} בקריאת הטבלה הקודמת; הושמט עד תמלול מהמקור")
+                continue
             i = seen.get(base, 0)
             seen[base] = i + 1
             polls.append({
