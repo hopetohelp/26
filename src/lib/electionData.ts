@@ -148,5 +148,11 @@ export function electionData(id: string): ElectionData {
   return d;
 }
 
+/**
+ * מעבר מצביעים מוכן להצגה למערכת. כרגע רק 2022 ⇐ 2026 (src/data/flow2026.json). כשסשן ג יוסיף `src/data/flows/kNN.json`
+ * (מבנה flow2026.json), מכלילים כאן את קריאת הקובץ — המסך כבר מציג "נתון חסר" בכל מערכת אחרת ולא ישתנה.
+ */
+export const hasVoterFlow = (id: string) => id === K26_ID;
+
 /** סכום הגוש בתוצאת האמת */
 export const resultBloc = (d: ElectionData, lists: readonly string[]) => d.result ? lists.reduce((t, x) => t + (d.result!.seats[x] ?? 0), 0) : null;

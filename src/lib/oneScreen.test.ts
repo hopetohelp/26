@@ -18,7 +18,7 @@ const body = (name: string) => {
   return j < 0 ? rest : rest.slice(0, j);
 };
 /** מסכים שעדיין מפוצלים — מתרוקן עד סוף העבודה (PR "מה השתנה") */
-const STILL_SPLIT = ["ChangesScreen"];
+const STILL_SPLIT: string[] = [];
 
 describe("מסך אחד לכל מערכת", () => {
   it("אין הסתעפות לפי מערכת מסוימת במסכי הבחירות (רק 'סיכום')", () => {

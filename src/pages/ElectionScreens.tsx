@@ -1,12 +1,8 @@
 import { lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import { Fold, PageTitle } from "../components/ui";
-import Missing, { POLL_DRAWERS } from "../components/Missing";
-import LocalityResults from "../components/LocalityResults";
-import OverviewCards from "../components/OverviewCards";
-import { results } from "../lib/data";
-import { K26_ID, SUMMARY_ID, electionOption, previousElection, useElection } from "../lib/election";
-import { overviewOf } from "../lib/voterFlow";
+import { POLL_DRAWERS } from "../components/Missing";
+import { SUMMARY_ID, useElection } from "../lib/election";
 import { useScreenShown } from "../lib/screenVisibility";
 import Results, { ElectionSummary } from "./Results";
 import { AccuracyAcross } from "./Accuracy";
@@ -42,26 +38,11 @@ export function ResultsScreen() {
   return <><h1 className="sr-only">תוצאות</h1><Results id={id} /></>;
 }
 
-/** "מה השתנה" של מערכת שהסתיימה: הערך והשינוי מהקודמת, הגושים, ומגירות המעבר (עדיין חסרות למערכות האלה) */
-function PastChanges({ id }: { id: string }) {
-  const e = results.find((x) => x.id === id)!;
-  const prevOpt = previousElection(id), prev = prevOpt ? results.find((x) => x.id === prevOpt.id) : undefined;
-  return <div>
-    <section className="rounded-theme border border-paper-line bg-paper-card shadow-sm p-3 md:p-4">
-      <h1 className="text-2xl font-display leading-tight">מה השתנה: {prevOpt?.label ?? "2013"} מול {electionOption(id).label}</h1>
-      <OverviewCards pair={{ prev: prev ? overviewOf(prev) : null, cur: overviewOf(e) }} />
-    </section>
-    <Fold title="מעבר בין מפלגות"><Missing what="מעבר המצביעים" /></Fold>
-    <Fold title="מעבר בין גושים"><Missing what="המעבר בין גושים" /></Fold>
-    <Fold title="תוצאות לפי יישוב"><LocalityResults key={id} electionId={id} /></Fold>
-  </div>;
-}
-
 export function ChangesScreen() {
   const [id] = useElection();
   if (id === SUMMARY_ID) return <Summary />;
-  if (id === K26_ID) return <Suspense fallback={loading}><VoterFlow /></Suspense>;
-  return <PastChanges id={id} />;
+  // אותו מסך לכל מערכת, כולל 2026 (הכרעת בעלים 04.11.2026); מה שאין לו נתון — "נתון חסר" באותו מקום
+  return <Suspense fallback={loading}><VoterFlow key={id} id={id} /></Suspense>;
 }
 
 /**
