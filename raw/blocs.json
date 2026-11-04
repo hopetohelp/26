@@ -73,7 +73,80 @@
       "crossCheck": [
         "https://www.inn.co.il/news/399518"
       ],
-      "reportedTotal": 65
+      "reportedTotal": 65,
+      "predecessors": {
+        "Joint List": {
+          "successors": [
+            "ום",
+            "דעם"
+          ],
+          "bloc": "arab",
+          "why": "התפצלה (ינואר 2019) לחד״ש–תע״ל ולרע״ם–בל״ד",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Ta'al": {
+          "successors": [
+            "ום"
+          ],
+          "bloc": "arab",
+          "why": "רצה עם חד״ש (חד״ש–תע״ל)",
+          "source": "https://en.wikipedia.org/wiki/Ta%27al"
+        },
+        "Yesh Atid": {
+          "successors": [
+            "פה"
+          ],
+          "bloc": "eisenkot",
+          "why": "התאחדה בכחול לבן (21.2.2019)",
+          "source": "https://en.wikipedia.org/wiki/Blue_and_White_(political_alliance)"
+        },
+        "Hosen- Telem": {
+          "successors": [
+            "פה"
+          ],
+          "bloc": "eisenkot",
+          "why": "חוסן לישראל ותל״ם התאחדו בכחול לבן",
+          "source": "https://en.wikipedia.org/wiki/Blue_and_White_(political_alliance)"
+        },
+        "Hosen": {
+          "successors": [
+            "פה"
+          ],
+          "bloc": "eisenkot",
+          "why": "חוסן לישראל התאחדה בכחול לבן",
+          "source": "https://en.wikipedia.org/wiki/Israel_Resilience_Party"
+        },
+        "Zionist Union": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "פורק (1.1.2019); התנועה פרשה מהמרוץ, העבודה רצה לבדה",
+          "source": "https://en.wikipedia.org/wiki/Zionist_Union"
+        },
+        "The Jewish Home": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה באיחוד מפלגות הימין",
+          "source": "https://en.wikipedia.org/wiki/Union_of_Right-Wing_Parties"
+        },
+        "Gesher": {
+          "successors": [
+            "נר"
+          ],
+          "bloc": null,
+          "why": "רשימת גשר לא נבחרה — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Gesher_(2019_political_party)"
+        },
+        "Hatnuah": {
+          "successors": [],
+          "bloc": null,
+          "why": "פרשה מהמרוץ (18.2.2019) — אין רשימה ממשיכה",
+          "source": "https://en.wikipedia.org/wiki/Hatnuah"
+        }
+      }
     },
     "22": {
       "recommendedNetanyahu": [
@@ -94,7 +167,88 @@
       "crossCheck": [
         "https://www.timesofisrael.com/as-rivlin-concludes-talks-with-parties-netanyahu-wins-55-backers-to-gantzs-54/"
       ],
-      "reportedTotal": 55
+      "reportedTotal": 55,
+      "predecessors": {
+        "New Right (Israel)": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה בימינה",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "Union of Right-Wing Parties": {
+          "successors": [
+            "טב",
+            "כף"
+          ],
+          "bloc": null,
+          "why": "הבית היהודי והאיחוד הלאומי רצו בימינה ועוצמה יהודית לחוד (לא נבחרה) — לא חד־משמעי",
+          "source": "https://en.wikipedia.org/wiki/Union_of_Right-Wing_Parties"
+        },
+        "Meretz": {
+          "successors": [
+            "מרצ"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה במחנה הדמוקרטי",
+          "source": "https://en.wikipedia.org/wiki/Democratic_Union_(Israel)"
+        },
+        "Democratic Israel": {
+          "successors": [
+            "מרצ"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה במחנה הדמוקרטי",
+          "source": "https://en.wikipedia.org/wiki/Democratic_Union_(Israel)"
+        },
+        "Israeli Labor Party": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה עם גשר (העבודה–גשר)",
+          "source": "https://en.wikipedia.org/wiki/Israeli_Labor_Party"
+        },
+        "Gesher (2019 political party)": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה עם העבודה (העבודה–גשר)",
+          "source": "https://en.wikipedia.org/wiki/Gesher_(2019_political_party)"
+        },
+        "Hadash": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "United Arab List": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Kulanu": {
+          "successors": [
+            "מחל"
+          ],
+          "bloc": "netanyahu",
+          "why": "התמזגה בליכוד (מאי 2019)",
+          "source": "https://en.wikipedia.org/wiki/Kulanu"
+        },
+        "Zehut": {
+          "successors": [],
+          "bloc": null,
+          "why": "פרשה מהמרוץ (29.8.2019)",
+          "source": "https://en.wikipedia.org/wiki/Zehut_(political_party)"
+        }
+      }
     },
     "23": {
       "recommendedNetanyahu": [
@@ -115,7 +269,132 @@
       "crossCheck": [
         "https://jewishjournal.com/online/312143/benny-gantz-will-get-first-chance-to-form-israeli-government/"
       ],
-      "reportedTotal": 58
+      "reportedTotal": 58,
+      "predecessors": {
+        "New Right (Israel)": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו בימינה (2020)",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "Tkuma (political party)": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו בימינה (2020)",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "The Jewish Home": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו בימינה (2020)",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "New Right (Israel)+Tkuma (political party)": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו בימינה (2020)",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "New Right (Israel)+Tkuma (political party)+The Jewish Home": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו בימינה (2020)",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "The Jewish Home+New Right (Israel)": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו בימינה (2020)",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "The Jewish Home+Otzma Yehudit": {
+          "successors": [
+            "טב",
+            "נץ"
+          ],
+          "bloc": null,
+          "why": "עוצמה יהודית רצה לחוד ולא נבחרה — לא חד־משמעי",
+          "source": "https://en.wikipedia.org/wiki/Otzma_Yehudit"
+        },
+        "Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+          "successors": [
+            "טב",
+            "נץ"
+          ],
+          "bloc": null,
+          "why": "עוצמה יהודית רצה לחוד ולא נבחרה — לא חד־משמעי",
+          "source": "https://en.wikipedia.org/wiki/Otzma_Yehudit"
+        },
+        "New Right (Israel)+Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+          "successors": [
+            "טב",
+            "נץ"
+          ],
+          "bloc": null,
+          "why": "עוצמה יהודית רצה לחוד ולא נבחרה — לא חד־משמעי",
+          "source": "https://en.wikipedia.org/wiki/Otzma_Yehudit"
+        },
+        "UJH": {
+          "successors": [],
+          "bloc": null,
+          "why": "זהות הרכב 'UJH' בטבלת המקור אינה ודאית",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "Tkuma (political party)+UJH": {
+          "successors": [],
+          "bloc": null,
+          "why": "זהות הרכב 'UJH' בטבלת המקור אינה ודאית",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "New Right (Israel)+Tkuma (political party)+UJH": {
+          "successors": [],
+          "bloc": null,
+          "why": "זהות הרכב 'UJH' בטבלת המקור אינה ודאית",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "Democratic Union (Israel)": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "מרצ, העבודה וגשר רצו יחד (העבודה–גשר–מרצ)",
+          "source": "https://en.wikipedia.org/wiki/Labor-Gesher-Meretz"
+        },
+        "Israeli Labor Party": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "מרצ, העבודה וגשר רצו יחד (העבודה–גשר–מרצ)",
+          "source": "https://en.wikipedia.org/wiki/Labor-Gesher-Meretz"
+        },
+        "Israeli Labor Party+Democratic Union (Israel)": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "מרצ, העבודה וגשר רצו יחד (העבודה–גשר–מרצ)",
+          "source": "https://en.wikipedia.org/wiki/Labor-Gesher-Meretz"
+        },
+        "Green Movement (Israel)": {
+          "successors": [],
+          "bloc": null,
+          "why": "פרשה מהמרוץ",
+          "source": "https://en.wikipedia.org/wiki/Green_Movement_(Israel)"
+        }
+      }
     },
     "24": {
       "recommendedNetanyahu": [
@@ -137,7 +416,163 @@
       "crossCheck": [
         "https://tps.co.il/articles/rivlin-concludes-consultations-on-candidate-to-form-govt-netanyahu-gets-majority-of-recommendations/"
       ],
-      "reportedTotal": 52
+      "reportedTotal": 52,
+      "predecessors": {
+        "Joint List": {
+          "successors": [
+            "ודעם",
+            "עם"
+          ],
+          "bloc": "arab",
+          "why": "הרשימה המשותפת ורע״ם רצו לחוד (ינואר 2021)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Joint List+Ta'al+United Arab List": {
+          "successors": [
+            "ודעם",
+            "עם"
+          ],
+          "bloc": "arab",
+          "why": "הרשימה המשותפת ורע״ם רצו לחוד (ינואר 2021)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Joint List+Ta'al": {
+          "successors": [
+            "ודעם",
+            "עם"
+          ],
+          "bloc": "arab",
+          "why": "הרשימה המשותפת ורע״ם רצו לחוד (ינואר 2021)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Otzma Yehudit": {
+          "successors": [
+            "ט"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו יחד בציונות הדתית (3.2.2021)",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party"
+        },
+        "Otzma Yehudit -Noam": {
+          "successors": [
+            "ט"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו יחד בציונות הדתית (3.2.2021)",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party"
+        },
+        "RZ": {
+          "successors": [
+            "ט"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו יחד בציונות הדתית (3.2.2021)",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party"
+        },
+        "Religious Zionism": {
+          "successors": [
+            "ט"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו יחד בציונות הדתית (3.2.2021)",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party"
+        },
+        "RZ+Otzma Yehudit -Noam": {
+          "successors": [
+            "ט"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצו יחד בציונות הדתית (3.2.2021)",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party"
+        },
+        "The Jewish Home": {
+          "successors": [
+            "ב"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה במסגרת ימינה (2021)",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "Yesh Atid -Telem": {
+          "successors": [
+            "פה"
+          ],
+          "bloc": "eisenkot",
+          "why": "תל״ם פרשה; יש עתיד רצה לבדה",
+          "source": "https://en.wikipedia.org/wiki/Yesh_Atid"
+        },
+        "Telem (2019 political party)": {
+          "successors": [],
+          "bloc": null,
+          "why": "פרשה מהמרוץ (4.2.2021)",
+          "source": "https://en.wikipedia.org/wiki/Telem_(2019_political_party)"
+        },
+        "Derekh Eretz": {
+          "successors": [
+            "ת"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה בתקווה חדשה",
+          "source": "https://en.wikipedia.org/wiki/New_Hope_(Israel)"
+        },
+        "Gesher (2019 political party)": {
+          "successors": [
+            "מחל"
+          ],
+          "bloc": "netanyahu",
+          "why": "יו״ר גשר הצטרפה לליכוד (2021)",
+          "source": "https://en.wikipedia.org/wiki/Gesher_(2019_political_party)"
+        },
+        "Israelis": {
+          "successors": [],
+          "bloc": null,
+          "why": "פרשה מהמרוץ",
+          "source": "https://en.wikipedia.org/wiki/The_Israelis"
+        },
+        "Tnufa": {
+          "successors": [],
+          "bloc": null,
+          "why": "פרשה מהמרוץ",
+          "source": "https://en.wikipedia.org/wiki/Tnufa"
+        },
+        "Blue and White (political alliance)": {
+          "successors": [
+            "כן",
+            "פה"
+          ],
+          "bloc": "eisenkot",
+          "why": "כחול לבן לפני הפיצול (29.3.2020) — כחול לבן ויש עתיד",
+          "source": "https://en.wikipedia.org/wiki/Blue_and_White_(political_alliance)"
+        },
+        "Israeli Labor Party": {
+          "successors": [
+            "אמת",
+            "מרצ",
+            "מחל"
+          ],
+          "bloc": null,
+          "why": "העבודה–גשר–מרצ התפצלה לשלושה גושים — לא חד־משמעי",
+          "source": "https://en.wikipedia.org/wiki/Labor-Gesher-Meretz"
+        },
+        "Israeli Labor Party+Meretz": {
+          "successors": [
+            "אמת",
+            "מרצ"
+          ],
+          "bloc": "eisenkot",
+          "why": "העבודה ומרצ רצו לחוד",
+          "source": "https://en.wikipedia.org/wiki/Labor-Gesher-Meretz"
+        },
+        "Israeli Labor Party+Gesher (2019 political party)": {
+          "successors": [
+            "אמת",
+            "מחל"
+          ],
+          "bloc": null,
+          "why": "העבודה וגשר בגושים שונים — לא חד־משמעי",
+          "source": "https://en.wikipedia.org/wiki/Labor-Gesher-Meretz"
+        }
+      }
     },
     "25": {
       "recommendedNetanyahu": [
@@ -151,8 +586,77 @@
         "https://he.wikipedia.org/wiki/הבחירות_לכנסת_העשרים_וחמש"
       ],
       "status": "cross_checked",
-      "reportedTotal": 64
+      "reportedTotal": 64,
+      "predecessors": {
+        "Joint List": {
+          "successors": [
+            "ום",
+            "ד"
+          ],
+          "bloc": "arab",
+          "why": "התפצלה (15.9.2022) לחד״ש–תע״ל ולבל״ד",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Blue and White (political alliance)": {
+          "successors": [
+            "כן"
+          ],
+          "bloc": "eisenkot",
+          "why": "התאחדה במחנה הממלכתי (10.7.2022)",
+          "source": "https://en.wikipedia.org/wiki/National_Unity_(Israel)"
+        },
+        "New Hope (Israel)": {
+          "successors": [
+            "כן"
+          ],
+          "bloc": "eisenkot",
+          "why": "התאחדה במחנה הממלכתי (10.7.2022)",
+          "source": "https://en.wikipedia.org/wiki/National_Unity_(Israel)"
+        },
+        "Otzma Yehudit": {
+          "successors": [
+            "ט"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה בציונות הדתית (26.8.2022)",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party"
+        },
+        "Religious Zionist Party": {
+          "successors": [
+            "ט"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה עם עוצמה יהודית ונעם",
+          "source": "https://en.wikipedia.org/wiki/Religious_Zionist_Party"
+        },
+        "Yamina": {
+          "successors": [
+            "ב",
+            "כן"
+          ],
+          "bloc": null,
+          "why": "התפרקה: חלק לבית היהודי וחלק למחנה הממלכתי — לא חד־משמעי",
+          "source": "https://en.wikipedia.org/wiki/Yamina"
+        },
+        "Zionist Spirit": {
+          "successors": [
+            "ב"
+          ],
+          "bloc": "netanyahu",
+          "why": "התפרקה (14.9.2022); איילת שקד רצה בבית היהודי",
+          "source": "https://en.wikipedia.org/wiki/Zionist_Spirit"
+        },
+        "Zionist Spirit/Yamina": {
+          "successors": [
+            "ב"
+          ],
+          "bloc": "netanyahu",
+          "why": "ימינה בראשות שקד ⇐ הרוח הציונית ⇐ הבית היהודי",
+          "source": "https://en.wikipedia.org/wiki/Zionist_Spirit"
+        }
+      }
     }
   },
-  "statusNote": "cross_checked = מספר הממליצים וזהות הסיעות אומתו מול דיווח בתקשורת או ויקיפדיה (בדיקה 04.11.2026); הודעת בית הנשיא עצמה לא אותרה בעמוד נגיש. reportedTotal = מספר הממליצים שדווח, ונבדק מול סכום המנדטים (src/lib/history.test.ts)."
+  "statusNote": "cross_checked = מספר הממליצים וזהות הסיעות אומתו מול דיווח בתקשורת או ויקיפדיה (בדיקה 04.11.2026); הודעת בית הנשיא עצמה לא אותרה בעמוד נגיש. reportedTotal = מספר הממליצים שדווח, ונבדק מול סכום המנדטים (src/lib/history.test.ts).",
+  "predecessorsRule": "מפלגה־קודמת (בטבלאות הסקרים שלפני הגשת הרשימות, שדה unmapped) משויכת לגוש של הרשימות שנוצרו ממנה רק כשכולן באותו גוש; אחרת bloc=null ונספרת 0 (הכרעת בעלים 04.11.2026). הערכים עצמם לא משתנים."
 }

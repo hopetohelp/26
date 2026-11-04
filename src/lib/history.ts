@@ -32,6 +32,10 @@ export interface HistPoll {
   verificationStatus?: string;
   /** primary = אתר הגוף המפרסם · press = כלי תקשורת שציטט · aggregator = ויקיפדיה וכד׳ */
   sourceLevel?: "primary" | "press" | "aggregator";
+  /** מפלגות־קודמות שאינן זהות לרשימה בקלפי (לפני איחוד או פיצול) — לפי שם העמודה במקור; לא משויכות לרשימה */
+  unmapped?: Record<string, HistValue>;
+  /** הסקר נערך לפני הגשת רשימות המועמדים (מהטבלאות הקודמות בדף המקור) */
+  preLists?: boolean;
 }
 
 export interface Cycle {

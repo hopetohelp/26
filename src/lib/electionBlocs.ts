@@ -10,7 +10,7 @@ import { bloc2022 } from "./voterFlow";
 import { K26_ID } from "./election";
 import { LIST_LEADERS } from "./listLeaders";
 
-type WithBlocs = { id: string; knesset: number; lists: { letters: string; seats?: number }[]; blocs?: Record<string, string[]> };
+type WithBlocs = { id: string; knesset: number; lists: { letters: string; seats?: number }[]; blocs?: Record<string, string[]>; predecessorBlocs?: Record<string, string[]> };
 
 /** שני הגושים שנקראים על שם אדם — על שם ראש הרשימה הגדולה בגוש באותה מערכת (הכרעת בעלים 04.11.2026); חרדים וערבים — שם תיאורי */
 const PERSON_BLOCS = ["netanyahu", "eisenkot"];
@@ -29,7 +29,9 @@ export function blocAssignment(id: string): readonly BlocDef[] | null {
   if (id === K26_ID) return SIMPLE_BLOCS;
   const e = (results as unknown as WithBlocs[]).find((x) => x.id === id);
   if (!e) return null;
-  if (e.blocs) return named(e, SIMPLE_BLOCS.map((b) => ({ ...b, lists: e.blocs![b.id] ?? [] })));
-  if (e.knesset === 25) return named(e, SIMPLE_BLOCS.map((b) => ({ ...b, lists: e.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters) })));
+  // מפלגות־קודמות מהסקרים שלפני הגשת הרשימות (raw/blocs.json, "predecessors"; הכרעת בעלים 04.11.2026) — בשמן, באותו גוש
+  const pre = (id: string) => e.predecessorBlocs?.[id] ?? [];
+  if (e.blocs) return named(e, SIMPLE_BLOCS.map((b) => ({ ...b, lists: [...(e.blocs![b.id] ?? []), ...pre(b.id)] })));
+  if (e.knesset === 25) return named(e, SIMPLE_BLOCS.map((b) => ({ ...b, lists: [...e.lists.filter((l) => bloc2022(l.letters) === b.id).map((l) => l.letters), ...pre(b.id)] })));
   return null;
 }
