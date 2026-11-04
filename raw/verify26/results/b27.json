@@ -1,0 +1,924 @@
+[
+ {
+  "id": "2023-07-25-cf-mp-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903637889/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903637889/"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 711,
+   "moe": "3.7%",
+   "population": "611 מהאוכלוסייה היהודית ו-100 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לכתבת חדשות 13 (WebFetch; סכום 120; קואליציה 52). פורסם 25.7.2023 במהדורה; מועד השדה לא צוין; 711 משיבים (בנתונים אין מדגם).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-20-cf-mp-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/fe5zo-903628386/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/fe5zo-903628386/"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 711,
+   "moe": "3.7%",
+   "population": "611 מהאוכלוסייה היהודית ו-100 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לכתבת חדשות 13 (סכום 120; קואליציה 53; מרצ והעבודה מתחת לחסימה). פורסם 20.7.2023; מועד השדה לא צוין; 711 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-13-cf-mp-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/news-poll-903615615/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/news-poll-903615615/"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 697,
+   "moe": "3.7%",
+   "population": "597 מהאוכלוסייה היהודית ו-100 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לכתבת חדשות 13 (רע\"מ 7 מנוסח \"וכך גם רע\"מ\" אחרי יהדות התורה 7; סכום 120; קואליציה 51). פורסם 13.7.2023; מועד השדה לא צוין; 697 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-05-cf-mp-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903602517",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903602517"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 701,
+   "moe": "3.7%",
+   "population": "601 מהאוכלוסייה היהודית ו-100 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לכתבת חדשות 13 (סכום 120; קואליציה 56). פורסם 5.7.2023; מועד השדה לא צוין; 701 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-25-cf-mp-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/knesset-poll-903584746/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/knesset-poll-903584746/"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 702,
+   "moe": "3.7%",
+   "population": "601 מהאוכלוסייה היהודית ו-101 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לכתבת חדשות 13 (סכום 120; קואליציה 52). פורסם 25.6.2023; מועד השדה לא צוין; 702 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-15-cf-mp-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903569276/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903569276/"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 700,
+   "moe": "3.7%",
+   "population": "600 מהאוכלוסייה היהודית ו-100 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לכתבת חדשות 13, כולל בל\"ד 4 (סכום 120; קואליציה 50). פורסם 15.6.2023; מועד השדה לא צוין; 700 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-11-cf-mp-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903562406/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903562406/"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 700,
+   "moe": "3.7%",
+   "population": "600 מהאוכלוסייה היהודית ו-100 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים בתרחיש הראשי תואמים לכתבת חדשות 13 (סכום 120). פורסם 11.6.2023; מועד השדה לא צוין; 700 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-11-cf-mp-sn-channel-13-b",
+  "status": "partial",
+  "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903562406/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/13-survey-903562406/"
+   }
+  },
+  "details": {
+   "pollster": "פרופ' קמיל פוקס; פרויקט המדגם (מגזר יהודי), סטט נט (מגזר לא־יהודי)",
+   "commissioner": "חדשות 13",
+   "sample_respondents": 700,
+   "moe": "3.7%",
+   "population": "600 מהאוכלוסייה היהודית ו-100 מהמגזר הלא־יהודי"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "scenarioOf": "2023-06-11-cf-mp-sn-channel-13",
+  "foundUrl": "https://13tv.co.il/item/news/politics/politics/13-survey-903562406/",
+  "note": "תרחיש ריצה משותפת של העבודה ומרצ באותה כתבה: הרשימה 7, המחנה הממלכתי מאבד מנדט (27) ויש עתיד שניים (17) — תואם. שאר הרשימות לא פורטו בתרחיש.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-20-lazar-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1024200",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-07-21T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1024200"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1024200"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר)",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "סקר אינטרנטי",
+   "moe": "4.3%",
+   "sample_respondents": 525,
+   "fieldwork": "2023-07-19..2023-07-20"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים (העבודה 2.5%, בל\"ד 2.1%) תואמים לטקסט הכתבה במעריב (סכום 120); שדה 19–20 ביולי, 525 משתתפים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-13-lazar-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1022468",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-07-14T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1022468"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1022468"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר)",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "סקר אינטרנטי",
+   "moe": "4.3%",
+   "sample_respondents": 516,
+   "fieldwork": "2023-07-13..2023-07-13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים (העבודה 1.8%, בל\"ד 1.9%) תואמים לטקסט הכתבה (סכום 120); הסקר \"נערך אתמול\" (13.7), 516 משיבים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-05-lazar-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1020798",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-07-07T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1020798"
+   }
+  },
+  "details": {
+   "pollster": "לזר מחקרים (ד\"ר מנחם לזר)",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "סקר אינטרנטי",
+   "moe": "4.3%",
+   "sample_respondents": null
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לטקסט הכתבה במעריב (סכום 120). אחוזי העבודה ובל\"ד, מועד השדה ומדגם אינם בטקסט (הגרף המוטמע לא נבדק).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-22-panels-politics-maariv",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1017322",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-06-23T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1017322"
+   }
+  },
+  "details": {
+   "pollster": "פאנלס פוליטיקס (ד\"ר מנחם לזר)",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "סקר אינטרנטי",
+   "moe": "4.3%"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים (העבודה 2.2%, בל\"ד 2%) תואמים לטקסט הכתבה (סכום 120; אופוזיציה 69 מול 51). מועד השדה ומדגם אינם בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-15-panels-politics-maariv",
+  "status": "partial",
+  "source": "https://www.maariv.co.il/news/politics/Article-1015547",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-06-16T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1015547"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1015547"
+   }
+  },
+  "details": {
+   "pollster": "פאנלס פוליטיקס (ד\"ר מנחם לזר)",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "סקר אינטרנטי",
+   "moe": "4.3%",
+   "sample_respondents": 512,
+   "fieldwork": "2023-06-15..2023-06-15"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "בטקסט הכתבה: המחנה הממלכתי 32, הליכוד 24, יש עתיד 17, העבודה 1.7%, בל\"ד 1.5%, קואליציה 50 — תואם. שאר המנדטים רק בתמונה שלא נקראה. \"נערך אתמול\" (15.6), 512 משתתפים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-08-panels-politics-maariv",
+  "status": "partial",
+  "source": "https://news.walla.co.il/item/3585123",
+  "access": [
+   "secondary"
+  ],
+  "published": "2023-06-09T06:00:52+03:00",
+  "fields": {
+   "seats": {
+    "status": "conflict",
+    "source": "https://news.walla.co.il/item/3585123"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://news.walla.co.il/item/3585123"
+   }
+  },
+  "details": {
+   "pollster": "פאנלס פוליטיקס (ד\"ר מנחם לזר)",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "סקר אינטרנטי",
+   "moe": "4.3%",
+   "sample_respondents": 502,
+   "fieldwork": "2023-06-07..2023-06-08"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "note": "בנתונים סכום המנדטים 121 (קואליציה 52). כתבת מעריב (Article-1013759): המחנה הממלכתי 31, העבודה 2%, בל\"ד 1.8%, קואליציה 51 מול 69, שדה 7–8 ביוני, 502 משתתפים; טבלת המנדטים שם בגרף infogram שהוחלף בסקר מאוחר יותר. דיווח וואלה על אותו סקר מפרט את כל הרשימות (סכום 120, קואליציה 51) — כולן תואמות מלבד הציונות הדתית 5 (בנתונים 6). הפער נשען על וואלה בצירוף סך הקואליציה בכתבת המקור. (הפער ברשימת הציונות הדתית לא נרשם — נשען על דיווח עצמאי אחד.)",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-09-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2023_q3/Article-10ec290027b3981027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-07-09T20:35:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2023_q3/Article-10ec290027b3981027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2023_q3/Article-10ec290027b3981027.htm"
+   }
+  },
+  "details": {
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12",
+   "sample_respondents": 501,
+   "moe": "4.4%",
+   "fieldwork": "2023-07-09..2023-07-09"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים תואמים לכתבת mako (WebFetch; הציונות הדתית+עוצמה 9; סכום 120). אחוזי העבודה ובל\"ד לא נמצאו בכתבה. איסוף 9.7.2023, מדגם התחלתי 501.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-25-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2023_q2/Article-16c825c9263f881026.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-06-25T20:40:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2023_q2/Article-16c825c9263f881026.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2023_q2/Article-16c825c9263f881026.htm"
+   }
+  },
+  "details": {
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12",
+   "sample_respondents": 518,
+   "moe": "4.3%",
+   "fieldwork": "2023-06-25..2023-06-25"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים (בל\"ד 2.9%, העבודה 1.6%) תואמים לכתבת mako (סכום 120). איסוף 25.6.2023, מדגם התחלתי 518.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-15-midgam-r-c-hahadashot-12",
+  "status": "match",
+  "source": "https://www.mako.co.il/news-politics/2023_q2/Article-3762dd484afb881027.htm",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-06-15T20:50:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2023_q2/Article-3762dd484afb881027.htm"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.mako.co.il/news-politics/2023_q2/Article-3762dd484afb881027.htm"
+   }
+  },
+  "details": {
+   "pollster": "מדגם ייעוץ ומחקר (מנו גבע)",
+   "commissioner": "חדשות 12",
+   "sample_respondents": 517,
+   "moe": "4.4%",
+   "fieldwork": "2023-06-15..2023-06-15"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "כל המנדטים והאחוזים (בל\"ד 2.7%, העבודה 1.8%) תואמים לכתבת mako (סכום 120; גוש נתניהו 54). איסוף 15.6.2023, מדגם התחלתי 517.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-23-kantar-kan-11",
+  "status": "unreachable",
+  "source": "https://www.kan.org.il/content/kan-news/local/458234/",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {
+   "commissioner": "כאן חדשות",
+   "sample_respondents": 602,
+   "moe": "4.1%",
+   "fieldwork": "2023-07-23..2023-07-23"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "אתר כאן חוסם (403 ב-curl וב-WebFetch) ולא נמצא דיווח עצמאי. תקצירי מנוע החיפוש של אותו עמוד מציגים מספרים תואמים לכל הרשימות (המחנה הממלכתי 30, הליכוד 27, יש עתיד 17, ציונות דתית 10, ש\"ס 9, יהדות התורה 7, ישראל ביתנו/מרצ/רע\"ם/חד\"ש-תע\"ל 5; קואליציה 53), שדה 23.7.2023, 602 משיבים, טעות 4.1% — לא נקרא ישירות ולכן לא אומת; שם המכון לא הופיע.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-09-kantar-kan-11",
+  "status": "unreachable",
+  "source": "https://www.kan.org.il/content/kan-news/politic/439662/",
+  "access": [
+   "none"
+  ],
+  "published": null,
+  "fields": {},
+  "details": {},
+  "law16E": {
+   "pollster": false,
+   "commissioner": false,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "אתר כאן חוסם (403 ב-curl וב-WebFetch); לא נמצא דיווח עצמאי על הסקר.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-24-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/835353/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/835353/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/835353/"
+   }
+  },
+  "details": {
+   "pollster": "דיירקט פולס (שלמה פילבר)",
+   "commissioner": "ערוץ 14",
+   "sample_respondents": 1143,
+   "moe": "3.6%",
+   "population": "האוכלוסייה הבוגרת (18+) בישראל",
+   "fieldwork": "2023-07-24..2023-07-24"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://ch10.co.il/news/835353/",
+  "note": "אתר ערוץ 14 חסום; כל המנדטים והאחוזים (בל\"ד 2.6%, העבודה 2.5%) תואמים לדיווח ב-ch10 (סכום 120). שדה 24.7.2023, 1,143 נדגמים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-07-13-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/833081/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/833081/"
+   }
+  },
+  "details": {
+   "pollster": "דיירקט פולס (שלמה פילבר)",
+   "commissioner": "ערוץ 14",
+   "population": "האוכלוסייה הבוגרת (18+) בישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://ch10.co.il/news/833081/",
+  "note": "אתר ערוץ 14 חסום; כל המנדטים והאחוזים (העבודה 2.5%, בל\"ד 2.7%) תואמים לדיווח ב-ch10 (\"פורסם הערב (חמישי)\" 13.7; סכום 120). מדגם ומועד שדה לא בדיווח.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-29-sf-dp-channel-14",
+  "status": "partial",
+  "source": "https://ch10.co.il/news/830264/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/830264/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/830264/"
+   }
+  },
+  "details": {
+   "pollster": "דיירקט פולס (שלמה פילבר)",
+   "commissioner": "ערוץ 14",
+   "sample_respondents": 779,
+   "moe": "3.9%",
+   "population": "האוכלוסייה הבוגרת (18+) בישראל",
+   "fieldwork": "2023-06-29..2023-06-29"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://ch10.co.il/news/830264/",
+  "note": "אתר ערוץ 14 חסום; בדיווח ch10 כל הרשימות תואמות, אך חד\"ש-תע\"ל מופיעה 5 (בנתונים 4) — הדיווח סותר את עצמו: סכום הרשימות בו 121 והגוש הערבי בו 9 (רע\"ם 5 + חד\"ש-תע\"ל 4). לכן אין פער. בל\"ד 3%, העבודה 2.5% תואמים. שדה 29.6.2023, 779 נדגמים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-15-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/827153/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/827153/"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/827153/"
+   }
+  },
+  "details": {
+   "pollster": "דיירקט פולס (שלמה פילבר)",
+   "commissioner": "ערוץ 14",
+   "sample_respondents": 614,
+   "population": "האוכלוסייה הבוגרת (18+) בישראל",
+   "fieldwork": "2023-06-15..2023-06-15"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://ch10.co.il/news/827153/",
+  "note": "אתר ערוץ 14 חסום; כל המנדטים והאחוזים (בל\"ד 2.6%, העבודה 2.5%) תואמים לדיווח ב-ch10 (סכום 120). \"נערך היום\" 15.6.2023, 614 משתתפים.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-08-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://ch10.co.il/news/825717/",
+  "access": [
+   "secondary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://ch10.co.il/news/825717/"
+   }
+  },
+  "details": {
+   "pollster": "דיירקט פולס (שלמה פילבר)",
+   "commissioner": "ערוץ 14",
+   "sample_respondents": 592,
+   "moe": "4.6%",
+   "population": "האוכלוסייה הבוגרת (18+) בישראל"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://ch10.co.il/news/825717/",
+  "note": "אתר ערוץ 14 חסום; כל המנדטים תואמים לדיווח ב-ch10 (\"אולפן חמישי\" 8.6; סכום 120). אחוזי העבודה ובל\"ד לא בדיווח (רק \"לא עוברות\"). 592 נדגמים; מועד שדה לא צוין.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2023-06-01-panels-politics-maariv-b",
+  "status": "match",
+  "source": "https://www.maariv.co.il/news/politics/Article-1011902",
+  "access": [
+   "primary"
+  ],
+  "published": "2023-06-02T06:00:45+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1011902"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.maariv.co.il/news/politics/Article-1011902"
+   }
+  },
+  "details": {
+   "pollster": "פאנלס פוליטיקס (ד\"ר מנחם לזר)",
+   "commissioner": "מעריב",
+   "population": "האוכלוסייה הבוגרת בישראל מגיל 18 ומעלה, יהודים וערבים",
+   "method": "סקר אינטרנטי",
+   "moe": "4.3%",
+   "sample_respondents": 506,
+   "fieldwork": "2023-05-31..2023-06-01"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": true,
+   "population": true,
+   "questions": true
+  },
+  "diffs": [],
+  "scenarioOf": "2023-06-01-panels-politics-maariv",
+  "foundUrl": "https://www.maariv.co.il/news/politics/Article-1011902",
+  "note": "תרחיש איחוד העבודה ומרצ בכתבת מעריב: כל המנדטים תואמים לטקסט (העבודה+מרצ 8, סכום 120). אחוז בל\"ד לא בטקסט. בריצה נפרדת: המחנה הממלכתי 29, הליכוד 26, יש עתיד 18. שדה \"אתמול ושלשום\" (31.5–1.6), 506 משתתפים.",
+  "checkedAt": "2026-11-04"
+ }
+]
