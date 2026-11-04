@@ -88,6 +88,34 @@
   "note": "Maariv 20/11/2020 (Panels Politics/Menachem Lazar for Maariv-Sofhashavua, conducted yesterday): Likud 27, Yamina 24, Yesh Atid-Telem 18, Joint List 11, Blue&White 10, Shas 9, Yisrael Beytenu 8, UTJ 7, Meretz 6; below threshold Otzma Yehudit 1.5%, Labor 0.8%, Derekh Eretz 0.5%, Jewish Home 0.3%, Gesher 0.2% — all match. 529 Panel4All respondents, max error 4.4%."
  },
  {
+  "id": "k24-2020-11-24-kantar-kan-11",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103003-סקר-מנדטים-הפער-בין-הליכוד-לימינה-מצטמצם/ (kan.org.il original returned 403)",
+  "differences": [],
+  "fieldEndSource": "2020-11-24",
+  "sample": 550,
+  "moe": "4.4%",
+  "note": "Kipa 24/11/20 citing Kantar Media Israel poll for Kan 11 (data collected 24.11.20, 550 respondents of 2407, error ±4.4%): Likud 31, Yamina 21, Yesh Atid-Telem 17, Joint List 11, Blue&White 9, Shas 9, Yisrael Beytenu 9, UTJ 7, Meretz 6 — all seats match. Below-threshold percentages (Labor 1.7, Otzma 1.2, Jewish Home 1.1) not given in the source."
+ },
+ {
+  "id": "k24-2020-11-24-camil-fuchs-channel-13",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/פוליטי/1103003-סקר-מנדטים-הפער-בין-הליכוד-לימינה-מצטמצם/ (13news original returned 403)",
+  "differences": [
+   {
+    "key": "[קודמת] Joint List",
+    "wikipedia": 11,
+    "source": 12
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 24/11/20 listing Channel 13 poll results: Likud 27, Yamina 23, Yesh Atid-Telem 20, Joint List 12, Blue&White 10, Yisrael Beytenu 8, Shas 7, UTJ 7, Meretz 6 (sum 120; blocs right-haredi 64, center-left 48 consistent with JL 12). Wikipedia has Joint List 11 (its row sums to 119)."
+ },
+ {
   "id": "k24-2020-11-26-maagar-mochot-103fm",
   "status": "match",
   "sourceLevel": "primary",

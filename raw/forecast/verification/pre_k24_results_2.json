@@ -1,5 +1,27 @@
 [
  {
+  "id": "k24-2020-08-06-kantar-kan-11",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kan.org.il/Item/?itemId=75546 (403, blocked - not bypassed); https://www.timesofisrael.com/polls-signal-slumping-support-for-netanyahus-likud-surge-for-yamina/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 599,
+  "moe": "4.4%",
+  "note": "Times of Israel 6 Aug 2020: 'Another poll by the Kan public broadcaster predicted 30 seats for Likud, 17 for Yesh-Atid-Telem, 15 for Yamina, 12 for Blue and White, 9 for Shas, 8 for UTJ, 7 for Yisrael Beytenu and 6 for Meretz' (599 respondents, 4.4%) - all match. Joint List seats (Wikipedia 16; implied by the 120 total) not stated; below-threshold parties named without percentages. Kan page blocked (403)."
+ },
+ {
+  "id": "k24-2020-08-06-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-1106039/ (403, blocked - not bypassed); https://www.timesofisrael.com/polls-signal-slumping-support-for-netanyahus-likud-surge-for-yamina/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 704,
+  "moe": "3.9%",
+  "note": "Times of Israel 6 Aug 2020, Channel 13 poll by Camil Fuchs (704 respondents, 3.9%): Likud 29, Yamina 19, Yesh Atid-Telem 19, Joint List 15, Blue and White 8, Yisrael Beytenu 8, Shas 8, UTJ 7, Meretz 7 - all match."
+ },
+ {
   "id": "k24-2020-08-07-midgam-channel-12",
   "status": "partial",
   "sourceLevel": "primary",
@@ -55,6 +77,17 @@
   "note": "N12 (Dafna Liel; Midgam/Mano Geva with iPanel; field 16/08/2020): Likud 30, Yamina 18, Yesh Atid-Telem 16, Joint List 15, Blue&White 12, UTJ 8, Yisrael Beytenu 8, Shas 7, Meretz 6; below threshold Labor 1.8%, Derekh Eretz 0.5%, Gesher 0.2%, Jewish Home 0.2% - all match."
  },
  {
+  "id": "k24-2020-08-16-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-1111097/ (403, blocked); https://www.israelnationalnews.com/news/285361",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva/INN 16 Aug 2020 'Poll: Likud 33, Yamina 19', Channel 13 poll by Camil Fuchs: Likud 33, Yesh Atid-Telem 20, Yamina 19, Blue and White 10, Joint List 12, Shas 7, UTJ 6, Yisrael Beytenu 7, Meretz 6 - all match."
+ },
+ {
   "id": "k24-2020-08-19-panels-politics-maariv",
   "status": "match",
   "sourceLevel": "primary",
@@ -75,6 +108,17 @@
   "sample": null,
   "moe": null,
   "note": "Maariv/103FM 21/08/2020, Maagar Mochot (Prof. Yitzhak Katz) for Nissim Mishal's 103FM show; graphic dated 21.08.2020: Likud 32, Yesh Atid 19, Joint List 15, Yamina 15, Blue&White 10, UTJ 8, Yisrael Beytenu 8, Shas 8, Meretz 5 - all match. Labor, Derekh Eretz, Jewish Home, Gesher below threshold (no %). No sample size in article."
+ },
+ {
+  "id": "k24-2020-08-23-camil-fuchs-channel-13",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-1114878/ (403, blocked); https://www.israelnationalnews.com/news/285751",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 24 Aug 2020 'Poll: Likud - 31 seats, Yamina - 18' (Camil Fuchs/Channel 13): Likud 31, Yesh Atid-Telem 19, Yamina 18, Joint List 13, Blue and White 11, Yisrael Beytenu 8, Shas 7, UTJ 7, Meretz 6 - all seats match. 'Labor, Gesher, Derech Eretz and the Jewish Home do not pass the threshold' - the 0.0% values for Derekh Eretz/Gesher/Jewish Home not given."
  },
  {
   "id": "k24-2020-08-27-panels-politics-maariv",
@@ -99,6 +143,28 @@
   "note": "N12 'Meet the Press' 05.09.20 (Midgam/Mano Geva with iPanel, conducted 4.9): Likud 31, Yamina 19, Yesh Atid 15, Joint List 15, Blue&White 11, Yisrael Beytenu 8, Shas 8, UTJ 7, Meretz 6 - all match. Labor, Derekh Eretz, Jewish Home, Gesher below threshold (no %)."
  },
  {
+  "id": "k24-2020-09-07-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-1123301/ (403, blocked); https://www.israelnationalnews.com/news/286787",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 7 Sep 2020 'Yamina up to 21 seats in latest poll' (Channel 13 News): Yamina 21, Likud 31, Yesh Atid-Telem 18, Joint List 13, Blue and White 11, Shas 7, UTJ 7, Yisrael Beytenu 6, Meretz 6 - all match."
+ },
+ {
+  "id": "k24-2020-09-11-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelhayom.co.il/article/800033 (403, blocked - not bypassed); https://www.israelnationalnews.com/news/287046",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 11 Sep 2020, Maagar Mochot poll published by Israel Hayom Friday morning: Likud 31, Yamina 20, Blue and White 10, Yesh Atid-Telem 13, Joint List 17, Meretz 5, Shas 9, UTJ 7, Yisrael Beytenu 8 - all match. Labor, Derech Eretz, Gesher, Jewish Home, Otzma Yehudit below threshold."
+ },
+ {
   "id": "k24-2020-09-12-panels-politics-103fm",
   "status": "match",
   "sourceLevel": "primary",
@@ -119,6 +185,17 @@
   "sample": null,
   "moe": null,
   "note": "Arutz Sheva/INN 'Poll: Likud 30, Yamina 20' (Direct Polls, conducted September 16th): Likud 30, Yamina 20, Yesh Atid-Telem 17, Joint List 14, Yisrael Beytenu 9, Shas 9, UTJ 7, Blue&White 8, Meretz 6 - all seats match. 'Labor, Gesher, Derech Eretz, Otzma Yehudit, and Jewish Home all failed to cross the threshold' - percentages (1.1/0.3/1.0/0.3/0.4) not given."
+ },
+ {
+  "id": "k24-2020-09-16-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://13news.co.il/item/news/politics/state-policy/survey-1128211/ (403, blocked); https://www.israelnationalnews.com/news/287459",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 17 Sep 2020 'New poll: Likud - 30 seats, Yamina - 22' (Channel 13, Prof. Camille Fuchs): Yamina 22, Likud 30, Yesh Atid 18, Joint List 12, Blue and White 8, Yisrael Beytenu 8, Meretz 8, Shas 7, UTJ 7 - all match. Labor, Gesher, Jewish Home, Derech Eretz below threshold (no %)."
  },
  {
   "id": "k24-2020-09-23-midgam-channel-12",
