@@ -39,9 +39,48 @@
   "source": "https://13news.co.il/item/news/politics/state-policy/survey-bennet-lapid-1246076/ (-> 13tv.co.il)",
   "differences": [],
   "fieldEndSource": "2021-05-04",
-  "sample": 699,
+  "sample": null,
   "moe": "3.8%",
-  "note": "Channel 13 site, 04.05.2021, Prof. Camil Fuchs: Likud 28, YA 21, Yamina 11, B&W 8, Shas 7, UTJ 7, Labor 7, New Hope 6, Joint 6, YB 5, Meretz 5, RZ 5, Ra'am 4. All match. Sample stated as 600 Jewish + 99 Arab (page summary said 669; 600+99=699)."
+  "note": "Channel 13 site 04.05.2021, Prof. Camil Fuchs (fieldwork Project HaMidgam / Stat-Net), MoE 3.8%: Likud 28, YA 21, Yamina 11, B&W 8, Shas 7, UTJ 7, Labor 7, New Hope 6, Joint 6, YB 5, Meretz 5, RZ 5, Ra'am 4. All match (also kipa.co.il 1110129). Sample size reading ambiguous (600 Jewish + 99 Arab), left null."
+ },
+ {
+  "id": "k25-2021-05-13-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/492634 (20il.co.il original returns 404)",
+  "differences": [],
+  "fieldEndSource": "2021-05-13",
+  "sample": 803,
+  "moe": "4.2%",
+  "note": "Arutz 7 (14.5.2021): Direct Polls (Filber/Sharon), fieldwork 13 May 2021, 803 adults, MoE ±4.2%: Likud 33, YA 19, Shas 9, RZ 8, Labor 7, UTJ 7, YB 'a similar number' (=7 by 120 total), Joint 6, B&W 6, Ra'am 5, New Hope 5, Yamina 4, Meretz 4. All match."
+ },
+ {
+  "id": "k25-2021-05-23-midgam-hahadashot-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/israel-elections/lapid-gantz-rising-in-first-election-polls-after-gaza-conflict-668939 ; israelhayom.co.il/news/politics/article/1338814 and israelhayom.com 2021/05/24 returned 403",
+  "differences": [
+   {
+    "key": "[קודמת] Joint List",
+    "wikipedia": 5,
+    "source": 6
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost 23.5.2021 on N12 poll (pollster not named): Likud 30, YA 21, B&W 10, RZP 7, Joint List 6, New Hope 6, YB 6, Yamina 5, Ra'am 4, Meretz 4; Shas & UTJ 'kept their seats', Labor 'lost one' (totals not given). Joint List 6 vs Wikipedia 5 - with Wikipedia's Shas 9/UTJ 7/Labor 6 the JPost figures would sum to 121, so the JPost Joint List figure may be a press error; original N12/Israel Hayom not reachable. Shas/UTJ/Labor not verified."
+ },
+ {
+  "id": "k25-2021-05-23-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/israel-elections/lapid-gantz-rising-in-first-election-polls-after-gaza-conflict-668939",
+  "differences": [],
+  "fieldEndSource": "2021-05-23",
+  "sample": 702,
+  "moe": "3.8%",
+  "note": "JPost 23.5.2021: Channel 13 poll by Prof. Camil Fuchs, 702 respondents (601 Jewish, 101 non-Jewish), MoE 3.8%: Likud 29, YA 22, B&W 11, RZP 8, Joint 8, Yamina 8, Labor 7, Shas 7, UTJ 6, Meretz 4, Ra'am below threshold; New Hope lost 1 (6->5), YB lost 2 (7->5). All match (NH/YB derived from stated changes vs March 2021 result)."
  },
  {
   "id": "k25-2021-06-10-maagar-mochot-channel-14",
@@ -66,6 +105,72 @@
   "note": "Kikar HaShabbat 13.06.21, Smith Institute for Kikar: Likud 31, YA 23, Shas 9, UTJ 7, B&W 7, RZ 7, Labor 6, Joint 6, YB 5, Yamina 5, New Hope 5, Ra'am 5, Meretz 4. All match."
  },
  {
+  "id": "k25-2021-06-13-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/308029 (bhol.co.il/news/1235816 returned 403)",
+  "differences": [],
+  "fieldEndSource": "2021-06-13",
+  "sample": 703,
+  "moe": "3.8%",
+  "note": "Arutz 7 (Jun 14 2021) on Channel 13 poll by Prof. Camil Fuchs after government formed Sunday night, 703 respondents, MoE 3.8%: Likud 27, YA 23, B&W 10, Shas 7, UTJ 6, Yamina 7, RZ 8, New Hope 5, YB 5, Labor 7, Meretz 4, Joint 6, Ra'am 5. All match."
+ },
+ {
+  "id": "k25-2021-06-22-maagar-mochot-channel-14",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/308562 (20il.co.il original returns 404)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (23 Jun 2021 00:07) on Maagar Mochot poll for Channel 20: Likud 29, YA 22, Shas 9, RZ 7, Labor 7, UTJ 7, B&W 7, YB 6, Yamina 6, Joint 6, Ra'am 5, Meretz 5, New Hope 4. All match."
+ },
+ {
+  "id": "k25-2021-07-12-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.ice.co.il/research/news/article/825430 ; https://www.israelnationalnews.com/News/Flash.aspx/546589",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "ice.co.il (12/7/2021) on Channel 12 poll aired Monday: Likud 30, Shas 9, B&W 8, Labor 8, Yamina 8, UTJ 7, YB 7, Joint 6, RZ 5, New Hope 5, Meretz 4, Ra'am 4; YA 'gains two' (=19 by total). Arutz 7 flash 12 Jul 2021: 'Likud down to 30 seats, Yesh Atid at 19'. Pollster not named in either; all match."
+ },
+ {
+  "id": "k25-2021-07-15-maagar-mochot-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/311685 (israelhayom.co.il/news/politics/article/3430022 returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (13 Aug 2021) cites the previous Maagar Mochot/Israel Hayom poll 'released on July 16th': Likud 29, YA 21, B&W 7, Yamina 9, YB 6, Labor 7, Ra'am 6, Joint 6, Meretz 6, RZ 7 - all match. Shas and UTJ not stated; New Hope (not in Wikipedia row) not stated. Published 16 Jul 2021."
+ },
+ {
+  "id": "k25-2021-08-12-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/311685 (20il.co.il URL returns 404; israelhayom.co.il returns 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (Fri 13 Aug 2021) on Maagar Mochot poll published by Israel Hayom: Likud 32, YA 18, B&W 10, Shas 8, Yamina 8, UTJ 7, RZ 7, YB 7, Labor 6, Meretz 6, Joint 6, Ra'am 5, New Hope fails threshold. All match."
+ },
+ {
+  "id": "k25-2021-08-18-maagar-mochot-channel-14",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/312023 (20il.co.il original returns 404)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (Aug 19 2021) on Channel 20 poll by Maagar Mochot (Prof. Yitzhak Katz): Likud 32, YA 18, B&W 11, Shas 8, Yamina 7, YB 7, RZ 7, Labor 7, UTJ 7, Meretz 6, Ra'am 5, Joint 5; New Hope 'does not pass the threshold' (no %). All seats match; New Hope 2.0% not verified."
+ },
+ {
   "id": "k25-2021-08-20-midgam-hahadashot-12",
   "status": "match",
   "sourceLevel": "primary",
@@ -88,6 +193,89 @@
   "note": "Kikar 02.09.21, Smith for Galei Israel: Likud 33, YA 18, B&W 10, Shas 9, UTJ 7, YB 7, RZ 7, Yamina 6, Joint 6, Labor 6, Meretz 6, Ra'am 5; New Hope below threshold. All match. Fieldwork date not stated."
  },
  {
+  "id": "k25-2021-09-12-smith-x",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "Searched inn.co.il / israelnationalnews.com, kikar.co.il, srugim.co.il, bhol.co.il (403), web search in Hebrew/English; no URLs in queue",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No report found of a Smith poll around 12 Sep 2021 with Likud 33, YA 22, RZ 8, New Hope 1.8%. Not verified."
+ },
+ {
+  "id": "k25-2021-10-03-direct-polls-x",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israeltoday.co.il/?p=1085551 ; https://www.israelnationalnews.com/news/316052 (bhol.co.il/news/1282191 returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Israel Today (Ryan Jones) on Direct Polls poll: Likud 35, YA 19, Shas 9, RZ 7, UTJ 7, Labor 8, B&W 8, YB 6, Ra'am 5, Yamina 4, Meretz 4, Joint 8; New Hope fails threshold (no %). Arutz 7 (31.10) refers to the 'previous Direct Polls survey released on October 4' with Likud 35, YA 19, Shas 9, UTJ 7, B&W 8, Yamina 4. All seats match; New Hope 1.8% not verified. Israel Today article date shown as 21 Oct 2021 (likely page date)."
+ },
+ {
+  "id": "k25-2021-10-04-camil-fuchs-channel-13",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/election-poll-1371594/ (-> 13tv.co.il)",
+  "differences": [],
+  "fieldEndSource": "2021-10-04",
+  "sample": 699,
+  "moe": "3.9%",
+  "note": "Channel 13 site (4 Oct 2021), Prof. Camil Fuchs, 699 respondents (599 Jewish + 100 non-Jewish), MoE 3.9%: Likud 34, YA 22, Bennett's party 7, Shas 6, YB 5, Meretz 4, UTJ 7, Ra'am 4, Joint 7; RZ 'gained one seat' (total not in text). All stated numbers match; Labor, B&W, New Hope, RZ totals only in chart image, not verified."
+ },
+ {
+  "id": "k25-2021-10-06-smith-galei-israel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/604648 (bhol.co.il/news/1283155 returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim (06.10.21) on Rafi Smith poll for Galei Israel released Wednesday: Likud 33, YA 21, B&W 8, Shas 8, UTJ 7, RZ 7, Joint 7, Labor 7, YB 6, Meretz 6, Ra'am 5, Yamina 5; New Hope below threshold. All match."
+ },
+ {
+  "id": "k25-2021-10-12-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/314989 ; https://www.kipa.co.il/חדשות/פוליטי/1118325",
+  "differences": [],
+  "fieldEndSource": "2021-10-12",
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (13 Oct 2021) on Midgam poll for Channel 12 taken 'yesterday (Tuesday)', Netanyahu-led Likud scenario: Likud 34, YA 18, Shas 9, B&W 8, Labor 7, UTJ 7, Yamina 7, RZ 6, YB 5, Meretz 5, Ra'am 4, New Hope 4 (Joint List not listed; =6 by total). Kipa confirms Likud 34 in Netanyahu scenario. All match (Edelstein scenario: Likud 20, not the Wikipedia row)."
+ },
+ {
+  "id": "k25-2021-10-31-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/316052 ; https://worldisraelnews.com/?p=266638",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 600,
+  "moe": null,
+  "note": "Arutz 7 and World Israel News (31 Oct 2021): Direct Polls, 600 respondents: Likud 35, YA 20, Shas 9, UTJ 8, B&W 7, YB 7, Labor 7, Joint 7, RZ 7, Ra'am 5, Meretz 4, New Hope 4, Yamina 0 (2.9%, below 3.25% threshold). All match."
+ },
+ {
+  "id": "k25-2021-11-01-smith-galei-israel",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/316230 ; https://www.srugim.co.il/613619",
+  "differences": [
+   {
+    "key": "מרצ (מרצ)",
+    "wikipedia": 6,
+    "source": 5
+   }
+  ],
+  "fieldEndSource": "2021-11-01",
+  "sample": 600,
+  "moe": "4%",
+  "note": "Two press reports of the Smith poll for Galei Israel (fieldwork 1 Nov 2021, 600 respondents, MoE 4%) disagree on Meretz: Srugim lists Likud 34, YA 20, Shas 8, B&W 8, Labor 7, UTJ 7, Joint 7, RZ 7, YB 6, Yamina 6, Meretz 6, Ra'am 5, New Hope 2.9% - which sums to 121 (same as Wikipedia). Arutz 7 (3 Nov 2021) lists the same figures but Meretz 5, summing to 120. Taken Meretz 5 as the internally consistent figure; primary (Galei Israel) not found. New Hope 2.9% per Srugim."
+ },
+ {
   "id": "k25-2021-11-01-camil-fuchs-channel-13",
   "status": "match",
   "sourceLevel": "press",
@@ -97,5 +285,16 @@
   "sample": 701,
   "moe": "3.8%",
   "note": "Arutz 7 1.11.21 on Channel 13 poll by Prof. Camil Fuchs (701 respondents, MoE 3.8%): Likud 36, YA 20, Labor 10, Joint 8, B&W 7, Shas 7, UTJ 7, Yamina 6, RZ 6, Meretz 5, YB 4, Ra'am 4, New Hope 2.6% (below threshold). All match."
+ },
+ {
+  "id": "k25-2021-11-22-maagar-mochot-channel-14",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/317328 ; https://www.kikar.co.il/405893.html (now14.co.il original returned 403)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar HaShabbat (21.11.2021, Sunday evening) and Arutz 7 (22.11.2021) on Maagar Mochot poll for Channel 20: Likud 33, YA 18, B&W 9, Labor 8, Shas 8, UTJ 8, RZ 7, Joint 7, Yamina 6, YB 6, Meretz 5, Ra'am 5; New Hope 1.3% (below threshold, per Kikar). All match. Published Sunday 21 Nov 2021 (Wikipedia date 22 Nov); fieldwork date not stated."
  }
 ]

@@ -860,7 +860,7 @@ def attach_verification(cycles: list[dict]) -> None:
                 p["verificationStatus"], p["sourceLevel"] = "unverified", "aggregator"
                 continue
             p["verificationStatus"], p["sourceLevel"] = v["status"], v.get("sourceLevel") or "aggregator"
-            for d in v.get("differences") or []:
+            for d in (v.get("differences") or []) if v["status"] == "corrected" else []:  # רק תיקון ודאי; חלקי — תיעוד בלבד
                 key, val = d["key"], d["source"]
                 if not isinstance(val, (int, float)) or isinstance(val, bool):
                     continue
@@ -869,7 +869,7 @@ def attach_verification(cycles: list[dict]) -> None:
                     p.setdefault("unmapped", {})[key[len("[קודמת] "):]] = entry
                 else:
                     p["values"][key.split(" ", 1)[0]] = entry
-            if v.get("differences"):
+            if v["status"] == "corrected" and v.get("differences"):
                 total = sum(e.get("s", 0) for e in [*p["values"].values(), *p.get("unmapped", {}).values()])
                 p["seatSum"], p["consistent"] = total, 118 <= total <= 122
             if p["sourceLevel"] in ("primary", "press"):
