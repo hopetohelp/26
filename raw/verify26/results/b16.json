@@ -449,5 +449,300 @@
   "foundUrl": "https://www.maariv.co.il/news/politics/article-1194952",
   "note": "כל 10 הרשימות שעברו, בל\"ד 1.9% והציונות הדתית 2.3% זהים לכתבת מעריב (וגם לג'רוזלם פוסט). פער במועדים: \"התקיים ב־8־7 במאי\" ולא 6-7. 500 משיבים, טעות 4.4%. הקישור בנתונים (ג'רוזלם פוסט) הוא דיווח משני.",
   "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-18-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-904631476/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/survey-904631476/"
+   }
+  },
+  "details": {
+   "moe": "3.9%",
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ) בשיתוף סטט-נט",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": true,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "11 רשימות זהות לכתבת חדשות 13 (18.06.2025, מהדורה מרכזית; שעה מדויקת לא צוינה). יהדות התורה 7 נגזר מגוש נתניהו 50 (27+10+6+7) והסכום 120. אחוזי בל\"ד והציונות הדתית לא צוינו (רק 'לא עוברות'). מדגם ומועדי שטח לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-11-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/kaees-904620925/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/kaees-904620925/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ); המגזר הערבי — סטט-נט",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "11 רשימות זהות לתרחיש הראשי בכתבה (11.06.2025). בפרסום גם הציונות הדתית 3.1% ובל\"ד 1.5% מתחת לחסימה — חסרים בנתונים (לא פער מנדטים). בכתבה גם תרחיש הנדל (לא בחבילה). מדגם, טעות ומועדים לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-04-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/xscbo-904610728/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/xscbo-904610728/"
+   }
+  },
+  "details": {
+   "pollster": "מאגר מוחות (פרופ' יצחק כ\"ץ)",
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "11 רשימות זהות, וגם בל\"ד 2.6% והציונות הדתית 2.4% זהים (04.06.2025, מהדורה מרכזית). מדגם, טעות ומועדים לא צוינו.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-20-mm-sn-channel-13",
+  "status": "match",
+  "source": "https://13tv.co.il/item/news/politics/politics/polls-904590986/",
+  "access": [
+   "primary"
+  ],
+  "published": null,
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://13tv.co.il/item/news/politics/politics/polls-904590986/"
+   }
+  },
+  "details": {
+   "commissioner": "חדשות 13"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "11 רשימות זהות במפורש; הציונות הדתית 4 לפי הניסוח 'רע\"מ נחלשת ל-4... כמו גם הציונות הדתית' ותואם לקואליציה 50 ולסכום 120. בל\"ד 'לא עוברת' — האחוז 1.8 לא צוין. שם המכון לא צוין בכתבה.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-12-filber-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1069366",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-06-12T21:28:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1069366"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר — דיירקט פולס",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). 13 הרשימות (תרחיש עם בנט) זהות לדיווח ice מ-12.6.2025 (סכום 120; בל\"ד 'לא עוברת', האחוז לא צוין). המכון בדיווח: דיירקט פולס של פילבר.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-12-filber-channel-14-b",
+  "status": "partial",
+  "source": "https://www.ice.co.il/research/news/article/1069366",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-06-12T21:28:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1069366"
+   }
+  },
+  "details": {
+   "pollster": "שלמה פילבר — דיירקט פולס",
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.ice.co.il/research/news/article/1069366",
+  "scenarioOf": "2025-06-12-filber-channel-14",
+  "note": "תרחיש 'בלי בנט' באותו סקר. 10 רשימות זהות לדיווח ice; עוצמה יהודית (6 בנתונים) לא הוזכרה בתרחיש — סכום המוזכרות 114. ערוץ 14 חסום (403).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-06-05-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1068120",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-06-05T21:30:32+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1068120"
+   }
+  },
+  "details": {
+   "commissioner": "ערוץ 14"
+  },
+  "law16E": {
+   "pollster": false,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": false,
+   "n_asked": false,
+   "moe": false,
+   "population": false,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). 12 הרשימות ובל\"ד 2.3% זהים לדיווח ice מ-5.6.2025 (סכום 120). המכון לא צוין בדיווח.",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-29-sf-dp-channel-14",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1067216",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-05-29T22:26:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1067216"
+   }
+  },
+  "details": {
+   "sample_respondents": 672,
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל",
+   "pollster": "Direct Polls",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "note": "ערוץ 14 חסום (403). תרחיש 'ללא בנט': 11 הרשימות זהות לדיווח ice (סכום 120); אחוז בל\"ד לא צוין. מדגם 672 לפי ice (חסר בנתונים; מקור משני יחיד — לא נרשם פער).",
+  "checkedAt": "2026-11-04"
+ },
+ {
+  "id": "2025-05-29-sf-dp-channel-14-b",
+  "status": "secondary",
+  "source": "https://www.ice.co.il/research/news/article/1067216",
+  "access": [
+   "secondary"
+  ],
+  "published": "2025-05-29T22:26:00+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.ice.co.il/research/news/article/1067216"
+   }
+  },
+  "details": {
+   "sample_respondents": 672,
+   "population": "מדגם מייצג של האוכלוסייה הבוגרת בישראל",
+   "pollster": "Direct Polls",
+   "commissioner": "חדשות 14"
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": false,
+   "n_participated": true,
+   "n_asked": false,
+   "moe": false,
+   "population": true,
+   "questions": false
+  },
+  "diffs": [],
+  "foundUrl": "https://www.ice.co.il/research/news/article/1067216",
+  "scenarioOf": "2025-05-29-sf-dp-channel-14",
+  "note": "תרחיש 'עם בנט' באותו סקר: 12 הרשימות זהות לדיווח ice (סכום 120); אחוז בל\"ד לא צוין.",
+  "checkedAt": "2026-11-04"
  }
 ]

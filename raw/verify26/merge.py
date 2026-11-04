@@ -112,10 +112,10 @@ def main() -> None:
             }
             if r.get("scenarioOf"):
                 entry["scenarioOf"] = r["scenarioOf"]
-            if r.get("fields"):
+            if r.get("fields") and not r.get("duplicateOf"):
                 entry["fields"] = {g: v for g, v in r["fields"].items() if v and v.get("status")}
                 for g, v in entry["fields"].items():
-                    if v["status"] == "conflict" and any(c["id"] == pid for c in cor if c["field"].startswith({"seats": "values", "sample": "sample", "dates": "start"}.get(g, "?"))):
+                    if v["status"] == "conflict" and any(c["id"] == pid for c in cor if c["field"].startswith({"seats": ("values",), "sample": ("sample",), "dates": ("start", "end")}.get(g, ("?",)))):
                         v["status"] = "corrected"
             if pid in ver_by:
                 old = ver[ver_by[pid]]

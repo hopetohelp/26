@@ -38,6 +38,24 @@
    "source": "https://www.mako.co.il/news-israel-elections/2026/Article-5ef5c111dfb5f91027.htm"
   },
   {
+   "detail": "סתירה בין השדה הראשי לפרטי האימות",
+   "end": "2026-05-14",
+   "firmHe": "יוסי טטיקה",
+   "group": "dates",
+   "id": "2026-05-14-yossi-tatika-zman-yisrael",
+   "publisherHe": "זמן ישראל",
+   "source": "https://www.zman.co.il/686781/"
+  },
+  {
+   "detail": "סתירה בין השדה הראשי לפרטי האימות",
+   "end": "2026-03-26",
+   "firmHe": "שלמה פילבר",
+   "group": "sample",
+   "id": "2026-03-26-filber-channel-14",
+   "publisherHe": "ערוץ 14",
+   "source": "https://www.ice.co.il/research/news/article/1107629"
+  },
+  {
    "detail": "סכום המנדטים 116 במקום 120 — הסקר נכנס לחישובים (רק סקר שסומן כשגוי מוחרג)",
    "end": "2025-02-20",
    "firmHe": "לזר מחקרים + Panel4All",
@@ -1050,6 +1068,287 @@
   },
   {
    "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-05-20",
+   "field": "start",
+   "firmHe": "יוסי טטיקה",
+   "from": "2026-05-20",
+   "group": "dates",
+   "id": "2026-05-20-yossi-tatika-zman-yisrael",
+   "publisherHe": "זמן ישראל",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.zman.co.il/688202/",
+   "to": "2026-05-19"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2026-05-07",
+   "field": "urls",
+   "firmHe": "שלמה פילבר + NEXT DATA",
+   "from": [],
+   "group": "other",
+   "id": "2026-05-07-sf-nd-channel-14",
+   "publisherHe": "ערוץ 14",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.inn.co.il/news/696380",
+   "to": [
+    "https://www.inn.co.il/news/696380"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-04-23",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-04-24",
+   "group": "dates",
+   "id": "2026-04-24-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1313295",
+   "to": "2026-04-23"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-04-23",
+   "field": "values.yesh_atid.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 6,
+   "group": "seats",
+   "id": "2026-04-23-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm",
+   "to": 7
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-04-23",
+   "field": "values.yb.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 7,
+   "group": "seats",
+   "id": "2026-04-23-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-israel-elections/2026/Article-0a686d0cffabd91027.htm",
+   "to": 8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-04-16",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-04-17",
+   "group": "dates",
+   "id": "2026-04-17-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1310919",
+   "to": "2026-04-15"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-04-16",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-04-17",
+   "group": "dates",
+   "id": "2026-04-17-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1310919",
+   "to": "2026-04-16"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-04-16",
+   "field": "start",
+   "firmHe": "יוסי טטיקה",
+   "from": "2026-04-16",
+   "group": "dates",
+   "id": "2026-04-16-yossi-tatika-zman-yisrael",
+   "publisherHe": "זמן ישראל",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.zman.co.il/680631/",
+   "to": "2026-04-15"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-04-09",
+   "field": "start",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-04-10",
+   "group": "dates",
+   "id": "2026-04-10-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1307063",
+   "to": "2026-04-09"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-04-09",
+   "field": "end",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": "2026-04-10",
+   "group": "dates",
+   "id": "2026-04-10-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.maariv.co.il/news/politics/article-1307063",
+   "to": "2026-04-09"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "חלון הממוצע הפשוט והמגמות"
+   ],
+   "end": "2026-03-26",
+   "field": "start",
+   "firmHe": "יוסי טטיקה",
+   "from": "2026-03-26",
+   "group": "dates",
+   "id": "2026-03-26-yossi-tatika-zman-yisrael",
+   "publisherHe": "זמן ישראל",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.zman.co.il/675323/",
+   "to": "2026-03-25"
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2026-02-26",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2026-02-26-lri-p4a-maariv-b",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1289697",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1289697"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2026-02-12",
+   "field": "urls",
+   "firmHe": "יוסי טטיקה",
+   "from": [],
+   "group": "other",
+   "id": "2026-02-12-yossi-tatika-zman-yisrael-b",
+   "publisherHe": "זמן ישראל",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.zman.co.il/663422/",
+   "to": [
+    "https://www.zman.co.il/663422/"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2026-02-12",
+   "field": "urls",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": [],
+   "group": "other",
+   "id": "2026-02-12-midgam-r-c-hahadashot-12-b",
+   "publisherHe": "חדשות 12",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.mako.co.il/news-politics/2026_q1/Article-b6101dba0b25c91026.htm",
+   "to": [
+    "https://www.mako.co.il/news-politics/2026_q1/Article-b6101dba0b25c91026.htm"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2026-01-29",
+   "field": "urls",
+   "firmHe": "יוסי טטיקה",
+   "from": [],
+   "group": "other",
+   "id": "2026-01-29-yossi-tatika-zman-yisrael-b",
+   "publisherHe": "זמן ישראל",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.zman.co.il/659834/",
+   "to": [
+    "https://www.zman.co.il/659834/"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-01-07",
+   "field": "values.yb.s",
+   "firmHe": "מאגר מוחות + סטטנט",
+   "from": 10,
+   "group": "seats",
+   "id": "2026-01-07-mm-sn-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://13tv.co.il/item/news/politics/politics/hk2qy-904921108/",
+   "to": 8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2026-01-07",
+   "field": "values.democrats.s",
+   "firmHe": "מאגר מוחות + סטטנט",
+   "from": 8,
+   "group": "seats",
+   "id": "2026-01-07-mm-sn-channel-13",
+   "publisherHe": "חדשות 13",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://13tv.co.il/item/news/politics/politics/hk2qy-904921108/",
+   "to": 10
+  },
+  {
+   "affects": [
     "ארכיון הסקרים"
    ],
    "end": "2025-12-25",
@@ -1062,6 +1361,93 @@
    "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
    "source": "https://www.zman.co.il/650951",
    "to": 500
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-11-27",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [
+    "https://www.maariv.co.il/news/politics/article-1254155"
+   ],
+   "group": "other",
+   "id": "2025-11-27-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "הקישור בנתוני המקור (ויקיפדיה) מוביל לפרסום אחר; הוחלף בקישור לפרסום של הסקר הזה",
+   "source": "https://www.maariv.co.il/news/politics/article-1256636",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1256636"
+   ]
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-11-20",
+   "field": "values.utj.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 7,
+   "group": "seats",
+   "id": "2025-11-20-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm",
+   "to": 8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-11-20",
+   "field": "values.democrats.s",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 11,
+   "group": "seats",
+   "id": "2025-11-20-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm",
+   "to": 10
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים",
+    "ממוצע פשוט",
+    "מגמות"
+   ],
+   "end": "2025-11-20",
+   "field": "values.bluewhite.p",
+   "firmHe": "מדגם מחקר וייעוץ",
+   "from": 2.2,
+   "group": "pct",
+   "id": "2025-11-20-midgam-r-c-hahadashot-12",
+   "publisherHe": "חדשות 12",
+   "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)",
+   "source": "https://www.mako.co.il/news-politics/2025_q4/Article-150a1b89042aa91027.htm",
+   "to": 1.8
+  },
+  {
+   "affects": [
+    "ארכיון הסקרים"
+   ],
+   "end": "2025-11-20",
+   "field": "urls",
+   "firmHe": "לזר מחקרים + Panel4All",
+   "from": [],
+   "group": "other",
+   "id": "2025-11-20-lri-p4a-maariv",
+   "publisherHe": "מעריב",
+   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)",
+   "source": "https://www.maariv.co.il/news/politics/article-1254155",
+   "to": [
+    "https://www.maariv.co.il/news/politics/article-1254155"
+   ]
   },
   {
    "affects": [
@@ -1150,6 +1536,6 @@
   },
   "sinceListSubmission": 77,
   "total": 811,
-  "usable": 799
+  "usable": 798
  }
 }
