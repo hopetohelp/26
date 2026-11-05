@@ -108,7 +108,7 @@ FIRMS = [(r"panel", "panels_politics"), (r"teleseker|tns|kantar", "kantar"), (r"
          (r"dahaf", "dahaf"), (r"new wave", "new_wave")]
 
 
-def add_polls(cycle: dict, election: dict, firm_names: dict, publisher_he, slug, prev_date: str) -> list[str]:
+def add_polls(cycle: dict, election: dict, firm_names: dict, publisher_he, slug, prev_date: str, scenarios: set = frozenset()) -> list[str]:
     """מוסיף לסבב את שורות הוויקיפדיה שאינן כבר בסבב (אותו יום ±1 ואותם מספרים, או אותו מכון ±2 ימים ואותם מספרים
     לגדולות ⇐ אותו סקר, גם כשתוקן בתמלול). רק מהיום שאחרי הבחירות הקודמות. שורה שסכום המנדטים בה אינו 118–122
     (קריאה חלקית) — מושמטת ומדווחת."""
@@ -142,6 +142,8 @@ def add_polls(cycle: dict, election: dict, firm_names: dict, publisher_he, slug,
         while pid in seen:
             pid, i = f"{base}-{chr(ord('a') + i)}", i + 1
         seen.add(pid)
+        if pid in scenarios:  # שורת תרחיש היפותטי (סומנה ברשומת האימות) — אינה סקר של המערכה
+            continue
         cycle["polls"].append({
             "id": pid, "start": r["date"], "end": r["date"], "dateBasis": "publication", "published": r["date"],
             "firmKey": firm_key, "firmHe": firm_names.get(firm_key, "מכון לא צוין"), "publisherHe": pub,

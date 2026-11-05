@@ -866,7 +866,9 @@ def build_history(results: list[dict]) -> dict:
     from historical_data import HIST_FIRM_NAMES, publisher_he
     prev = {20: "2013-01-22", 19: "2009-02-10"}  # יום הבחירות הקודמות
     for n in (20, 19):
-        for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == n), by_n[n], HIST_FIRM_NAMES, publisher_he, slug, prev[n]):
+        scen = {r["id"] for f in (RAW / "forecast" / "verification").glob(f"pre_k{n}_results*.json")
+                for r in json.loads(f.read_text(encoding="utf-8")) if r.get("scenario")}
+        for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == n), by_n[n], HIST_FIRM_NAMES, publisher_he, slug, prev[n], scen):
             print(f"::warning::K{n}: {line} — סכום חלקי בקריאת הטבלה; הושמט עד תמלול מהמקור")
     for c in cycles:
         check_predecessors(c["knesset"], c, by_n[c["knesset"]])
