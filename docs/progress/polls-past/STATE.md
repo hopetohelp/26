@@ -1,6 +1,6 @@
 # סשן ב1 — סקרים 2013–2022: מצב ומסירה
 
-עדכון אחרון: 05.11.2026 (סשן `session_01Q5dg3xV4CvhJh9hNeFXCGN`, ענף `claude/data-polls-past`).
+עדכון אחרון: 05.11.2026 (סשן ההמשך `session_01Q5dg3y2qQk1RoVjtveMEY1`; קודם `session_01Q5dg3xV4CvhJh9hNeFXCGN`, ענף `claude/data-polls-past`).
 הפרט הרשמי בארבע שורות: `docs/תוכנית-נתונים-מלאים-לכל-המערכות-04-11-2026.md`, "ב1".
 
 ## מה מוזג
@@ -29,7 +29,7 @@
 - שני פערים פתוחים (לא תוקנו — קלט המודל): k23-2020-02-19-panels-politics-maariv (ש"ס 8 ב־maariv article-749466), k20-2015-02-26-w13 (maariv article-465071: מחנה ציוני 25, בית יהודי 11).
 - לבדוק בהמשך: k19-2013-01-17-18 (פאנלס, "ערוץ הכנסת") תואם מספר־למספר לסקר mako 17.1.2013 — ייתכן שהמזמין שגוי; k20-2015-03-13-0 — המכון לפי mako: מדגם (בנתונים "לא צוין"); k20-2015-02-24-w18 — לפי JPost יחד לא עוברת (אצלנו 4).
 
-## תיקון ש"ס 2020 + הצגת ערכים מתוקנים (PR 767)
+## תיקון ש"ס 2020 + הצגת ערכים מתוקנים (PR 767 — מוזג ונבדק באתר החי)
 - `k21_k25_windows_results.json`: k23-2020-02-19-panels-politics-maariv ⇐ corrected (ש"ס 9⇐8, maariv article-749466).
 - `attach_verification`: רשומה `corrected` ב־polls.json ⇐ הערכים המתוקנים מוצגים בהיסטוריה (`corrections` עם from/to/source).
 - קלט המודל השתנה ⇐ `python3 pipeline/forecast.py --log` אחרי commit נקי (19 שורות ביומן); `test_forecast` דורש שהאופק המוצג רשום ביומן.
