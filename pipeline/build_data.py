@@ -864,8 +864,10 @@ def build_history(results: list[dict]) -> dict:
     # 2015: סקרים מטבלת ויקיפדיה שאינם בתמלולי האימות (pipeline/history_wiki_2015.py)
     import history_wiki_2015
     from historical_data import HIST_FIRM_NAMES, publisher_he
-    for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == 20), by_n[20], HIST_FIRM_NAMES, publisher_he, slug):
-        print(f"::warning::K20: {line} — סכום חלקי בקריאת הטבלה; הושמט עד תמלול מהמקור")
+    prev = {20: "2013-01-22", 19: "2009-02-10"}  # יום הבחירות הקודמות
+    for n in (20, 19):
+        for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == n), by_n[n], HIST_FIRM_NAMES, publisher_he, slug, prev[n]):
+            print(f"::warning::K{n}: {line} — סכום חלקי בקריאת הטבלה; הושמט עד תמלול מהמקור")
     for c in cycles:
         check_predecessors(c["knesset"], c, by_n[c["knesset"]])
     from exit_polls import load as load_exit_polls  # מדגמי ליל הבחירות (raw/exit-polls-history.json)
