@@ -15,13 +15,15 @@
 - `raw/forecast/verification/pre_meta_fixes.json`: תיקון שם מכון/מזמין (ערך קודם, חדש, נימוק, מקור) — 19.
 - תצוגה מקדימה תקינה והוסרה; מוזג ונבדק באתר החי (8 מסכים, 390/1280, יום/לילה).
 
-## PR הנוכחי (סשן `session_01Q5dg3y2qQk1RoVjtveMEY1`) — שורות חלקיות ותיקוני שמות
+## PR 765 (סשן `session_01Q5dg3y2qQk1RoVjtveMEY1`) — שורות חלקיות ותיקוני שמות
 - `pre_k19_manual.json` (21), `pre_k20_manual.json` (6): תמלול מהמקור לשורות שהושמטו; `status: match` + `seats` ⇐ נקלט (11), אחרת תיעוד בלבד. מפתח: (`end`, `firm` = תא הסקר הגולמי בוויקיפדיה).
 - `history_wiki_2015.manual_values`: שמות באנגלית ⇐ אותיות (`single` / `joint`), אחר ⇐ `unmapped`; מפלגות חדשות ב־`raw/blocs.json` predecessors (עצמאות, מפלגת דרעי, הירוקים, קדימה/עם שלם ב־2015 — בלי גוש).
 - `pre_meta_fixes.json` +11.
 - 6 שורות אפר׳ 2019 — המקור עצמו חלקי (נבדק ב־`pre_k21_manual.json`); אין מה להוסיף.
 
-## (ד) — שדרוג למקור ראשי (PR הנוכחי)
+## PR 765 (שורות חלקיות 2015/2013, תיקוני שמות) ו־PR 766 (שדרוג 41 למקור ראשי) — מוזגו ונבדקו באתר החי
+
+## (ד) — שדרוג למקור ראשי (PR 766)
 - `raw/forecast/verification/primary_upgrades.json` (41): נקרא בסוף `forecast_polls.build()`; רק match/corrected שאינם primary; משנה `sourceLevel`/`source` בלבד (נבדק: שאר השדות זהים; forecast/backtest ללא שינוי).
 - 109 לא נמצאו (חסימה/ארכיון שנעלם), 13 "חלשים" (1–5 רשימות במקור) — נשארו "הוצלב".
 - שני פערים פתוחים (לא תוקנו — קלט המודל): k23-2020-02-19-panels-politics-maariv (ש"ס 8 ב־maariv article-749466), k20-2015-02-26-w13 (maariv article-465071: מחנה ציוני 25, בית יהודי 11).
