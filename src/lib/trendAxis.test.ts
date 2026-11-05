@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { labelIndexes, thinCandles, trendAxis, visibleLines } from "./trendAxis";
+import { labelIndexesByX, thinCandles, trendAxis, visibleLines } from "./trendAxis";
 
 describe("trendAxis", () => {
   it("קווים כל 5, והתחום מכסה את הערכים", () => {
@@ -48,15 +48,6 @@ describe("thinCandles", () => {
   });
 });
 
-describe("labelIndexes", () => {
-  it("ראשון ואחרון תמיד", () => {
-    expect(labelIndexes(30, 5)[0]).toBe(0);
-    expect(labelIndexes(30, 5)[labelIndexes(30, 5).length - 1]).toBe(29);
-    expect(labelIndexes(30, 5).length).toBeLessThanOrEqual(5);
-  });
-  it("מעט נקודות — כולן", () => expect(labelIndexes(3, 5)).toEqual([0, 1, 2]));
-});
-
 describe("visibleLines", () => {
   const lines = [10, 15, 20, 25, 30, 35].map((v) => ({ v, major: false }));
   it("קו בלי נתונים בשתי הרצועות שלידו נעלם", () => {
@@ -70,4 +61,16 @@ describe("visibleLines", () => {
   it("טווח מעל 30: קו כל 10, ו-61 במקום 60", () => {
     expect(trendAxis([5, 54]).lines.map((l) => l.v)).toEqual([0, 10, 20, 30, 40, 50, 61]);
   });
+});
+
+describe("labelIndexesByX", () => {
+  it("תאריכים צפופים אינם חופפים: כל שתי תוויות במרחק 46 לפחות, הראשונה והאחרונה תמיד", () => {
+    const xs = [0, 3, 5, 8, 40, 41, 43, 100, 101, 102, 103, 200, 201, 300];
+    const lab = labelIndexesByX(xs, 46);
+    expect(lab[0]).toBe(0);
+    expect(lab[lab.length - 1]).toBe(xs.length - 1);
+    for (let k = 1; k < lab.length; k++) expect(xs[lab[k]] - xs[lab[k - 1]]).toBeGreaterThanOrEqual(46);
+  });
+  it("נקודה אחת או אין", () => { expect(labelIndexesByX([5], 46)).toEqual([0]); expect(labelIndexesByX([], 46)).toEqual([]); });
+  it("מרווחים גדולים — כולן", () => expect(labelIndexesByX([0, 50, 100, 150], 46)).toEqual([0, 1, 2, 3]));
 });

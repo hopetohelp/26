@@ -74,11 +74,19 @@ export function thinCandles<T extends { t: number }>(points: T[], plotPx: number
   return out;
 }
 
-/** תוויות ציר הזמן: הראשונה והאחרונה תמיד, ובאמצע עד `max` תוויות במרווחים שווים (לפי מספר הנרות) */
-export function labelIndexes(n: number, max: number): number[] {
-  if (n <= 0) return [];
-  if (n <= max) return Array.from({ length: n }, (_, i) => i);
-  const out = new Set<number>([0, n - 1]);
-  for (let k = 1; k < max - 1; k++) out.add(Math.round((k * (n - 1)) / (max - 1)));
-  return [...out].sort((a, b) => a - b);
+/**
+ * תוויות ציר הזמן לפי המרחק בפועל (בפיקסלים): כשהתאריכים אינם במרווחים שווים (למשל קווים של כמה סדרות במערכה ארוכה),
+ * בחירה לפי מספר הנקודות מצמידה תוויות זו לזו. כאן — מהסוף אחורה, כל תווית במרחק `minGap` לפחות מהבאה אחריה;
+ * האחרונה תמיד, והראשונה תמיד (במקום התווית שצמודה אליה מדי). `xs` — המיקום של כל תאריך, בסדר עולה.
+ */
+export function labelIndexesByX(xs: number[], minGap: number): number[] {
+  const n = xs.length;
+  if (n <= 1) return n ? [0] : [];
+  const out = [n - 1];
+  for (let i = n - 2; i >= 0; i--) if (xs[out[0]] - xs[i] >= minGap) out.unshift(i);
+  if (out[0] !== 0) {
+    if (xs[out[0]] - xs[0] < minGap && out.length > 1) out.shift();
+    out.unshift(0);
+  }
+  return out;
 }
