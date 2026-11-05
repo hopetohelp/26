@@ -2253,5 +2253,715 @@
    "https://13tv.co.il/item/news/politics/politics/survey-904449424/"
   ],
   "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-01-16-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1164949",
+  "to": 509,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-01-16-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1164949",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1164949"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-01-16-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1164949",
+  "to": 509,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-01-09-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1163094",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-01-09-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1163094",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1163094"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2025-01-09-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1163094",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2025-01-03-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1161209",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1161209"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-12-27-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1159464",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1159464"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-19-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1157681",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-12-19-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1157681",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1157681"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-19-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1157681",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.bennett.s",
+  "from": 25,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 24,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.likud.s",
+  "from": 21,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 23,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.democrats.s",
+  "from": 9,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 10,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.yb.s",
+  "from": 8,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 7,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.otzma.s",
+  "from": 8,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 7,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.hadash_taal.s",
+  "from": 6,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 5,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.raam.s",
+  "from": 4,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 5,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-12-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1155847"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-12-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1155847",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-05-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1154006",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-12-05-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1154006",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1154006"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-05-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1154006",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-25-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-2301bdfa49ef391027.htm",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-12-25-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-2301bdfa49ef391027.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q4/Article-2301bdfa49ef391027.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-25-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-2301bdfa49ef391027.htm",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-12-12-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-3a2514386bbb391026.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q4/Article-3a2514386bbb391026.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-11-mm-sn-channel-13-b",
+  "source": "https://13tv.co.il/item/news/politics/politics/f9cra-904374629/",
+  "to": 676,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-12-11-mm-sn-channel-13-b",
+  "source": "https://13tv.co.il/item/news/politics/politics/f9cra-904374629/",
+  "to": [
+   "https://13tv.co.il/item/news/politics/politics/f9cra-904374629/"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-12-11-mm-sn-channel-13",
+  "source": "https://13tv.co.il/item/news/politics/politics/f9cra-904374629/",
+  "to": 676,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-11-29-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1152123",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1152123"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-21-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1150208",
+  "to": 504,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-11-21-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1150208",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1150208"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-21-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1150208",
+  "to": 504,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-11-15-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1148311",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1148311"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "start",
+  "from": "2024-11-08",
+  "id": "2024-11-08-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1146356",
+  "to": "2024-11-06",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "end",
+  "from": "2024-11-08",
+  "id": "2024-11-08-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1146356",
+  "to": "2024-11-07",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-08-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1146356",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-31-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1144488",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-10-31-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1144488",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1144488"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-31-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1144488",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-23-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1142556",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "start",
+  "from": "2024-10-18",
+  "id": "2024-10-18-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1140916",
+  "to": "2024-10-15",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "end",
+  "from": "2024-10-18",
+  "id": "2024-10-18-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1140916",
+  "to": "2024-10-16",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-18-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1140916",
+  "to": 602,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-10-18-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1140916",
+  "to": [
+   "https://www.maariv.co.il/news/politics/article-1140916"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "start",
+  "from": "2024-10-18",
+  "id": "2024-10-18-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1140916",
+  "to": "2024-10-15",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "end",
+  "from": "2024-10-18",
+  "id": "2024-10-18-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1140916",
+  "to": "2024-10-16",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-18-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1140916",
+  "to": 602,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-26-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-d02e860b0d96391026.htm",
+  "to": 510,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-11-26-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-d02e860b0d96391026.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q4/Article-d02e860b0d96391026.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-26-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-d02e860b0d96391026.htm",
+  "to": 510,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-11-18-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-7fb2ef2d6704391027.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q4/Article-7fb2ef2d6704391027.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-06-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-759495f75a20391027.htm",
+  "to": 502,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-28-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-cf44ce1f1e3d291027.htm",
+  "to": 507,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-10-28-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-cf44ce1f1e3d291027.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q4/Article-cf44ce1f1e3d291027.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-28-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2024_q4/Article-cf44ce1f1e3d291027.htm",
+  "to": 507,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-19-sf-dp-channel-14",
+  "source": "https://ch10.co.il/news/943632/",
+  "to": 810,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-27-sf-dp-channel-14",
+  "source": "https://ch10.co.il/news/939908/",
+  "to": 523,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-11-06-mm-sn-i24-news",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-50d140b0",
+  "to": 502,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-10-19-mm-sn-channel-13",
+  "source": "https://13tv.co.il/item/news/politics/politics/otgj6-904303425/",
+  "to": 676,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "end",
+  "from": "2024-09-30",
+  "id": "2024-09-30-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/article-1137180",
+  "to": "2024-10-01",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "end",
+  "from": "2024-09-30",
+  "id": "2024-09-30-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/article-1137180",
+  "to": "2024-10-01",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-09-29-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q3/Article-7ba05781b4e3291027.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q3/Article-7ba05781b4e3291027.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-09-09-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q3/Article-f3ddd748997d191027.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q3/Article-f3ddd748997d191027.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-08-22-midgam-r-c-hahadashot-12-b",
+  "source": "https://www.mako.co.il/news-politics/2024_q3/Article-8946c5821fa7191026.htm",
+  "to": [
+   "https://www.mako.co.il/news-politics/2024_q3/Article-8946c5821fa7191026.htm"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-08-22-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1126966",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.bennett.s",
+  "from": 24,
+  "id": "2024-08-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/Article-1124241",
+  "to": 22,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-08-12-lri-p4a-maariv-b",
+  "source": "https://www.maariv.co.il/news/politics/Article-1124241",
+  "to": [
+   "https://www.maariv.co.il/news/politics/Article-1124241"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-08-08-sf-dp-channel-14",
+  "source": "https://ch10.co.il/news/924879/",
+  "to": 505,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-08-08-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1123591",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "end",
+  "from": "2024-07-31",
+  "id": "2024-07-31-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1121872",
+  "to": "2024-08-01",
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-07-31-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1121872",
+  "to": 510,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.yb.s",
+  "from": 12,
+  "id": "2024-07-26-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1120115",
+  "to": 14,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "values.yesh_atid.s",
+  "from": 14,
+  "id": "2024-07-26-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1120115",
+  "to": 12,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-07-17-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1118321",
+  "to": 502,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-07-11-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1114520",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "urls",
+  "from": [],
+  "id": "2024-07-04-sf-dp-channel-14",
+  "source": "https://ch10.co.il/news/917386/",
+  "to": [
+   "https://ch10.co.il/news/917386/"
+  ],
+  "reason": "קישור לפרסום המקורי חסר בנתוני המקור (ויקיפדיה)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-06-24-midgam-r-c-hahadashot-12",
+  "source": "https://www.mako.co.il/news-politics/2024_q2/Article-c00d1cc3bea4091027.htm",
+  "to": 500,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-06-19-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1108870",
+  "to": 510,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-06-13-lri-p4a-maariv",
+  "source": "https://www.maariv.co.il/news/politics/Article-1106957",
+  "to": 501,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
+ },
+ {
+  "field": "sample",
+  "from": null,
+  "id": "2024-06-10-sf-dp-channel-14",
+  "source": "https://ch10.co.il/news/911887/",
+  "to": 512,
+  "reason": "אימות מול הפרסום המקורי (סשן ב2, 11.2026)"
  }
 ]

@@ -1,0 +1,70 @@
+[
+ {
+  "id": "2024-12-09-maagar-mochot-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-ba9e532e",
+  "access": [
+   "primary"
+  ],
+  "published": "2024-12-09T21:11:51+02:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-ba9e532e"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-ba9e532e"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-ba9e532e"
+   }
+  },
+  "details": {
+   "sample_respondents": 501
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true
+  },
+  "diffs": [],
+  "note": "סקר שחסר באתר ונמצא בהשוואה לוויקיפדיה העברית; הועתק מכתבת i24NEWS המקורית (סשן ב2)."
+ },
+ {
+  "id": "2026-04-09-direct-polls-i24-news",
+  "status": "match",
+  "source": "https://www.i24news.tv/he/news/news/politics/artc-a8f038f0",
+  "access": [
+   "primary"
+  ],
+  "published": "2026-04-09T19:56:39+03:00",
+  "fields": {
+   "seats": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-a8f038f0"
+   },
+   "dates": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-a8f038f0"
+   },
+   "sample": {
+    "status": "match",
+    "source": "https://www.i24news.tv/he/news/news/politics/artc-a8f038f0"
+   }
+  },
+  "details": {
+   "sample_respondents": 532
+  },
+  "law16E": {
+   "pollster": true,
+   "commissioner": true,
+   "dates": true,
+   "n_participated": true
+  },
+  "diffs": [],
+  "note": "סקר שחסר באתר ונמצא בהשוואה לוויקיפדיה העברית; הועתק מכתבת i24NEWS המקורית (סשן ב2)."
+ }
+]
