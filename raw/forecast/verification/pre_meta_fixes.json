@@ -111,5 +111,14 @@
   "new": "panels_politics",
   "why": "מעריב/JPost: פאנלס פוליטיקס, 576 משיבים",
   "source": "https://www.jpost.com/israel-elections/post-poll-finds-netanyahu-blamed-for-housing-crisis-392351 ; https://www.maariv.co.il/journalists/elections-2015/article-465071 ; https://www.israelnationalnews.com/news/191920"
+ },
+ {
+  "id": "k20-2014-10-31-panels-politics-knesset-channel",
+  "field": "firm",
+  "old": "panels_politics",
+  "new": "smith",
+  "publisherNew": "גלובס",
+  "why": "השורה בוויקיפדיה היא סקר רפי סמית׳/גלובס שפורסם 30.10 (IMRA; הקישור בוויקיפדיה הוא פוסט smithglobes)",
+  "source": "http://www.imra.org.il/story.php?id=65305; https://www.globes.co.il/en/article-poll-netanyahu-should-call-elections-fast-1000989720"
  }
 ]
