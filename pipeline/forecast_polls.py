@@ -97,6 +97,13 @@ def build() -> list[dict]:
             out.append({"id": r["id"], "knesset": k, "series": series_of(r.get("firm"), k, r.get("publisher")),
                         "fieldEnd": r.get("fieldEnd") or q.get("fieldEnd"), "values": values, "status": status,
                         "sourceLevel": r.get("sourceLevel") or "primary", "source": r.get("source")})
+    # שדרוג רמת המקור: הסקר נמצא בפרסום של הגוף המפרסם ומספריו תואמים (raw/forecast/verification/primary_upgrades.json)
+    up = VER / "primary_upgrades.json"
+    upgrades = {u["id"]: u for u in json.loads(up.read_text(encoding="utf-8"))} if up.exists() else {}
+    for r in out:
+        u = upgrades.get(r["id"])
+        if u and r["status"] in ("match", "corrected") and r["sourceLevel"] != "primary":
+            r["sourceLevel"], r["source"] = "primary", u["source"]
     for r in out:
         if not r["fieldEnd"]:
             r["fieldEnd"], r["fieldEndInferred"] = infer_field_end(r["id"]), True
