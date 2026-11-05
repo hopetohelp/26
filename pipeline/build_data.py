@@ -884,6 +884,24 @@ def attach_verification(cycles: list[dict]) -> None:
     (differences: מפתח, ערך ויקיפדיה, ערך המקור) מתקן את הערך — המקור גובר, והתיקון מתועד ברשומה.
     סקר שאין לו רשומת אימות מקבל "unverified", כך שכל סקר בכל מחזור נושא את השדה (חוזה הנתונים, 04.11.2026)."""
     rows = {r["id"]: r for r in json.loads((RAW / "forecast" / "polls.json").read_text(encoding="utf-8"))}
+    # תיקון שם מכון/מזמין שגוי בטבלת המקור — ערך קודם, חדש, נימוק ומקור (raw/forecast/verification/pre_meta_fixes.json)
+    from historical_data import HIST_FIRM_NAMES
+    fixes = {f["id"]: f for f in json.loads((RAW / "forecast" / "verification" / "pre_meta_fixes.json").read_text(encoding="utf-8"))}
+    firm_he = {k: he for k, he in HIST_FIRMS.values()}
+    for c in cycles:
+        for p in c["polls"]:
+            f = fixes.get(p["id"])
+            if not f:
+                continue
+            if f["field"] == "firm":
+                assert p["firmKey"] == f["old"], (p["id"], p["firmKey"], f["old"])
+                p["firmKey"] = f["new"]
+                p["firmHe"] = (HIST_FIRM_NAMES if c["knesset"] <= 20 else {}).get(f["new"]) or firm_he[f["new"]]
+                if f.get("publisherNew"):
+                    p["publisherHe"] = f["publisherNew"]
+            else:
+                assert p["publisherHe"] == f["old"], (p["id"], p["publisherHe"], f["old"])
+                p["publisherHe"] = f["new"]
     pre = {}
     for path in sorted((RAW / "forecast" / "verification").glob("pre_k*_results*.json")):
         pre.update({r["id"]: r for r in json.loads(path.read_text(encoding="utf-8"))})

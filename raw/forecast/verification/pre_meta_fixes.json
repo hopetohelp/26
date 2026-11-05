@@ -1,0 +1,115 @@
+[
+ {
+  "id": "k21-2017-04-22-unknown-channel-22",
+  "field": "publisher",
+  "old": "ערוץ 22",
+  "new": "חדשות 2",
+  "why": "לפי מעריב הסקר שודר בערוץ 2; 'Channel 22' בוויקיפדיה — שגיאת הקלדה",
+  "source": "https://www.maariv.co.il/news/politics/article-581966"
+ },
+ {
+  "id": "k21-2017-01-12-unknown-walla",
+  "field": "firm",
+  "old": "unknown",
+  "new": "midgam_project",
+  "why": "וואלה/INN: פרויקט המדגם וסטטנט",
+  "source": "https://www.israelnationalnews.com/news/223196"
+ },
+ {
+  "id": "k21-2017-03-29-unknown-walla",
+  "field": "firm",
+  "old": "unknown",
+  "new": "panels_politics",
+  "why": "וואלה: פאנלס פוליטיקס, 520 משיבים",
+  "source": "https://news.walla.co.il/item/3052825"
+ },
+ {
+  "id": "k21-2017-03-17-unknown-channel-10",
+  "field": "firm",
+  "old": "unknown",
+  "new": "camil_fuchs",
+  "why": "המקור: פרופ' קמיל פוקס",
+  "source": "https://www.israelnationalnews.com/news/226871"
+ },
+ {
+  "id": "k21-2016-01-21-unknown-channel-10",
+  "field": "firm",
+  "old": "unknown",
+  "new": "camil_fuchs",
+  "why": "המקור: פרופ' קמיל פוקס",
+  "source": "https://www.israelnationalnews.com/news/206851"
+ },
+ {
+  "id": "k21-2017-11-01-unknown-ten-news",
+  "field": "firm",
+  "old": "unknown",
+  "new": "camil_fuchs",
+  "why": "ynet: פרופ' קמיל פוקס עם פרויקט המדגם וסטטנט",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-5037313,00.html"
+ },
+ {
+  "id": "k21-2017-11-26-unknown-ten-news",
+  "field": "firm",
+  "old": "unknown",
+  "new": "camil_fuchs",
+  "why": "וואלה: פרופ' קמיל פוקס עם פרויקט המדגם וסטטנט",
+  "source": "https://news.walla.co.il/item/3114601"
+ },
+ {
+  "id": "k21-2017-11-01-unknown-news-company",
+  "field": "firm",
+  "old": "unknown",
+  "new": "midgam",
+  "why": "ynet: מדגם (מנו גבע ומינה צמח)",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/237532 ; https://www.ynet.co.il/articles/0,7340,L-5037313,00.html"
+ },
+ {
+  "id": "k21-2017-12-04-unknown-news-company",
+  "field": "firm",
+  "old": "unknown",
+  "new": "midgam",
+  "why": "ynet: מדגם (מנו גבע ומינה צמח), 525 משיבים",
+  "source": "https://www.israelnationalnews.com/news/238882 (mako link 403, not bypassed)"
+ },
+ {
+  "id": "k21-2017-11-19-unknown-walla-news",
+  "field": "firm",
+  "old": "unknown",
+  "new": "camil_fuchs",
+  "why": "וואלה: פרופ' קמיל פוקס, ביצוע פרויקט המדגם, 602 משיבים",
+  "source": "https://news.walla.co.il/item/3112628"
+ },
+ {
+  "id": "k20-2015-01-15-unknown-channel-10",
+  "field": "firm",
+  "old": "unknown",
+  "new": "dialog",
+  "why": "המקור: דיאלוג (פרופ' קמיל פוקס)",
+  "source": "https://www.israelnationalnews.com/news/190028 ; https://www.ynetnews.com/articles/0,7340,L-4615657,00.html ; https://www.maariv.co.il/news/elections-2015/article-459997"
+ },
+ {
+  "id": "k20-2015-01-20-unknown-nrg",
+  "field": "firm",
+  "old": "unknown",
+  "new": "panels_politics",
+  "publisherNew": "ערוץ הכנסת",
+  "why": "מעריב/INN: פאנלס פוליטיקס עבור ערוץ הכנסת",
+  "source": "https://www.maariv.co.il/news/elections-2015/article-460508 ; https://www.israelnationalnews.com/news/190219"
+ },
+ {
+  "id": "k20-2015-01-28-unknown-channel-10",
+  "field": "firm",
+  "old": "unknown",
+  "new": "dialog",
+  "why": "המקור: קמיל פוקס (דיאלוג)",
+  "source": "https://www.israelnationalnews.com/news/190637"
+ },
+ {
+  "id": "k20-2015-02-27-unknown-maariv",
+  "field": "firm",
+  "old": "unknown",
+  "new": "panels_politics",
+  "why": "מעריב/JPost: פאנלס פוליטיקס, 576 משיבים",
+  "source": "https://www.jpost.com/israel-elections/post-poll-finds-netanyahu-blamed-for-housing-crisis-392351 ; https://www.maariv.co.il/journalists/elections-2015/article-465071 ; https://www.israelnationalnews.com/news/191920"
+ }
+]
