@@ -122,14 +122,20 @@
  },
  {
   "id": "k23-2020-02-19-panels-politics-maariv",
-  "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/02/21/45th-poll-of-2020-election-blue-white-36-likud-32-joint-list-14-shas-9-labor-gesher-meretz-8-yisrael-beitenu-8-yamina-7-utj-7/",
-  "differences": [],
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/article-749466",
+  "differences": [
+   {
+    "list": "ש\"ס",
+    "wikipedia": 9,
+    "source": 8
+   }
+  ],
   "fieldEndSource": "2020-02-19",
   "sample": 536,
   "moe": "4.4%",
-  "note": "KnessetJeremy: Panels for Maariv, published Feb 21 2020, conducted Feb 19. All lists match incl. Otzma 2.6%."
+  "note": "KnessetJeremy: Panels for Maariv, published Feb 21 2020, conducted Feb 19. All lists match incl. Otzma 2.6%. | Primary (Maariv 21/02/2020, 'סקר מעריב: כחול לבן 36, הליכוד 32, ליברמן 8', Panels Politics): Shas 8 ('יורדת במנדט ומקבלת 8'); right bloc 54 confirms; with 9 the sum is 121. Corrected 9→8 (coordinator/owner decision 05.11.2026, iron rule 5)."
  },
  {
   "id": "k23-2020-02-19-midgam-channel-12",
