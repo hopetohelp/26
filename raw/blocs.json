@@ -92,6 +92,24 @@
           "bloc": "arab",
           "why": "שלוש הרשימות הערביות (סכום משותף בטבלת המקור)",
           "source": "https://en.wikipedia.org/wiki/United_Arab_List"
+        },
+        "Atzmaut": {
+          "successors": [],
+          "bloc": null,
+          "why": "עצמאות (ברק) פרשה מההתמודדות (נובמבר 2012) — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Independence_(Israeli_political_party)"
+        },
+        "Deri party": {
+          "successors": [],
+          "bloc": null,
+          "why": "מפלגה משוערת של אריה דרעי שלא הוקמה (חזר לש\"ס) — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Aryeh_Deri"
+        },
+        "Green Party": {
+          "successors": [],
+          "bloc": null,
+          "why": "הירוקים לא עברו את אחוז החסימה — אין להם גוש",
+          "source": "https://en.wikipedia.org/wiki/Green_Party_(Israel)"
         }
       }
     },
@@ -190,6 +208,18 @@
           "bloc": null,
           "why": "לא עברה את אחוז החסימה — אין לה גוש",
           "source": "https://en.wikipedia.org/wiki/Yachad_(political_party)"
+        },
+        "Kadima": {
+          "successors": [],
+          "bloc": null,
+          "why": "קדימה פרשה מההתמודדות (2015) — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Kadima"
+        },
+        "Am Shalem": {
+          "successors": [],
+          "bloc": null,
+          "why": "עם שלם לא רצה ב-2015 — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Am_Shalem"
         }
       }
     },

@@ -1,0 +1,352 @@
+[
+ {
+  "end": "2013-01-10",
+  "firm": "Geocartography",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": null,
+  "seats": null,
+  "differences": [],
+  "note": "No original found. Hint only: knessetjeremy (600 respondents, ±4.2%) gives half-seats (Labor 16.5, Meretz 5.5) plus Kadima/Otzma/Am Shalem 0 and mentions Ale Yarok 3; even if found, half-seats would make it partial."
+ },
+ {
+  "end": "2012-11-06",
+  "firm": "Channel 2/Maagar",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=58903",
+  "seats": {
+   "Likud Beiteinu": 39,
+   "Israeli Labor Party": 22,
+   "Shas": 14,
+   "Yesh Atid": 10,
+   "Arab parties": 10,
+   "Jewish Home-National Union": 7,
+   "United Torah Judaism": 6,
+   "Atzmaut": 3,
+   "Kadima": 3,
+   "Am Shalem": 3,
+   "Meretz": 3
+  },
+  "differences": [],
+  "note": "IMRA (Aaron Lerner), 8 Nov 2012, 'Maagar Poll after Obama victory: National Camp 69 seats'; Maagar (Prof. Yitzhak Katz) for Channel 2, survey 6 Nov 2012, error ±4.5%. Sum 120. Wikipedia lacked Atzmaut (Barak) 3 and Am Shalem 3."
+ },
+ {
+  "end": "2012-11-06",
+  "firm": "Maagar",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=58883",
+  "seats": {
+   "Kadima": 4,
+   "Likud Beiteinu": 39,
+   "Israeli Labor Party": 22,
+   "Atzmaut": 2,
+   "Shas": 15,
+   "Jewish Home-National Union": 7,
+   "United Torah Judaism": 6,
+   "Meretz": 2,
+   "Yesh Atid": 10,
+   "Arab parties": 9,
+   "Am Shalem": 4
+  },
+  "differences": [],
+  "note": "IMRA, 7 Nov 2012, 'Maagar Poll: Candidacy of Olmert and/or Livni would not significantly impact national camp majority'; Maagar, 509 respondents, 5-6 Nov 2012, ±4.5%. Column (1) Mofaz heads Kadima (matches Wikipedia); sum 120. Other columns: Olmert-led Kadima 12 / Olmert+Livni+Mofaz 13. Wikipedia lacked Atzmaut 2 and Am Shalem 4."
+ },
+ {
+  "end": "2012-11-04",
+  "firm": "Yedioth Ahronoth",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-4300359,00.html ; https://www.ynetnews.com/articles/0,7340,L-4300376,00.html",
+  "seats": null,
+  "differences": [],
+  "note": "Ynet 02.11.12 'סקר: 13 מנדטים לכחלון, פוגע בעיקר בליכוד', Yedioth/Dr. Mina Tzemach, sample not printed. Scenario without Kahlon as printed: Likud Beiteinu 35, Labor 24, Yesh Atid 15, Shas 13, Arab parties 11, UTJ 6, Jewish Home-National Union 5, Meretz 4, Atzmaut 2 (Wikipedia lacks), Ben-Gvir/Eldad (Otzma LeYisrael) 2 = 117; Kadima below threshold. Source itself sums only 117, hence partial. Kahlon-party scenario also printed (Kahlon 13, LB 30, Labor 22, Shas 13, YA 12, Arab 11, UTJ 6, JH 5, Meretz 4, Atzmaut 2, Otzma 2 = 120)."
+ },
+ {
+  "end": "2012-10-28",
+  "firm": "Channel 2/Maagar",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=58768",
+  "seats": {
+   "Likud Beiteinu": 42,
+   "Israeli Labor Party": 23,
+   "Shas": 13,
+   "Yesh Atid": 9,
+   "Meretz": 6,
+   "Jewish Home-National Union": 5,
+   "United Torah Judaism": 5,
+   "Atzmaut": 3,
+   "Kadima": 3,
+   "Arab parties": 10
+  },
+  "differences": [],
+  "note": "IMRA reprint 28.10.2012 'Maagar Poll after announced merger: Likud & Yisrael Beiteinu 42'; Maagar (Prof. Yitzhak Katz) for Channel 2; 504 adults, +/-4%. Sums 119 (IMRA notes this). Wikipedia lacked Atzmaut (Barak) 3."
+ },
+ {
+  "end": "2012-08-01",
+  "firm": "Globes",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://en.globes.co.il/en/article-1000771357",
+  "seats": {
+   "Likud": 27,
+   "Israeli Labor Party": 19,
+   "Yisrael Beiteinu": 15,
+   "Yesh Atid": 13,
+   "Shas": 9,
+   "Arab parties": 11,
+   "Kadima": 4,
+   "United Torah Judaism": 6,
+   "National Union": 4,
+   "The Jewish Home": 5,
+   "Meretz": 4,
+   "Atzmaut": 3
+  },
+  "differences": [],
+  "note": "Globes English 2.8.2012 'Likud weakens, Labor gains, Kadima collapses', Rafi Smith Institute for Globes, sample not printed. Sums 120. Wikipedia lacked Atzmaut 3; Green Movement printed as 0."
+ },
+ {
+  "end": "2012-07-26",
+  "firm": "Globes",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://en.globes.co.il/en/article-1000771357",
+  "seats": {
+   "Likud": 28,
+   "Israeli Labor Party": 18,
+   "Yisrael Beiteinu": 16,
+   "Yesh Atid": 11,
+   "Shas": 9,
+   "Arab parties": 11,
+   "Kadima": 7,
+   "United Torah Judaism": 6,
+   "National Union": 3,
+   "The Jewish Home": 4,
+   "Meretz": 4,
+   "Atzmaut": 3
+  },
+  "differences": [],
+  "note": "Taken from the previous-poll (July 26) column of the Globes 2.8.2012 article table, Smith for Globes. Sums 120. Wikipedia lacked Atzmaut 3; Green Movement 0."
+ },
+ {
+  "end": "2012-07-17",
+  "firm": "Maariv/Maagar",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=57553",
+  "seats": null,
+  "differences": [],
+  "note": "IMRA reprint 20.7.2012 'Poll: Do not advance elections 45%:31%', Maagar (Prof. Katz) for Maariv, fieldwork 17.7, 506 respondents. Printed: Likud 27, Labor 17, YB 16, Yesh Atid 11, Shas 9, Kadima 7, UTJ 6, Arab parties 10, Meretz 4, National Union 3, Jewish Home 3, Deri party 2, Green Party (Ale Yarok) 2, Atzmaut 1.5, Amsalem party (Am Shalem) 1.5 = 120. Partial only because of the x.5 values (Atzmaut, Am Shalem); Wikipedia lacked Deri, Green, Atzmaut, Am Shalem."
+ },
+ {
+  "end": "2012-05-13",
+  "firm": "Globes/Smith",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=269799 (redirects to section page; title URL 404)",
+  "seats": null,
+  "differences": [],
+  "note": "JPost 'Smith poll: Netanyahu saved Kadima with unity deal' no longer served (redirect/404); search snippets only confirm Kadima 9, Likud 31. No Globes original found."
+ },
+ {
+  "end": "2012-04-30",
+  "firm": "[[Ynet]]/Dahaf",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-4222374,00.html",
+  "seats": null,
+  "differences": [],
+  "note": "Ynet 30.04.12 'סקר: עם ציפי לבני, יאיר לפיד מזנק למקום השני', Dahaf/Mina Tzemach for Yedioth. Text gives only Likud 30, Kadima 11, Yesh Atid 11, YB 13, Shas 7 (Deri separate), Deri list 3 (Wikipedia lacks), Labor 18 baseline (14 if Lapid+Livni), blocs 61/56; full table is an image not readable. Consistent with Wikipedia; with Deri 3 the Wikipedia row would reach 119, but unverified."
+ },
+ {
+  "end": "2012-03-28",
+  "firm": "Channel 10/Dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/154289 ; http://news.nana10.co.il/Article/?ArticleID=886931 (503)",
+  "seats": null,
+  "differences": [],
+  "note": "Nana10 original returned 503. INN 29.3.2012 reports Channel 10 poll: Kadima (Mofaz) 15, Likud 32, Labor 15, YB 14, Lapid party 9, Atzmaut below threshold; other parties not printed. Matches Wikipedia."
+ },
+ {
+  "end": "2012-03-21",
+  "firm": "Yedioth Ahronoth",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.ynetnews.com/articles/0,7340,L-4206904,00.html",
+  "seats": {
+   "Likud": 29,
+   "Kadima": 12,
+   "Yesh Atid": 14,
+   "Yisrael Beiteinu": 14,
+   "Israeli Labor Party": 13,
+   "Shas": 8,
+   "Meretz": 3,
+   "Deri party": 2,
+   "Arab parties": 11,
+   "United Torah Judaism": 6,
+   "The Jewish Home": 3,
+   "National Union": 3
+  },
+  "differences": [],
+  "note": "Ynetnews 23.03.12 'Poll: Kadima with Livni - 15 mandates, 12 with Mofaz', Yedioth/Mina Tzemach, 502 people. Mofaz scenario (matches Wikipedia) sums 118 incl. Aryeh Deri party 2 (Wikipedia lacks); Atzmaut below threshold. Livni scenario: Kadima 15, Lapid 13, YB 12, Shas 9, Meretz 4, rest same (=120)."
+ },
+ {
+  "end": "2012-03-09",
+  "firm": "[[Teleseker]]",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=55990",
+  "seats": null,
+  "differences": [],
+  "note": "IMRA reprint of Teleseker poll for Maariv (9 Mar 2012), 550 respondents incl. Arabs, ±4.5%. Wikipedia used the Mofaz-heads-Kadima column. The source prints Likud 27, Labor 14, Kadima (Mofaz) 14, YB 14, Lapid party 11, Arab parties 10, Shas 8, Meretz 5, JH/NRP 4, UTJ 4, NU 4 = 115, with Barak's Atzmaut only 'borderline threshold'. So the source itself is incomplete (115). In the Livni scenario Kadima is 16 and Lapid 10. Hebrew search for the Maariv original found nothing."
+ },
+ {
+  "end": "2012-01-18",
+  "firm": "Maagar",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=55384",
+  "seats": {
+   "Kadima": 9,
+   "Likud": 28,
+   "Israeli Labor Party": 15,
+   "Atzmaut": 2,
+   "Yesh Atid": 8,
+   "Deri party": 3,
+   "Shas": 7,
+   "Yisrael Beiteinu": 17,
+   "The Jewish Home": 4,
+   "United Torah Judaism": 6,
+   "Meretz": 3,
+   "National Union": 5,
+   "Am Shalem": 2,
+   "Arab parties": 11
+  },
+  "differences": [],
+  "note": "IMRA reprint of Maagar (Prof. Yitzhak Katz) poll for Channel 10 Orly & Guy morning program, conducted 18 Jan 2012, 501 respondents, ±4.5%. Seats from the Mofaz-heads-Kadima column, which matches Wikipedia; sum 120. Wikipedia lacked Barak's Atzmaut (2), Arieh Deri's party (3) and Rabbi Amsalem's party (Am Shalem, 2). 'Yesh Atid' = 'party led by Yair Lapid'. Livni column: Kadima 13, Likud 26, Labor 14, Lapid 7, otherwise the same."
+ },
+ {
+  "end": "2012-01-09",
+  "firm": "Dahaf",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=55263",
+  "seats": {
+   "Likud": 28,
+   "Yisrael Beiteinu": 16,
+   "Kadima": 8,
+   "Israeli Labor Party": 14,
+   "Yesh Atid": 14,
+   "Shas": 6,
+   "Deri party": 5,
+   "Meretz": 4,
+   "Arab parties": 11,
+   "The Jewish Home": 4,
+   "National Union": 2,
+   "United Torah Judaism": 6,
+   "Green Party": 2
+  },
+  "differences": [],
+  "note": "IMRA reprint of Dahaf telephone poll for Yedioth Ahronot, 9 Jan 2012; sample not stated. Seats from the Mofaz-heads-Kadima column, which matches Wikipedia; sum 120. Wikipedia lacked Deri's party (5) and the Greens (2). Livni column: YB 15, Kadima 13, Labor 13, Lapid 11. A Lapid-inside-Kadima scenario was given only partially."
+ },
+ {
+  "end": "2012-01-09",
+  "firm": "Teleseker",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=55262",
+  "seats": {
+   "Likud": 26,
+   "Israeli Labor Party": 17,
+   "Kadima": 15,
+   "Yisrael Beiteinu": 14,
+   "Yesh Atid": 12,
+   "Arab parties": 10,
+   "Jewish Home-National Union": 8,
+   "Shas": 7,
+   "Deri party": 4,
+   "United Torah Judaism": 4,
+   "Meretz": 3
+  },
+  "differences": [],
+  "note": "IMRA reprint of Teleseker telephone poll for Maariv, 9 Jan 2012, 550 respondents incl. Arabs. Seats from scenario #2 (with Lapid and Deri parties), which matches Wikipedia; sum 120. Wikipedia lacked Deri's party (4). Scenario #1 (no Deri): Likud 27, Labor 18, Shas 8, UTJ 5, others the same."
+ },
+ {
+  "end": "2012-01-09",
+  "firm": "Panels",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://en.globes.co.il/en/article-1000714188",
+  "seats": null,
+  "differences": [],
+  "note": "Globes, 'Poll shows Yair Lapid hitting Kadima', 9 Jan 2012; Panels poll for the Knesset Channel. It prints only Lapid party 20, Kadima (Livni) 9, Likud 29, YB 13, Shas 8, Labor 12 (Labor figure said to include Barak's Atzmaut); a Lapid-led Kadima would get 32. The source is incomplete (91 seats). Hebrew search found no fuller version."
+ },
+ {
+  "end": "2012-01-08",
+  "firm": "Maagar",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=55241",
+  "seats": {
+   "Kadima": 12,
+   "Likud": 27,
+   "Israeli Labor Party": 14,
+   "Atzmaut": 2,
+   "Yesh Atid": 7,
+   "Deri party": 5,
+   "Shas": 7,
+   "Yisrael Beiteinu": 17,
+   "The Jewish Home": 4,
+   "United Torah Judaism": 6,
+   "Meretz": 3,
+   "National Union": 5,
+   "Arab parties": 11
+  },
+  "differences": [],
+  "note": "IMRA reprint of Maagar (Prof. Yitzhak Katz) poll for Channel 10 Orly & Guy morning program, conducted 8 Jan 2012, 491 respondents, ±4.5%. Kadima headed by Livni; sum 120. Wikipedia lacked Barak's Atzmaut (2) and Deri's party (5)."
+ },
+ {
+  "end": "2012-01-08",
+  "firm": "Haaretz",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.haaretz.com/news/national/veteran-israeli-anchor-yair-lapid-leaves-channel-2-to-enter-politics-1.406168",
+  "seats": null,
+  "differences": [],
+  "note": "The Haaretz article cited by Wikipedia (8 Jan 2012) gives no seat table. It says only that 'polls show a Lapid-led party would garner 15-20 seats', with no pollster or sample. The Wikipedia figures (Kadima 10, Labor 15, Lapid 15, Likud 24, YB 14) do not appear in it. Hebrew search found no original Haaretz/Dialog poll. The web.archive.org copy is unreachable."
+ },
+ {
+  "end": "2011-10-27",
+  "firm": "Channel 2/Sarid",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/149120",
+  "seats": null,
+  "differences": [],
+  "note": "Arutz Sheva/INN (Gil Ronen), 'Poll: Likud Up to 37 Knesset Seats', 27 Oct 2011; Sarid Institute poll for Channel 2, after the Shalit deal; sample not stated. It prints only Likud 37, Labor 22, Kadima 17, YB 15, which matches Wikipedia. The source is incomplete (91 seats). Hebrew search found no Channel 2 original."
+ },
+ {
+  "end": "2011-01-17",
+  "firm": "Channel 10/Dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/141791",
+  "seats": null,
+  "differences": [
+   {
+    "party": "The Jewish Home",
+    "wikipedia": 6,
+    "source": null
+   },
+   {
+    "party": "Meretz",
+    "wikipedia": null,
+    "source": 6
+   }
+  ],
+  "note": "Arutz Sheva/INN (Gil Ronen), 'Poll: 3% for Barak Faction', 17 Jan 2011; Dialog instant poll for Channel 10. It prints only Barak's faction (Atzmaut) 3, Labor 6, Meretz 6, Likud 30, Kadima 27, YB 17 (89 seats). The source gives no Jewish Home number; Wikipedia's 'The Jewish Home 6' is most likely Meretz 6 put in the wrong column. Wikipedia also lacked Atzmaut 3."
+ }
+]

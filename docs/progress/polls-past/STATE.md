@@ -15,10 +15,16 @@
 - `raw/forecast/verification/pre_meta_fixes.json`: תיקון שם מכון/מזמין (ערך קודם, חדש, נימוק, מקור) — 19.
 - תצוגה מקדימה תקינה והוסרה; מוזג ונבדק באתר החי (8 מסכים, 390/1280, יום/לילה).
 
+## PR הנוכחי (סשן `session_01Q5dg3y2qQk1RoVjtveMEY1`) — שורות חלקיות ותיקוני שמות
+- `pre_k19_manual.json` (21), `pre_k20_manual.json` (6): תמלול מהמקור לשורות שהושמטו; `status: match` + `seats` ⇐ נקלט (11), אחרת תיעוד בלבד. מפתח: (`end`, `firm` = תא הסקר הגולמי בוויקיפדיה).
+- `history_wiki_2015.manual_values`: שמות באנגלית ⇐ אותיות (`single` / `joint`), אחר ⇐ `unmapped`; מפלגות חדשות ב־`raw/blocs.json` predecessors (עצמאות, מפלגת דרעי, הירוקים, קדימה/עם שלם ב־2015 — בלי גוש).
+- `pre_meta_fixes.json` +11.
+- 6 שורות אפר׳ 2019 — המקור עצמו חלקי (נבדק ב־`pre_k21_manual.json`); אין מה להוסיף.
+
 ## הצעד הבא (לסשן ההמשך)
 1. **(ד) שדרוג "הוצלב" למקור ראשי:** ~150 רשומות ישנות ב־`raw/forecast/polls.json` (`match` עם `sourceLevel` press/aggregator ⇐ מוצגות "הוצלב") ורשומות `pre_*` ברמת press. לחפש את אתר הגוף המפרסם/דוח לוועדת הבחירות; כשנמצא — לעדכן את רשומת האימות ל־`sourceLevel: primary`. רשומות הקודמות ב־`raw/forecast/verification/k19_k20_*`, `k21_k25_*` נבנות ל־`polls.json` ב־`pipeline/forecast_polls.py` — **שינוי שם עלול לשנות את קלט המודל**: לעדכן רק `sourceLevel` (המודל מסנן לפי `sourceLevels` ב־`pipeline/forecast_k26.json`? לבדוק ש־`test_forecast.py` ו־`backtest.json` לא משתנים).
-2. **שורות שקריאתן חלקית** (אזהרות בנייה "הושמט עד תמלול מהמקור"): 2015 — 6, 2013 — 21 (בחלקן הרשימה בוויקיפדיה עצמה חסרה מפלגות — אז אין מה לתקן), אפר׳ 2019 — 6. קליטה דרך `pre_kNN_manual.json` (המנגנון קיים ל־k21 ב־`build_history`; ל־2015/2013 צריך להוסיף ב־`history_wiki_2015.add_polls`).
-3. **עוד תיקוני שמות** מהערות הסוכנים ב־`pre_*_results_*.json` (חיפוש "pollster"/"publisher"/"commissioned").
+2. ~~**שורות שקריאתן חלקית**~~ (בוצע ב־PR הנוכחי; 16 שנותרו — המקור עצמו חלקי/לא נמצא) (אזהרות בנייה "הושמט עד תמלול מהמקור"): 2015 — 6, 2013 — 21 (בחלקן הרשימה בוויקיפדיה עצמה חסרה מפלגות — אז אין מה לתקן), אפר׳ 2019 — 6. קליטה דרך `pre_kNN_manual.json` (המנגנון קיים ל־k21 ב־`build_history`; ל־2015/2013 צריך להוסיף ב־`history_wiki_2015.add_polls`).
+3. ~~**עוד תיקוני שמות**~~ (בוצע חלקית: 11; מועמדים מפוקפקים — k22-2019-05-30 קאן/דיירקט פולס, k22-2019-07-03 סטטנט, k21-2017-07-27 סטטנט — לא שונו, אין מקור ודאי) מהערות הסוכנים ב־`pre_*_results_*.json` (חיפוש "pollster"/"publisher"/"commissioned").
 
 ## שיטה (לסוכני אימות)
 - תדריך: `/tmp/claude-0/.../scratchpad/briefs/brief.md` (זמני). העיקר: מקור ראשי ⇐ עיתונות ⇐ (ויקיפדיה/knessetjeremy אינם מקור); לא עוקפים חסימה (403/captcha); web.archive.org לא נגיש מהסביבה; פלט JSON לרשומה: id, status, sourceLevel, source, differences[{key, wikipedia, source}], fieldEndSource, sample, moe, note, scenario.

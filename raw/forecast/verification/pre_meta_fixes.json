@@ -201,5 +201,47 @@
   "new": "חברת החדשות",
   "why": "ערוץ 7: 'סקר שבוצע על ידי מכון מדגם עבור חדשות 2' (חברת החדשות), לא חדשות 13",
   "source": "https://www.inn.co.il/news/390384"
+ },
+ {
+  "id": "k19-2012-11-06-unknown-maagar-b",
+  "field": "firm",
+  "old": "unknown",
+  "new": "maagar_mochot",
+  "why": "IMRA: 'Maagar (Prof. Yitzhak Katz)' — מאגר מוחות; בוויקיפדיה 'Maagar' בלבד, שלא זוהה כמכון",
+  "source": "https://imra.org.il/story.php3?id=58883"
+ },
+ {
+  "id": "k19-2012-11-06-unknown-maagar",
+  "field": "firm",
+  "old": "unknown",
+  "new": "maagar_mochot",
+  "why": "IMRA: 'Maagar (Prof. Yitzhak Katz)' — מאגר מוחות; בוויקיפדיה 'Maagar' בלבד, שלא זוהה כמכון",
+  "source": "https://imra.org.il/story.php3?id=58903"
+ },
+ {
+  "id": "k19-2012-10-28-unknown-maagar",
+  "field": "firm",
+  "old": "unknown",
+  "new": "maagar_mochot",
+  "why": "IMRA: 'Maagar (Prof. Yitzhak Katz)' — מאגר מוחות; בוויקיפדיה 'Maagar' בלבד, שלא זוהה כמכון",
+  "source": "https://imra.org.il/story.php3?id=58768"
+ },
+ {
+  "id": "k19-2012-01-18-unknown-maagar",
+  "field": "firm",
+  "old": "unknown",
+  "new": "maagar_mochot",
+  "why": "IMRA: 'Maagar (Prof. Yitzhak Katz)' — מאגר מוחות; בוויקיפדיה 'Maagar' בלבד, שלא זוהה כמכון; הסקר נערך עבור ערוץ 10 (תוכנית הבוקר)",
+  "source": "https://imra.org.il/story.php3?id=55384",
+  "publisherNew": "חדשות 10"
+ },
+ {
+  "id": "k19-2012-01-08-unknown-maagar",
+  "field": "firm",
+  "old": "unknown",
+  "new": "maagar_mochot",
+  "why": "IMRA: 'Maagar (Prof. Yitzhak Katz)' — מאגר מוחות; בוויקיפדיה 'Maagar' בלבד, שלא זוהה כמכון; הסקר נערך עבור ערוץ 10 (תוכנית הבוקר)",
+  "source": "https://imra.org.il/story.php3?id=55241",
+  "publisherNew": "חדשות 10"
  }
 ]
