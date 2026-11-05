@@ -7,7 +7,7 @@ import { candleProfiles, smoothPath, sparseIndices, valueSegs, type Seg } from "
 import { dateRange, pctValue, rng, seatsFmt } from "../lib/format";
 import { dayMonth } from "../lib/home";
 import { POINT_DAYS, POINT_WINDOW } from "../lib/data";
-import { labelIndexes, thinCandles, trendAxis, visibleLines } from "../lib/trendAxis";
+import { labelIndexesByX, thinCandles, trendAxis, visibleLines } from "../lib/trendAxis";
 import { useSeen, whenVisible } from "../lib/useSeen";
 
 /**
@@ -165,7 +165,8 @@ export default function CandleTrend({ title, series, majority, step = 5, windowD
   });
   const ln = { vectorEffect: "non-scaling-stroke" as const };
   const dateTicks = candleMode ? shown.map((p) => p.t) : [...new Set(series.flatMap((s) => s.points.map((p) => p.t)))].sort((a, b) => a - b);
-  const lab = labelIndexes(dateTicks.length, Math.max(2, Math.floor(plotPx / 46)));
+  // לפי המיקום על הציר ולא לפי מספר הנקודות — כדי שתאריכים צפופים (אפר׳ 2019, כמה סדרות) לא יחפפו
+  const lab = labelIndexesByX(dateTicks.map((t) => (X(t) / 100) * width), 46);
   const lastT = dateTicks[dateTicks.length - 1];
   // על ציר הזמן: רק היום בחודש, והחודש רק בתווית הראשונה ובכל מעבר חודש, בצורה 2/10 (הכרעת בעלים 03.11.2026)
   const dateLabel = (i: number) => {
