@@ -1,0 +1,305 @@
+[
+ {
+  "id": "k21-2015-11-30-maagar-mochot-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/news/politics/article-516215; https://www.maariv.co.il/news/politics/article-516291",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 516,
+  "moe": null,
+  "note": "מעריב (3.12.2015): סקר מנדטים של רדיו 103FM, מכון מאגר מוחות (פרופ' יצחק כץ), 516 משתתפים: ליכוד 31, המחנה הציוני 20, יש עתיד 15, הבית היהודי 9, ש\"ס 8, ישראל ביתנו 8, כולנו 5; המשותפת, מרצ ויהדות התורה ללא שינוי (13/5/6) - הכל תואם. המזמין: 103FM (בוויקיפדיה ריק). תאריכי שטח לא צוינו."
+ },
+ {
+  "id": "k21-2016-01-01-midgam-yediot-ahronot",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-4747275,00.html (incl. chart image http://images1.ynet.co.il/PicServer4/2016/01/01/6729707/Doc1.jpg); https://www.israelnationalnews.com/news/205807",
+  "differences": [],
+  "fieldEndSource": "2015-12-29",
+  "sample": 504,
+  "moe": "4.5%",
+  "note": "ynet/ידיעות אחרונות (1.1.2016, סימה קדמון): מדגם (ד\"ר מינה צמח ומנו גבע), 504 משיבים, ±4.5%, נערך 28-29 בדצמבר. בתרשים: ליכוד 25, יש עתיד 18, המחנה הציוני 18, המשותפת 13, הבית היהודי 12, ישראל ביתנו 8, יהדות התורה 7, כולנו 7, ש\"ס 6, מרצ 6 - הכל תואם (ערוץ 7 כתב בטעות מרצ 5). בסקר גם תרחיש כחלון-סער."
+ },
+ {
+  "id": "k21-2016-01-21-unknown-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/206851",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Jan 21 2016): Channel 10 poll by Prof. Camil Fuchs (actual pollster). Baseline (no Ashkenazi): Likud 27, Yesh Atid 16, Zionist Camp 15, Joint List 14, Jewish Home 13, Yisrael Beytenu 10, Kulanu 7, Shas 7, UTJ 7, Meretz 4 - all match. Ashkenazi scenarios also in the poll."
+ },
+ {
+  "id": "k21-2016-01-28-maagar-mochot-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/news/politics/article-523722",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "מעריב (28.1.2016): סקר 103FM ('משעל על הבוקר'), מאגר מוחות (פרופ' יצחק כץ): ליכוד 30, יש עתיד 18, המחנה הציוני 18, כולנו 4, ישראל ביתנו 9, הבית היהודי 9, ש\"ס 8, המשותפת 13, יהדות התורה 6, מרצ 5 - הכל תואם. המזמין: 103FM."
+ },
+ {
+  "id": "k21-2016-02-19-panels-politics-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/208283",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Feb 19 2016): Panels Politics poll conducted this week for Maariv (publisher = Maariv): Likud 27, Yesh Atid 18, Zionist Union 15, Joint List 12, Jewish Home 12, Yisrael Beytenu 10, Kulanu 6, Shas 7, UTJ 7, Meretz 6 - all match."
+ },
+ {
+  "id": "k21-2016-02-26-smith-reshet-bet",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/breaking-news/article-527991",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "מעריב (26.2.2016): הסקר השבועי של קול ישראל, מכון רפי סמית: ליכוד 27, יש עתיד 18, המחנה הציוני 19, כולנו 7, המשותפת 13 (שומרת), יהדות התורה 6 (שומרת), הבית היהודי 11, ישראל ביתנו 7, מרצ 6, ש\"ס 6 - הכל תואם."
+ },
+ {
+  "id": "k21-2016-03-05-midgam-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/208924",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Mar 5 2016): Midgam (Mina Tzemach, Mano Geva) for Channel 2 'Meet the Press': Likud 26, Yesh Atid 19, Zionist Union 18, Joint List 13, Jewish Home 11, Yisrael Beytenu 8, Kulanu 7, UTJ 7, Shas 6, Meretz 5 - all match."
+ },
+ {
+  "id": "k21-2016-03-09-kantar-channel-1",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/israel-news/yair-lapids-yesh-atid-party-hits-21-seats-in-channel-1-poll-447424",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 525,
+  "moe": null,
+  "note": "JPost (Mar 9 2016): Channel 1 poll by Stella Karayof of 'TNC' (TNS/Kantar Teleseker), 525 respondents: Likud 25, Yesh Atid 21, Zionist Union 15, Joint List 13, Bayit Yehudi 12, Yisrael Beytenu 8, Shas 7, UTJ 7, Kulanu 6, Meretz 6 - all match."
+ },
+ {
+  "id": "k21-2016-03-18-unknown-maariv",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/209576",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Mar 18 2016) citing Maariv's special one-year poll: Likud 26, Yesh Atid 21, Zionist Union 15, Jewish Home 12, Joint List 12, Yisrael Beytenu 9, Shas 7, UTJ 6, Kulanu 6, Meretz 6 - all match. Pollster not named in the article."
+ },
+ {
+  "id": "k21-2016-03-24-dialog-haaretz",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/2016/03/24/a-dialoghaaretz-scenario-poll/ (aggregator); haaretz.co.il blocked (403, not bypassed); INN English/Hebrew scanned for Mar 23-27 2016, maariv sitemap Mar 24-25",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No press or primary source with the numbers found. knessetjeremy titles it a 'scenario poll'; the row may be the baseline of a scenario poll - unverified."
+ },
+ {
+  "id": "k21-2016-03-25-smith-reshet-bet",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/209914",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Mar 25 2016): Kol Yisrael radio poll released Friday: Likud 26, Zionist Union 17, Yesh Atid 19, Yisrael Beytenu 8 - these 4 match; other parties not given; pollster not named."
+ },
+ {
+  "id": "k21-2016-05-16-midgam-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/212360; https://www.maariv.co.il/news/politics/article-541898",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (May 16 2016): Channel 2 poll by Midgam/iPanels: Likud 27, Yesh Atid 18, Zionist Union 17, Joint List 13, Kulanu 7, Jewish Home 10, Yisrael Beytenu 9, UTJ 7, Shas 6, Meretz 6 - all match (sum 120). Maariv's article on the same night says Yesh Atid 17 in Channel 2 (likely typo)."
+ },
+ {
+  "id": "k21-2016-05-16-midgam-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/212360; https://www.maariv.co.il/news/politics/article-541898",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (May 16 2016): Channel 10 poll: Likud 25, Yesh Atid 20, Zionist Union 13, Joint List 14, Jewish Home 12, Yisrael Beytenu 9, Kulanu 9, Meretz 6, Shas 6, UTJ 6 - all match. Pollster: Maariv says the Channel 10 poll was by Camil Fuchs (קמיל פוקס), not Midgam as in Wikipedia."
+ },
+ {
+  "id": "k21-2016-05-17-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/article-541926; https://www.israelnationalnews.com/news/212392",
+  "differences": [],
+  "fieldEndSource": "2016-05-16",
+  "sample": null,
+  "moe": null,
+  "note": "מעריב (17.5.2016): פאנלס פוליטיקס, נערך 'אתמול' (16.5): ליכוד 26, יש עתיד 18, המחנה הציוני 13, הבית היהודי 14, ישראל ביתנו 11, כולנו 6, ש\"ס 7, יהדות התורה 7, מרצ 7, המשותפת 11 - הכל תואם. בסקר גם תרחישי יעלון (לא נבדקו כאן)."
+ },
+ {
+  "id": "k21-2016-05-17-geocartography-channel-1",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/2016/05/20/channel-1-poll-likud-27-yesh-atid-24-joint-list-13-zionist-union-11/ (aggregator); INN English/Hebrew scanned May 15-25 2016; maariv sitemap May 15-21",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post found; no primary/press source with the Channel 1 Geocartography numbers."
+ },
+ {
+  "id": "k21-2016-05-27-smith-reshet-bet",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/Israel-News/Politics-And-Diplomacy/Poll-Party-led-by-Kahlon-Yaalon-and-Saar-could-topple-Netanyahu-455208; https://www.jpost.com/israel-news/politics-and-diplomacy/yaalon-drops-in-new-post-poll-netanyahu-remains-strong-466670; https://www.maariv.co.il/news/politics/article-543358",
+  "differences": [
+   {
+    "key": "[קודמת] Joint List",
+    "wikipedia": 13,
+    "source": 14
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost (May 27 2016) on the Israel Radio poll: current-party baseline Likud 28, Yesh Atid 19, Zionist Union 15 (match), Joint List 14 (Wikipedia 13); other parties not given. The same article confusingly calls it a 'Panels Research survey for the Knesset Channel', while JPost (Sep 1 2016) says the May 27 Israel Radio poll was by Rafi Smith. Maariv gives only the Kahlon-Sa'ar-Ya'alon scenario (25/Likud 21). Not enough to correct confidently."
+ },
+ {
+  "id": "k21-2016-05-29-geocartography-kol-chai",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/213015",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (May 30 2016): Geocartography for Radio Kol Hai, released Sunday: Likud 27, Yesh Atid 21, Jewish Home 14, Joint List 13, UTJ 10, Zionist Union 8, Meretz 8, Yisrael Beytenu 8, Kulanu 7, Shas 4 - all match."
+ },
+ {
+  "id": "k21-2016-06-03-smith-jerusalem-post",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/israel-news/jpost-poll-yaalon-ties-netanyahu-if-elections-held-today-pms-popularity-dips-455770",
+  "differences": [],
+  "fieldEndSource": "2016-06-01",
+  "sample": 500,
+  "moe": "4.5%",
+  "note": "JPost (Jun 2 2016): Smith Research poll taken Wednesday (Jun 1) for The Jerusalem Post, 500 respondents, ±4.5%. Current parties: Likud 27, Yesh Atid 19, Zionist Union 15, Joint List 13, Bayit Yehudi 11, Yisrael Beytenu 8, UTJ 8, Kulanu 7, Shas 6, Meretz 6 - all match. Also a Ya'alon-Sa'ar-Ashkenazi scenario (22 seats)."
+ },
+ {
+  "id": "k21-2016-08-07-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/327711",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "ערוץ 7: סקר מכון גיאוקרטוגרפיה (פרופ' אבי דגני): ליכוד 25, הבית היהודי 16, יש עתיד 22, ישראל ביתנו 7, כולנו 6, המחנה הציוני 8, מרצ 5, המשותפת 13, יהדות התורה 11, ש\"ס 7 - הכל תואם. המזמין לא צוין."
+ },
+ {
+  "id": "k21-2016-08-11-maagar-mochot-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/216260",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Aug 11 2016): Maagar Mohot poll published Thursday morning: Likud 27, Yesh Atid 21, Jewish Home 13, Joint List 13, Zionist Union 10, Yisrael Beitenu 9, Shas 8, UTJ 7, Kulanu 6, Meretz 6 - all match. Commissioning outlet not named in the article."
+ },
+ {
+  "id": "k21-2016-09-06-midgam-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/likud-falls-behind-yesh-atid-in-poll-467060",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost (Sep 6 2016): Channel 2 poll by Midgam (Mano Geva): Yesh Atid 24, Likud 22, Bayit Yehudi 14, Zionist Union 13, Joint List 13, Yisrael Beytenu 10, UTJ 7, Shas 6, Kulanu 6, Meretz 5 - all match."
+ },
+ {
+  "id": "k21-2016-09-09-geocartography-channel-1",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/217598",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Sep 11 2016): Geocartography poll for Channel 1, released Saturday: Yesh Atid 27, Likud 23, Joint List 13, Jewish Home 11, Zionist Union 11, UTJ 9, Yisrael Beytenu 9, Meretz 7, Kulanu 6, Shas 4 - all match."
+ },
+ {
+  "id": "k21-2016-09-26-kantar-channel-1",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/218356",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Sep 26 2016): TNS-KANTAR survey on Channel 1: Yesh Atid 25, Likud 21, Joint List 13, Jewish Home 13, Zionist Camp 12, Yisrael Beytenu 9, Shas 8, UTJ 7, Kulanu 6, Meretz 6 - all match."
+ },
+ {
+  "id": "k21-2016-10-02-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/article-559236; https://www.israelnationalnews.com/news/218569",
+  "differences": [],
+  "fieldEndSource": "2016-09-26",
+  "sample": 523,
+  "moe": "4.3%",
+  "note": "Maariv (Oct 2 2016, Ben Caspit): Panels Politics (Menachem Lazar), 523 Panel4All panelists, Sept 25-26, MoE 4.3%; text gives Yesh Atid 27, Likud 22 (full table not in text). Arutz Sheva citing Maariv gives the rest: Jewish Home 14, Joint List 13, Meretz 5, Zionist Union 10, Kulanu 6, Yisrael Beytenu 9, Shas 7, UTJ 7 - all match."
+ },
+ {
+  "id": "k21-2016-11-04-smith-reshet-bet",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/Israel-News/POLL-The-Likud-party-returns-to-be-the-biggest-Political-Party-471737",
+  "differences": [],
+  "fieldEndSource": "2016-11-04",
+  "sample": null,
+  "moe": null,
+  "note": "JPost (Nov 5 2016): Rafi Smith poll taken Friday for Israel Radio: Likud 26, Yesh Atid 21, Zionist Union 13, Joint List 13, Bayit Yehudi 12, Yisrael Beytenu 8, Shas 7, UTJ 7, Kulanu 7, Meretz 6 - all match."
+ },
+ {
+  "id": "k21-2016-12-02-midgam-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/221166",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (Dec 2 2016): Channel 2 News poll (publisher = Channel 2) by Mano Geva and Mina Tzemach (Midgam): Likud 25, Yesh Atid 25, Joint List 13, Jewish Home 11, Zionist Union 10, Yisrael Beytenu 8, Shas 7, Meretz 7, UTJ 7, Kulanu 7 - all match."
+ },
+ {
+  "id": "k21-2016-12-30-statnet-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/israel-news/lapids-yesh-atid-surpasses-netanyahus-likud-in-new-poll-477026",
+  "differences": [],
+  "fieldEndSource": "2016-12-29",
+  "sample": 615,
+  "moe": "3.9%",
+  "note": "JPost citing Channel 10, StatNet survey conducted Thursday (Dec 29): Yesh Atid 27, Likud 23, Jewish Home 12, Joint List 12, Yisrael Beytenu 10, Shas 8, Kulanu 7, UTJ 7, Meretz 6, Zionist Union 8 - all match. Sample 615, MoE 3.9%."
+ }
+]

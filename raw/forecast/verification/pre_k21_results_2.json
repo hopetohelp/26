@@ -1,0 +1,305 @@
+[
+ {
+  "id": "k21-2017-01-01-smith-reshet-moreshet",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.ch10.co.il/news/336696/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "ch10 (Yoni Green, 1.1.2017) reports Rafi Smith poll first aired on Radio Moreshet 'Hakham al haboker': Likud 28, Yesh Atid 22, Zionist Union 13, Joint List 12, Jewish Home 11, Yisrael Beytenu 7, UTJ 7, Kulanu 7, Shas 7, Meretz 6. All match."
+ },
+ {
+  "id": "k21-2017-01-05-kantar-channel-1",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/222867",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (6.1.2017): survey conducted by Teleseker (Kantar's Israeli arm, 'Kantar Teleseker') on behalf of Channel 1: Yesh Atid 26, Likud 22, Jewish Home 14, Zionist Union 13, Joint List 12, Yisrael Beytenu 9, Shas 7, UTJ 6, Meretz 6, Kulanu 5. All match."
+ },
+ {
+  "id": "k21-2017-01-09-geocartography-globes",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/news/politics/article-569653",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv (9.1.2017): Geocartography (Prof. Avi Degani) poll: Yesh Atid 27, Likud 22, Zionist Union 13, Joint List 13, UTJ 10, Jewish Home 9, Yisrael Beytenu 7, Meretz 7, Kulanu 6, Shas 6. All match. Article does not name Globes as commissioner."
+ },
+ {
+  "id": "k21-2017-01-12-unknown-walla",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/223196",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (12.1.2017): 'latest Panel Project HaMidgam/Statnet poll', published Thursday: Yesh Atid 27, Likud 24, Jewish Home 13, Joint List 12, Zionist Union 9, Meretz 6, Shas 7, UTJ 7, Yisrael Beytenu 9, Kulanu 6. All match. Actual pollster: Project HaMidgam (Panel HaMidgam) with Statnet; INN does not name the outlet (Wikipedia: Walla)."
+ },
+ {
+  "id": "k21-2017-01-17-unknown-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/223426",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (17.1.2017): survey released Tuesday evening by Channel 2: Yesh Atid 26, Likud 24, Joint List 13, Jewish Home 12, Zionist Union 11, Kulanu 7, Yisrael Beytenu 7, UTJ 7, Shas 7, Meretz 6. All match. Pollster not named in the article."
+ },
+ {
+  "id": "k21-2017-01-20-panels-politics-x",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/article-570922 ; https://www.israelnationalnews.com/news/223582",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv (20.1.2017), Panels Politics poll for Maariv: Lapid 26, Likud 23, Herzog (Zionist Union) 9, Bennett 13, Liberman 7, Kahlon 7 — all match. Joint List, Shas, UTJ, Meretz not stated in text. Scenario: Bennett-led Likud 29 vs Lapid 27 (not this row). Commissioner = Maariv."
+ },
+ {
+  "id": "k21-2017-03-17-unknown-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/226871",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (17.3.2017): Channel 10 News poll released Friday, conducted by Prof. Camil Fuchs (actual pollster): Likud 26, Yesh Atid 25, Jewish Home 13, Joint List 13, Zionist Union 10, Yisrael Beytenu 7, UTJ 7, Meretz 7, Kulanu 6, Shas 6. All match. Haaretz links not opened (403 site, not bypassed)."
+ },
+ {
+  "id": "k21-2017-03-24-panels-politics-maariv-jerusalem-post",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/227328 ; https://www.maariv.co.il/news/politics/article-578973",
+  "differences": [
+   {
+    "key": "ל (ישראל ביתנו)",
+    "wikipedia": 7,
+    "source": 6
+   }
+  ],
+  "fieldEndSource": "2017-03-18",
+  "sample": 572,
+  "moe": "4.3%",
+  "note": "INN (27.3.2017): Panels poll published Friday: Yesh Atid 28, Likud 25, Jewish Home 13, Joint List 13, Zionist Union 10, Kulanu 7, Shas 6, UTJ 7, 'Yisrael Beytenu would remain stable with six mandates', Meretz 5; 572 respondents, MoE 4.3%; 'conducted by the Panels agency on March 18th' (as stated). Source sums to 120; Wikipedia row sums to 121 (YB 7). Maariv 24.3 confirms a Panels Politics poll for Maariv-Sofashavua but its web text has no seat numbers."
+ },
+ {
+  "id": "k21-2017-03-29-unknown-walla",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3052825",
+  "differences": [],
+  "fieldEndSource": "2017-03-28",
+  "sample": 520,
+  "moe": null,
+  "note": "Walla! NEWS (Tal Shalev, 29.3.2017): poll for Walla by Panels Politics (actual pollster; Wikipedia lists no firm), conducted yesterday (Tuesday) among 520 online respondents. Yesh Atid 28, Likud 24, Jewish Home 13, Zionist Union 10, Joint List 12, Kulanu 7, Yisrael Beytenu 7, UTJ 7, Meretz 6, Shas 6. All match."
+ },
+ {
+  "id": "k21-2017-04-05-dialog-channel-10",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/227760",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (4.4.2017): Channel 10 poll released Tuesday evening (4.4): Likud 27, Yesh Atid 29, Joint List 12, Jewish Home 10, UTJ 7, Meretz 7, Shas 6, Yisrael Beytenu 6, Kulanu 6 — all match. Zionist Union not stated (implied 10). Pollster not named. Sa'ar-led Likud scenario (29-29) also reported (not this row)."
+ },
+ {
+  "id": "k21-2017-04-22-unknown-channel-22",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/news/politics/article-581966",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv (22.4.2017): poll published this evening (Saturday) on Channel 2 (Hadashot 2) — Wikipedia's 'ערוץ 22' appears to be a typo for Channel 2: Likud 28, Yesh Atid 24, Joint List 13, Zionist Union 12, Jewish Home 10, Kulanu 7, Shas 7, UTJ 7, Yisrael Beytenu 6, Meretz 6. All match. Pollster not named."
+ },
+ {
+  "id": "k21-2017-04-27-geocartography-radio-103fm",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/228849 ; https://www.maariv.co.il/news/politics/article-582604",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (30.4.2017) 'new Geocartography poll': Yesh Atid 25, Likud 23, Jewish Home 13, Joint List 13, Zionist Union 11, Shas 6, UTJ 9, Kulanu 7, Yisrael Beytenu 7, Meretz 6. All match. Article does not name the outlet (103FM) nor fieldwork date. Maariv (27.4.2017) confirms the Geocartography poll was presented that morning on Gabi Gazit's 103FM show (text qualitative only)."
+ },
+ {
+  "id": "k21-2017-05-26-midgam-channel-2",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/230246",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (27.5.2017): Midgam Institute & Dr. Mina Tzemach poll for Channel 2: Likud 'over 30' / '30+ seats', Yesh Atid 22, Joint List 13, Zionist Union 12, Jewish Home 9, Shas 7, UTJ 7, Kulanu 7, Yisrael Beytenu 7, Meretz 6 — all these match; Likud given only as '30+' (remainder to 120 = 30, consistent with Wikipedia). mako link not opened (403 site). Barak-led ZU scenario 15 (not this row)."
+ },
+ {
+  "id": "k21-2017-05-26-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.ch10.co.il/news/369455/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Haredim10 (Yoni Green, 26.5.2017): Geocartography (Prof. Avi Degani) poll published on the news1 site: Likud 26, Yesh Atid 24, Joint List 13, Zionist Union 11, Jewish Home 11, UTJ 9, Shas 4, Yisrael Beytenu 8, Meretz 8, Kulanu 6. All match. Publisher = News1 (Wikipedia: none). nrg link not opened (403)."
+ },
+ {
+  "id": "k21-2017-07-11-midgam-project-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/232327",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (11.7.2017), 'results of tonight's poll by Channel 10': Likud 29, Zionist Union 24, Yesh Atid 16, Jewish Home 14, Joint List 8, Kulanu 6, UTJ 6, Yisrael Beytenu 7, Shas 5, Meretz 5. All match. Pollster not named."
+ },
+ {
+  "id": "k21-2017-07-11-midgam-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/232327",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (11.7.2017), 'results of tonight's poll by Channel 2': Likud 25, Zionist Union 20, Yesh Atid 18, Jewish Home 13, Joint List 13, Kulanu 8, UTJ 7, Yisrael Beytenu 6, Shas 5, Meretz 5. All match. mako link not opened (403 site)."
+ },
+ {
+  "id": "k21-2017-07-12-panels-politics-walla",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/232448",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (13.7.2017): Panels poll for Walla News released Wednesday: Likud 25, Yesh Atid 21, Zionist Union 19, Joint List 12, Jewish Home 12, UTJ 8, Shas 5, Meretz 5, Kulanu 7, Yisrael Beytenu 6. All match. Walla original not located."
+ },
+ {
+  "id": "k21-2017-07-12-geocartography-kol-brama",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/232448 ; https://www.israelnationalnews.com/news/232896",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (13.7.2017): Geocartography poll publicized on Kol Barama Wednesday: Zionist Union 19, Yesh Atid 21, Meretz 5, Joint List 11, Likud 29, Jewish Home 10, Yisrael Beytenu 4, Kulanu 8, UTJ 9 (6+3), Shas 4 (7-3), coalition 64. All match (UTJ/Shas stated as change from 2015)."
+ },
+ {
+  "id": "k21-2017-07-21-panels-politics-maariv-jerusalem-post",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/article-592475 ; https://www.jpost.com/Israel-News/Poll-Israelis-dont-believe-Netanyahu-on-submarine-scandal-500284/",
+  "differences": [],
+  "fieldEndSource": "2017-07-19",
+  "sample": 555,
+  "moe": "4.3%",
+  "note": "JPost: Panels Politics for Maariv: Likud 24, Yesh Atid 22, Zionist Union 19, Bayit Yehudi 13, Joint List 11, Kulanu 9, UTJ 7, Shas/Yisrael Beytenu/Meretz 5 each. 'The poll was taken on Wednesday, July 19 ... online panel of 555 ... margin of error 4.3%'. All match; fieldwork date 19.7 (Wikipedia 21.7 = publication). Maariv (21.7.2017) lists identical numbers."
+ },
+ {
+  "id": "k21-2017-07-23-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/232896",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (24.7.2017): Geocartography survey published on the Haredim10 news site on Sunday (23.7): Likud 32, Yisrael Beytenu 9, Jewish Home 9, UTJ 9, Shas 5, Kulanu 6, Joint List 10, Zionist Union 18, Yesh Atid 17, Meretz 5. All match. Publisher = Haredim10 (Wikipedia: none)."
+ },
+ {
+  "id": "k21-2017-07-27-midgam-project-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/233091",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (27.7.2017): survey by Statnet under supervision of Dr. Camil Fuchs, publicized on Channel 10 Thursday evening: Likud 28, Zionist Union 20, Yesh Atid 17, Meretz 5, Joint List 10, Kulanu 7, UTJ 7, Shas 6, Jewish Home 13, Yisrael Beytenu 7. All match. Article names Statnet (not Midgam Project) as pollster. nana10 link 404; web.archive.org unreachable."
+ },
+ {
+  "id": "k21-2017-08-03-maagar-mochot-makor-rishon",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/233428",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (4.8.2017): Maagar Mohot (Dr. Yitzhak Katz) poll released Thursday evening (3.8): Likud 30, Yesh Atid 20, Jewish Home 12, UTJ 6, Shas 4, Yisrael Beytenu 5, Zionist Union 16, Meretz 5, Joint List 13 — all match. Kulanu not stated explicitly (coalition total 66 implies 9, = Wikipedia). Outlet (Makor Rishon) not named; nrg/makorrishon link not opened (403)."
+ },
+ {
+  "id": "k21-2017-08-13-panels-politics-x",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/article-595077 ; https://www.jpost.com/Israel-News/Politics-And-Diplomacy/Poll-Bennett-Saar-top-potential-successors-to-Netanyahu-502259",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 562,
+  "moe": "4.3%",
+  "note": "Maariv (11.8.2017) Panels poll for Maariv: Likud 25, Yesh Atid 21, Labor (Gabbay) 16, Bennett 12, Joint List 11, Kahlon 9, UTJ 8, Liberman 7, Meretz 6, Shas 5. Same in JPost (Panels Research, 562 respondents, MoE 4.3%). All match. Commissioner = Maariv. Sa'ar-led Likud scenario also reported (not this row)."
+ },
+ {
+  "id": "k21-2017-08-22-geocartography-x",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/234467",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (24.8.2017): Geocartography poll for Maariv: Likud 34, Yesh Atid 14, Jewish Home 13, Labor 13, Kulanu 10, UTJ 9, Meretz 7, Yisrael Beytenu 6, Shas 4. All these match; Joint List (10 in Wikipedia) not stated in the article (implied remainder 10). Commissioner = Maariv."
+ },
+ {
+  "id": "k21-2017-09-21-panels-politics-x",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://www.mako.co.il/tv-people/articles/Article-187f533caf3ae51006.htm (403, not bypassed); Maariv politics sitemap 19-24.9.2017 (no poll article); INN English/Hebrew title scans 18-27.9.2017 (none); web searches",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No accessible source with the seat numbers found. Only cited link is mako (blocked); web.archive.org unreachable."
+ },
+ {
+  "id": "k21-2017-10-17-panels-politics-x",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3104944",
+  "differences": [],
+  "fieldEndSource": "2017-10-17",
+  "sample": 540,
+  "moe": "4.4%",
+  "note": "Walla (19.10.2017), poll for Walla! NEWS by Panels Politics, fieldwork Mon-Tue that week (16-17.10), 540 Panel4All respondents, MoE 4.4%. Text: Likud 25, Yesh Atid 22, Zionist Union 20, Jewish Home 13, Joint List 11, Kulanu 6, Shas 4 — all match. UTJ, Yisrael Beytenu, Meretz only in a graphic (not readable). Commissioner = Walla."
+ },
+ {
+  "id": "k21-2017-10-28-midgam-project-ten-news",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/news/politics/article-604475",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv (28.10.2017): poll aired Saturday on Channel 10 'HaMateh HaMerkazi': Likud 26, Yesh Atid 21, Zionist Union 20, Joint List 12, Jewish Home 10, Meretz 7, Yisrael Beytenu 6, UTJ 6, Shas 3 (below threshold) — all match. Kulanu not stated in text. Pollster not named."
+ }
+]

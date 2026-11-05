@@ -776,6 +776,10 @@ def build_history(results: list[dict]) -> dict:
                   [(all_tables[i][1], {k: v for k, v in {**cfg["cols"], **pre["cols"]}.items() if k not in pre.get("separate", {}).get(i, set())},
                     pre["ignore"], True) for i in pre["tables"]]
         polls, seen = [], {}
+        mp = RAW / "forecast" / "verification" / f"pre_k{n}_manual.json"
+        manual = {(r["end"], r["firm"]): r for r in json.loads(mp.read_text(encoding="utf-8"))} if mp.exists() else {}
+        scenarios = {r["id"] for f in (RAW / "forecast" / "verification").glob(f"pre_k{n}_results*.json")
+                     for r in json.loads(f.read_text(encoding="utf-8")) if r.get("scenario")}
         rows = [(d, cols, ignore, lenient) for table, cols, ignore, lenient in sources
                 for d in wt.parse_table(table)[1]]
         for d, cols, ignore, lenient in rows:
@@ -818,12 +822,27 @@ def build_history(results: list[dict]) -> dict:
                                                                cfg.get("combined", False))
             seat_sum = sum(e.get("s", 0) for e in [*values.values(), *unmapped.values()])
             base = f"k{n}-{d['date']['end']}-{slug(firm_key)}-{slug(pub_key)}"
+            man = manual.get((d["date"]["end"], d.get("firm"))) if lenient and not 118 <= seat_sum <= 122 else None
+            if man and man.get("seats") and 118 <= sum(man["seats"].values()) <= 122:
+                # תמלול מלא מהמקור (raw/forecast/verification/pre_kNN_manual.json) במקום קריאת טבלה שאיבדה תאים
+                values, unmapped = {}, {}
+                for k, v in [*((k, {"s": x}) for k, x in man["seats"].items()), *((k, {"p": x}) for k, x in (man.get("pct") or {}).items())]:
+                    if k in cols:
+                        values.setdefault(cols[k], v)
+                    else:
+                        unmapped.setdefault(k, v)
+                seat_sum = sum(e.get("s", 0) for e in [*values.values(), *unmapped.values()])
             if lenient and not 118 <= seat_sum <= 122:
                 # טבלה קודמת שקריאתה איבדה תאים (תאים מאוחדים): לא מציגים מספרים חלקיים; לתמלול ידני
                 print(f"::warning::K{n}: {base} — סכום {seat_sum} בקריאת הטבלה הקודמת; הושמט עד תמלול מהמקור")
                 continue
             i = seen.get(base, 0)
             seen[base] = i + 1
+            pid = base if i == 0 else f"{base}-{chr(ord('a') + i)}"
+            if lenient and (i > 0 or pid in scenarios):
+                # שורת תרחיש היפותטי של אותו סקר (אותו יום, מכון ומזמין, או סומן ברשומת האימות) — אינה סקר של המערכה,
+                # כמו טבלאות התרחישים שאינן נקלטות ב-2026; מתועדת ב-raw/forecast/verification/pre_*
+                continue
             polls.append({
                 "id": base if i == 0 else f"{base}-{chr(ord('a') + i)}",
                 "start": d["date"]["start"], "end": d["date"]["end"],
@@ -831,6 +850,7 @@ def build_history(results: list[dict]) -> dict:
                 "values": values, "seatSum": seat_sum, "consistent": 118 <= seat_sum <= 122,
                 **({"unmapped": unmapped} if unmapped else {}),
                 **({"preLists": True} if lenient else {}),
+                **({"manualVerification": {k: man.get(k) for k in ("status", "sourceLevel", "source", "note")}} if man and man.get("seats") else {}),
                 "urls": d["urls"][:3],
             })
         polls.sort(key=lambda p: (p["end"], p["id"]), reverse=True)
@@ -868,7 +888,7 @@ def attach_verification(cycles: list[dict]) -> None:
                 if r["status"] == "match" and p["sourceLevel"] != "primary":
                     p["verificationStatus"] = "cross_checked"  # הכרעת בעלים 05.11.2026 (גם לרשומות האימות הקודמות)
                 continue
-            v = pre.get(p["id"]) if p.get("preLists") else None
+            v = (p.pop("manualVerification", None) or pre.get(p["id"])) if p.get("preLists") else None
             if not v:
                 p["verificationStatus"], p["sourceLevel"] = "unverified", "aggregator"
                 continue
