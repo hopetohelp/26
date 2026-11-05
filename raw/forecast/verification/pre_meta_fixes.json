@@ -129,5 +129,29 @@
   "publisherNew": "מקור ראשון",
   "why": "לפי המקור: מאגר מוחות עבור מקור ראשון",
   "source": "https://www.imra.org.il/story.php?id=53353"
+ },
+ {
+  "id": "k19-2012-10-17-unknown-globes",
+  "field": "firm",
+  "old": "unknown",
+  "new": "smith",
+  "why": "לפי המקור (גלובס): סמית׳",
+  "source": "https://www.globes.co.il/serveen/globes/docview.asp?did=1000791038 ; https://imra.org.il/story.php3?id=58661"
+ },
+ {
+  "id": "k19-2012-12-06-unknown-channel-2",
+  "field": "firm",
+  "old": "unknown",
+  "new": "maagar_mochot",
+  "why": "לפי המקור: מאגר מוחות עבור 'משעל חם', 511 משיבים",
+  "source": "news-israel.net (403), nrg (403); https://imra.org.il/story.php3?id=59340 ; https://www.israelnationalnews.com/News/News.aspx/162942"
+ },
+ {
+  "id": "k19-2012-12-06-unknown-meno-geva",
+  "field": "firm",
+  "old": "unknown",
+  "new": "midgam",
+  "why": "לפי המקור: מנו גבע / מדגם, 560 משיבים",
+  "source": "http://www.iba.org.il/bet/... (403); https://imra.org.il/story.php3?id=59335 ; https://www.israelnationalnews.com/News/News.aspx/162907"
  }
 ]
