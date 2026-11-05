@@ -463,8 +463,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "https://www.haaretz.co.il/news/elections/1.1888975 (Wayback 20121220103054) ; https://knessetjeremy.com/2012/12/18/channel-2-poll-after-liberman-resignation-likud-beitenu-35-labor-19-jewish-home-12-shas-11-movement-10-yesh-atid-9/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-elections-2013/polls/Article-d38f622be1fab31004.htm"
  },
  {
   "id": "k19-2012-12-20-x2",
@@ -672,8 +672,8 @@
    }
   },
   "status": "corrected",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2012/12/28/jerusalem-postsmith-poll-likud-beitenu-34-labor-18-bayit-yehudi-14-shas-11-yesh-atid-10-movement-10/"
+  "sourceLevel": "primary",
+  "source": "https://en.globes.co.il/en/article-1000810043"
  },
  {
   "id": "k19-2012-12-27-w51",
@@ -788,8 +788,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2013/01/02/channel-2dahaf-poll-likud-beitneu-33-labor-17-bayit-yehudi-13-shas-11-movement-11-yesh-atid-11/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-channel2/Channel-2-Newscast/Article-fa51c1b8567fb31004.htm"
  },
  {
   "id": "k19-2013-01-02-w48",
@@ -991,8 +991,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2013/01/03/likud-beitenu-32-labor-17-bayit-yehudi-16-shas-10-movement-10-yesh-atid-10/"
+  "sourceLevel": "primary",
+  "source": "https://en.globes.co.il/en/article-1000811695"
  },
  {
   "id": "k19-2013-01-07-w43",
@@ -1097,8 +1097,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://www.israelnationalnews.com/News/News.aspx/163953 ; https://knessetjeremy.com/2013/01/08/channel-2-poll-likud-beitenu-32-bayit-yehudi-16-labor-16-shas-10-yesh-atid-10-movement-9/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-elections-2013/polls/Article-08f9bdd03911c31006.htm"
  },
  {
   "id": "k19-2013-01-08-w42",
@@ -2650,8 +2650,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "http://www.israelnationalnews.com/News/News.aspx/190706 (Arutz Sheva, Jan 30 2015 8:32, live) ; https://knessetjeremy.com/2015/01/30/"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/elections-2015/article-461760"
  },
  {
   "id": "k20-2015-01-30-f16",
@@ -3448,8 +3448,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "https://www.timesofisrael.com/poll-zionist-union-pushes-ahead-of-likud/ ; https://knessetjeremy.com/2015/02/16/midgamchannel-2-poll-zionist-union-25-likud-24-the-joint-arab-list-12-bayit-yehudi-11-yesh-atid-11/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-military/politics-q1_2015/Article-863cccc34839b41004.htm"
  },
  {
   "id": "k20-2015-02-15-w29",
@@ -3536,8 +3536,8 @@
    }
   },
   "status": "corrected",
-  "sourceLevel": "aggregator",
-  "source": "http://www.bizportal.co.il/electioneconomy/news/article/403115 ; https://knessetjeremy.com/2015/02/17/tribizportal-poll-zionist-union-24-likud-23-bayit-yehudi-14-yesh-atid-12-the-joint-arab-list-12-koolanu-10/"
+  "sourceLevel": "primary",
+  "source": "https://www.bizportal.co.il/electioneconomy/news/article/403115"
  },
  {
   "id": "k20-2015-02-17-w27",
@@ -3932,8 +3932,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2015/02/25/midgamchannel-2-poll-zionist-union-24-likud-22-bayit-yehudi-12-yesh-atid-12-the-joint-arab-list-12/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-military/politics-q1_2015/Article-ff3e03e538cbb41004.htm"
  },
  {
   "id": "k20-2015-02-24-w17",
@@ -4718,8 +4718,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2015/03/06/panelsmaariv-jerusalem-post-poll-zionist-union-24-likud-22-yesh-atid-13-the-joint-arab-list-13-bayit-yehudi-12-kulanu-8/"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/journalists/elections-2015/article-467001"
  },
  {
   "id": "k20-2015-03-08-14",
@@ -4895,8 +4895,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2015/03/11/midgamchannel-2-poll-zionist-union-25-likud-21-bayit-yehudi-13-the-joint-arab-list-13-yesh-atid-12-kulanu-8/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-military/politics-q1_2015/Article-98b4f1ede940c41004.htm"
  },
  {
   "id": "k20-2015-03-11-11",
@@ -5291,8 +5291,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "https://www.timesofisrael.com/final-polls-before-elections-give-herzog-4-point-lead/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-military/politics-q1_2015/Article-c446c18f3931c41004.htm"
  },
  {
   "id": "k20-2015-03-13-1",
@@ -6297,8 +6297,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/03/03/channel-12-poll-blue-white-38-likud-30-hadash-taal-9-labor-8-2-tied-at-7/ (via WordPress API); CEC archive list checked - no filing for this poll found"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/tv-morning-news/articles/Article-cfe91919e024961006.htm"
  },
  {
   "id": "k21-2019-03-05-kantar-kan",
@@ -6456,8 +6456,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "http://www.israelnationalnews.com/News/News.aspx/259935 ; https://knessetjeremy.com/2019/03/05/ (KJ Walla post)"
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3222605"
  },
  {
   "id": "k21-2019-03-05-smith-channel-20",
@@ -7339,8 +7339,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/03/22/maariv-poll-likud-31-blue-white-30-labor-9-hadash-taal-9-utj-7-right-religious-bloc-66/"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2019/polls/article-690719"
  },
  {
   "id": "k21-2019-03-24-midgam-channel-12",
@@ -7869,8 +7869,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/03/29/yediot-achronot-poll-blue-white-31-likud-27-labor-9-utj-7-hadash-taal-7-right-religious-bloc-64/"
+  "sourceLevel": "primary",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-5486226,00.html"
  },
  {
   "id": "k21-2019-03-28-smith-maariv",
@@ -7922,8 +7922,8 @@
    }
   },
   "status": "corrected",
-  "sourceLevel": "press",
-  "source": "https://www.jpost.com/Israel-Elections/Poll-shows-Likud-gains-two-seats-585095"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/israel/Article-691840"
  },
  {
   "id": "k21-2019-03-29-maagar-mochot-radio-103-fm",
@@ -8234,8 +8234,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/04/03/walla-poll-blue-white-30-likud-29-labor-10-hadash-taal-8-url-7-right-religious-bloc-62/"
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3228485"
  },
  {
   "id": "k21-2019-04-04-kantar-kan",
@@ -8393,8 +8393,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/04/05/channel-12-poll-blue-white-30-likud-26-labor-10-utj-7-hadash-taal-7-right-religious-bloc-64/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q2_2019/Article-0ba1a4c1849e961004.htm"
  },
  {
   "id": "k21-2019-04-04-midgam-yedioth-ahronoth",
@@ -8743,8 +8743,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/07/30/channel-12-poll-likud-30-blue-white-30-united-right-12-joint-list-11-yisrael-beitenu-10/ (via WordPress API)"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-29667de2cb34c61026.htm"
  },
  {
   "id": "k22-2019-08-01-maagar-mochot-israel-hayom",
@@ -8822,8 +8822,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/08/01/channel-13-poll-likud-30-blue-white-29-united-right-11-yisrael-beitenu-11-joint-list-11/ (via WordPress API)"
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-010819-318381/"
  },
  {
   "id": "k22-2019-08-02-midgam-channel-12",
@@ -8904,8 +8904,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/08/04/103-fm-radio-poll-likud-31-blue-white-29-united-right-11-joint-list-11-yisrael-beitenu-10/ (via WordPress API)"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-711021"
  },
  {
   "id": "k22-2019-08-04-kantar-reshet-bet",
@@ -9068,8 +9068,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "https://www.israelnationalnews.com/news/267141 ; https://knessetjeremy.com/2019/08/09/103-fm-maariv-poll-likud-32-blue-white-30-joint-list-11-united-right-10-yisrael-beitenu-9/"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-712356"
  },
  {
   "id": "k22-2019-08-13-midgam-channel-12",
@@ -9109,8 +9109,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/08/13/channel-12-poll-likud-30-blue-white-29-yamina-11-joint-list-11-yisrael-beitenu-10/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-f14d667890a8c61026.htm"
  },
  {
   "id": "k22-2019-08-15-midgam-project-channel-13",
@@ -9150,8 +9150,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "http://www.israelnationalnews.com/News/News.aspx/267471 ; https://knessetjeremy.com/2019/08/16/ (KJ Channel 13 post)"
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-150819-331384/"
  },
  {
   "id": "k22-2019-08-15-smith-103fm",
@@ -9191,8 +9191,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "http://www.israelnationalnews.com/News/News.aspx/267486 ; https://knessetjeremy.com/2019/08/16/ (KJ Smith/103FM post)"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-713688"
  },
  {
   "id": "k22-2019-08-18-direct-polls-makor-rishon",
@@ -9273,8 +9273,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "http://www.israelnationalnews.com/News/News.aspx/267703 ; https://knessetjeremy.com/2019/08/22/ (KJ Walla post)"
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3254430"
  },
  {
   "id": "k22-2019-08-22-maagar-mochot-israel-hayom",
@@ -9396,8 +9396,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "press",
-  "source": "http://www.israelnationalnews.com/News/News.aspx/267779"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-715028"
  },
  {
   "id": "k22-2019-08-25-kantar-kan-11",
@@ -9803,8 +9803,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/09/05/channel-12-poll-likud-32-blue-white-32-joint-list-10-yamina-9-yisrael-beitenu-9/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-585e58d72320d61027.htm"
  },
  {
   "id": "k22-2019-09-05-midgam-project-channel-13",
@@ -9844,8 +9844,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/09/05/channel-13-poll-likud-32-blue-white-32-yisrael-beitenu-11-yamina-10-joint-list-10/"
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/u51nn-350794/"
  },
  {
   "id": "k22-2019-09-05-smith-103fm-maariv",
@@ -9885,8 +9885,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/09/06/103-fm-maariv-poll-likud-32-blue-white-32-yisrael-beitenu-10-yamina-9-joint-list-9/"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/israel/Article-717583"
  },
  {
   "id": "k22-2019-09-09-kantar-kan-11",
@@ -10210,8 +10210,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/09/13/103-fm-poll-likud-33-blue-white-32-joint-list-12-yamina-9-yisrael-beitenu-9/"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/israel/Article-718879"
  },
  {
   "id": "k22-2019-09-12-smith-maariv",
@@ -10251,7 +10251,7 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
+  "sourceLevel": "primary",
   "source": "https://www.maariv.co.il/elections2019/polls/Article-718968"
  },
  {
@@ -10292,8 +10292,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/09/14/channel-12-poll-likud-32-blue-white-32-joint-list-10-yamina-8-utj-8-yisrael-beitenu-8/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-80897689a8b2d61026.htm"
  },
  {
   "id": "k22-2019-09-13-midgam-project-channel-13",
@@ -10333,8 +10333,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2019/09/14/channel-13-poll-likud-32-blue-white-32-joint-list-12-yamina-9-yisrael-beitenu-9/"
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/last-survey-357504/"
  },
  {
   "id": "k22-2019-09-13-shvakim-panorama-hot",
@@ -10450,8 +10450,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/01/17/20th-poll-of-2020-election-blue-white-34-likud-30-joint-list-14-labor-gesher-meretz-10-yamina-9-shas-8-yisrael-beitenu-8-utj-7/ (via WordPress API)"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/article-741662"
  },
  {
   "id": "k23-2020-01-16-midgam-channel-12",
@@ -10903,8 +10903,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/01/30/29th-poll-of-2020-election-blue-white-34-likud-31-joint-list-14-yamina-9-shas-9-labor-gesher-meretz-9-utj-7-yisrael-beitenu-7/"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/article-744311"
  },
  {
   "id": "k23-2020-02-05-midgam-walla",
@@ -11397,8 +11397,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/02/21/43rd-poll-of-2020-election-blue-white-35-likud-33-joint-list-13-labor-gesher-meretz-9-shas-8-utj-8-yamina-7-yisrael-beitenu-7/"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2020/Article-94897855f5e5071026.htm"
  },
  {
   "id": "k23-2020-02-19-panels-politics-maariv",
@@ -11663,8 +11663,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/02/27/49th-poll-of-2020-election-likud-33-blue-white-32-joint-list-14-labor-gesher-meretz-10-yamina-8-shas-8-yisrael-beitenu-8-utj-7/"
+  "sourceLevel": "primary",
+  "source": "https://13tv.co.il/item/news/politics/politics/survey-240220-1013725/"
  },
  {
   "id": "k23-2020-02-25-midgam-walla",
@@ -11929,8 +11929,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/02/29/58th-poll-of-2020-election-likud-35-blue-white-33-joint-list-14-labor-gesher-meretz-9-shas-8-utj-8-yamina-7-yisrael-beitenu-6/ ; cited mako URL 404 (alternate path blocked by bot protection)"
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/2020/Article-186f5a0448c8071027.htm"
  },
  {
   "id": "k23-2020-02-28-midgam-project-channel-13",
@@ -12002,8 +12002,8 @@
    }
   },
   "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/02/28/56th-poll-of-2020-election-likud-35-blue-white-34-joint-list-14-shas-9-labor-gesher-meretz-8-yamina-7-utj-7-yisrael-beitenu-6/ (via WordPress API)"
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/article-750883"
  },
  {
   "id": "k24-2021-02-04-panels-politics-maariv",

@@ -21,8 +21,14 @@
 - `pre_meta_fixes.json` +11.
 - 6 שורות אפר׳ 2019 — המקור עצמו חלקי (נבדק ב־`pre_k21_manual.json`); אין מה להוסיף.
 
+## (ד) — שדרוג למקור ראשי (PR הנוכחי)
+- `raw/forecast/verification/primary_upgrades.json` (41): נקרא בסוף `forecast_polls.build()`; רק match/corrected שאינם primary; משנה `sourceLevel`/`source` בלבד (נבדק: שאר השדות זהים; forecast/backtest ללא שינוי).
+- 109 לא נמצאו (חסימה/ארכיון שנעלם), 13 "חלשים" (1–5 רשימות במקור) — נשארו "הוצלב".
+- שני פערים פתוחים (לא תוקנו — קלט המודל): k23-2020-02-19-panels-politics-maariv (ש"ס 8 ב־maariv article-749466), k20-2015-02-26-w13 (maariv article-465071: מחנה ציוני 25, בית יהודי 11).
+- לבדוק בהמשך: k19-2013-01-17-18 (פאנלס, "ערוץ הכנסת") תואם מספר־למספר לסקר mako 17.1.2013 — ייתכן שהמזמין שגוי; k20-2015-03-13-0 — המכון לפי mako: מדגם (בנתונים "לא צוין"); k20-2015-02-24-w18 — לפי JPost יחד לא עוברת (אצלנו 4).
+
 ## הצעד הבא (לסשן ההמשך)
-1. **(ד) שדרוג "הוצלב" למקור ראשי:** ~150 רשומות ישנות ב־`raw/forecast/polls.json` (`match` עם `sourceLevel` press/aggregator ⇐ מוצגות "הוצלב") ורשומות `pre_*` ברמת press. לחפש את אתר הגוף המפרסם/דוח לוועדת הבחירות; כשנמצא — לעדכן את רשומת האימות ל־`sourceLevel: primary`. רשומות הקודמות ב־`raw/forecast/verification/k19_k20_*`, `k21_k25_*` נבנות ל־`polls.json` ב־`pipeline/forecast_polls.py` — **שינוי שם עלול לשנות את קלט המודל**: לעדכן רק `sourceLevel` (המודל מסנן לפי `sourceLevels` ב־`pipeline/forecast_k26.json`? לבדוק ש־`test_forecast.py` ו־`backtest.json` לא משתנים).
+1. **(ד) שדרוג "הוצלב" למקור ראשי** (בוצע ל־polls.json: 41/165; נותרו רשומות `pre_*` ברמת press): ~150 רשומות ישנות ב־`raw/forecast/polls.json` (`match` עם `sourceLevel` press/aggregator ⇐ מוצגות "הוצלב") ורשומות `pre_*` ברמת press. לחפש את אתר הגוף המפרסם/דוח לוועדת הבחירות; כשנמצא — לעדכן את רשומת האימות ל־`sourceLevel: primary`. רשומות הקודמות ב־`raw/forecast/verification/k19_k20_*`, `k21_k25_*` נבנות ל־`polls.json` ב־`pipeline/forecast_polls.py` — **שינוי שם עלול לשנות את קלט המודל**: לעדכן רק `sourceLevel` (המודל מסנן לפי `sourceLevels` ב־`pipeline/forecast_k26.json`? לבדוק ש־`test_forecast.py` ו־`backtest.json` לא משתנים).
 2. ~~**שורות שקריאתן חלקית**~~ (בוצע ב־PR הנוכחי; 16 שנותרו — המקור עצמו חלקי/לא נמצא) (אזהרות בנייה "הושמט עד תמלול מהמקור"): 2015 — 6, 2013 — 21 (בחלקן הרשימה בוויקיפדיה עצמה חסרה מפלגות — אז אין מה לתקן), אפר׳ 2019 — 6. קליטה דרך `pre_kNN_manual.json` (המנגנון קיים ל־k21 ב־`build_history`; ל־2015/2013 צריך להוסיף ב־`history_wiki_2015.add_polls`).
 3. ~~**עוד תיקוני שמות**~~ (בוצע חלקית: 11; מועמדים מפוקפקים — k22-2019-05-30 קאן/דיירקט פולס, k22-2019-07-03 סטטנט, k21-2017-07-27 סטטנט — לא שונו, אין מקור ודאי) מהערות הסוכנים ב־`pre_*_results_*.json` (חיפוש "pollster"/"publisher"/"commissioned").
 
