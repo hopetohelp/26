@@ -19,7 +19,9 @@ CONFIG = {
                     "United Torah Judaism": "ג", "Meretz": "מרצ", "Kulanu": "כ"},
          "merged": {("Israeli Labor Party", "Hatnuah"): "אמת", ("Hadash", "UAL-Ta'al", "Balad"): "ודעם",
                     ("Otzma Yehudit", "Yachad"): "קץ", ("Likud", "Yisrael Beiteinu"): "Likud Beiteinu"},
-         "key": ("פה", "טב", "ג", "מרצ"), "big": ("מחל", "פה", "אמת")},
+         "key": ("פה", "טב", "ג", "מרצ"), "big": ("מחל", "פה", "אמת"),
+         # שמות ברשומות התמלול מהמקור (pre_k20_manual.json) לרשימה משותפת ⇐ אותיותיה; שם אחר שאינו עמודה ⇐ unmapped
+         "joint": {"Zionist Union": "אמת", "Joint List": "ודעם", "Arab parties": "ודעם"}},
     # 2013: הליכוד+ישראל ביתנו = הליכוד ביתנו (מחל); האיחוד הלאומי+הבית היהודי = הבית היהודי (טב)
     19: {"page": "en__Opinion_polling_for_the_2013_Israeli_legislative_election.wiki",
          "cols": ["Kadima", "Likud", "Yisrael Beiteinu", "Israeli Labor Party", "Shas", "United Torah Judaism", "National Union",
@@ -28,7 +30,8 @@ CONFIG = {
                     "Hadash": "ו", "Balad": "ד", "Meretz": "מרץ", "Yesh Atid": "פה", "Otzma LeYisrael": "נץ", "Am Shalem": "ץ",
                     "Hatnuah": "צפ"},
          "merged": {("Likud", "Yisrael Beiteinu"): "מחל", ("National Union", "The Jewish Home"): "טב"},
-         "key": ("אמת", "שס", "ג", "מרץ"), "big": ("מחל", "אמת", "שס")},
+         "key": ("אמת", "שס", "ג", "מרץ"), "big": ("מחל", "אמת", "שס"),
+         "joint": {"Likud Beiteinu": "מחל", "Jewish Home-National Union": "טב", "Arab parties": "UAL-Ta'al+Hadash+Balad"}},
 }
 MONTHS = {m: i for i, m in enumerate(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 1)}
 YEAR_ROW = re.compile(r"(?m)^[!|]\s*colspan=\d+\|\s*(?:'{3})?\s*(\d{4})\s*(?:'{3})?\s*$")
@@ -108,10 +111,25 @@ FIRMS = [(r"panel", "panels_politics"), (r"teleseker|tns|kantar", "kantar"), (r"
          (r"dahaf", "dahaf"), (r"new wave", "new_wave")]
 
 
-def add_polls(cycle: dict, election: dict, firm_names: dict, publisher_he, slug, prev_date: str, scenarios: set = frozenset()) -> list[str]:
+def manual_values(n: int, seats: dict) -> tuple[dict, dict]:
+    """תמלול מלא מהמקור (שמות באנגלית כמו בעמודות הטבלה) ⇐ values לפי אותיות הקלפי, ו-unmapped למפלגה־קודמת."""
+    cfg = CONFIG[n]
+    values, unmapped = {}, {}
+    for name, s in seats.items():
+        letters = cfg["single"].get(name) or cfg["joint"].get(name)
+        if letters and not letters.isascii():
+            values[letters] = {"s": s}
+        else:
+            unmapped[letters or name] = {"s": s}
+    return values, unmapped
+
+
+def add_polls(cycle: dict, election: dict, firm_names: dict, publisher_he, slug, prev_date: str, scenarios: set = frozenset(),
+              manual: dict | None = None) -> list[str]:
     """מוסיף לסבב את שורות הוויקיפדיה שאינן כבר בסבב (אותו יום ±1 ואותם מספרים, או אותו מכון ±2 ימים ואותם מספרים
     לגדולות ⇐ אותו סקר, גם כשתוקן בתמלול). רק מהיום שאחרי הבחירות הקודמות. שורה שסכום המנדטים בה אינו 118–122
-    (קריאה חלקית) — מושמטת ומדווחת."""
+    (קריאה חלקית) — מושמטת ומדווחת, אלא אם יש לה תמלול מלא מהמקור ב-manual ((תאריך, תא הסקר) ⇐ רשומה,
+    raw/forecast/verification/pre_kNN_manual.json)."""
     from pathlib import Path
     from datetime import date as D
     n = cycle["knesset"]
@@ -132,6 +150,12 @@ def add_polls(cycle: dict, election: dict, firm_names: dict, publisher_he, slug,
                for hd, hv, hf in have):
             continue
         total = sum(e.get("s", 0) for e in [*r["values"].values(), *r["unmapped"].values()])
+        man = (manual or {}).get((r["date"], r["firm"])) if not 118 <= total <= 122 else None
+        if man and man.get("seats") and 118 <= sum(man["seats"].values()) <= 122:
+            r["values"], r["unmapped"] = manual_values(n, man["seats"])
+            total = sum(man["seats"].values())
+        else:
+            man = None
         if not 118 <= total <= 122:
             skipped.append(f"{r['date']} {firm_txt} ({total})")
             continue
@@ -148,6 +172,7 @@ def add_polls(cycle: dict, election: dict, firm_names: dict, publisher_he, slug,
             "id": pid, "start": r["date"], "end": r["date"], "dateBasis": "publication", "published": r["date"],
             "firmKey": firm_key, "firmHe": firm_names.get(firm_key, "מכון לא צוין"), "publisherHe": pub,
             "values": r["values"], **({"unmapped": r["unmapped"]} if r["unmapped"] else {}),
-            "seatSum": total, "consistent": True, "preLists": True, "urls": r["urls"]})
+            "seatSum": total, "consistent": True, "preLists": True, "urls": r["urls"],
+            **({"manualVerification": {k: man.get(k) for k in ("status", "sourceLevel", "source", "note")}} if man else {})})
     cycle["polls"].sort(key=lambda p: (p["end"], p["id"]), reverse=True)
     return skipped

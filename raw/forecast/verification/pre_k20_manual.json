@@ -1,0 +1,74 @@
+[
+ {
+  "end": "2015-01-20",
+  "firm": "Knesset Channel/NRG",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://elections.walla.co.il/item/2821694",
+  "seats": null,
+  "differences": [],
+  "note": "Walla, 20.1.2015 17:34, 'סקר: איחוד מפלגות משיג לליכוד והבית היהודי רק מנדט אחד יותר'; Knesset Channel poll by Panels Politics, 513 respondents, error 4.5%. NRG original (nrg.co.il / makorrishon mirror) returned 403. Wikipedia row is the joint Likud+Jewish Home scenario: joint list 40, Yachad 6, Kulanu 6, Shas 4, Yisrael Beiteinu 5, Zionist Union 24, Yesh Atid 11 (=96). Separate scenario: Likud 23, Jewish Home 16 (YB 5, ZU 24, YA 11 same). Walla prints no numbers for UTJ, Meretz, Joint List (Wikipedia has 7/6/11), so the source is incomplete. Wikipedia lacks the Likud/Jewish Home (joint 40 or 23+16) cells."
+ },
+ {
+  "end": "2014-12-23",
+  "firm": "TRI/Nana&nbsp;10",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.theyeshivaworld.com/?p=277092",
+  "seats": null,
+  "differences": [],
+  "note": "Nana10 original returned 503/404. Yeshiva World News, 23 Dec 2014, 'Poll: Religious Favor Netanyahu – Secularists Hertzog'; TRI and Panels for Channel 10. Prints Labor/Movement 21, Likud 20, Bayit Yehudi 16, UTJ 8, Yisrael Beitenu 7, Meretz 6, Shas 5, Ha'Am Itanu (Yishai) 4, combined Arab parties 11 (=98, identical to Wikipedia). Adds: 'if Moshe Kahlon runs on a joint ticket with Yair Lapid they would receive 21 seats' (98+21=119), but no separate Yesh Atid or Kulanu numbers; unclear if the list is that scenario, so left partial."
+ },
+ {
+  "end": "2014-12-16",
+  "firm": "Geocartography",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": null,
+  "seats": null,
+  "differences": [],
+  "note": "No original or press report found (searched Hebrew/English). Hint only: knessetjeremy (not a source) says broadcast on Israeli radio 16 Dec 2014 and itself sums to 124 (adds Kadima 0, Yishai 0); commenters noted the error."
+ },
+ {
+  "end": "2014-11-03",
+  "firm": "Panels/NRG",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": null,
+  "seats": null,
+  "differences": [],
+  "note": "NRG original not found/reachable (nrg/makorrishon blocks with 403); no press report found. Hint only: knessetjeremy lists same numbers as Wikipedia plus Kadima 0, summing 117."
+ },
+ {
+  "end": "2014-01-22",
+  "firm": "GeoCartography",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/176602",
+  "seats": {
+   "Likud Beiteinu": 40,
+   "Israeli Labor Party": 12,
+   "Shas": 12,
+   "The Jewish Home": 11,
+   "Meretz": 10,
+   "Yesh Atid": 9,
+   "United Torah Judaism": 6,
+   "Hatnuah": 3,
+   "Kadima": 3,
+   "Am Shalem": 3,
+   "Joint List": 11
+  },
+  "differences": [],
+  "note": "Arutz Sheva/INN, 22 Jan 2014, 'Poll Shows Nationalists with Whopping 76 Seats'; GeoCartography for Radio 103FM, 500 respondents. Sum 120. 'Joint List' = printed combined 'Hadash, Ra'am-Ta'al and Balad' 11. Wikipedia lacked Kadima 3 and Am Shalem 3 (both non-Wikipedia columns in 2015 table). Article also prints a split scenario (Likud 39, YB 16, Labor 11, Shas 10, YA 10, Meretz 8, JH 7, UTJ 4, Hatnua 2, Kadima 2, Am Shalem 0, Arab 11)."
+ },
+ {
+  "end": "2013-12-25",
+  "firm": "Midgam/Walla",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": null,
+  "seats": null,
+  "differences": [],
+  "note": "Walla original not found by search. Hint only: knessetjeremy lists Wikipedia numbers plus Kadima 2 and Green Party (Ale Yarok) 2, summing 120 - unverified."
+ }
+]
