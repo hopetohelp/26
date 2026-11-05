@@ -261,7 +261,8 @@
   "fieldEndSource": null,
   "sample": null,
   "moe": null,
-  "note": "Arutz 7 (inn.co.il) 9.12.19 20:25 citing Kantar for Kan 11. NOTE: these are the SCENARIO figures 'גדעון סער בראשות הליכוד': הליכוד 32, כחול לבן 33, המשותפת 13, ש\"ס 9, ישראל ביתנו 8, יהדות התורה 8, הימין החדש 8, העבודה-גשר 5, המחנה הדמוקרטי 4 — all match Wikipedia, but this row is a Saar-led-Likud scenario, not the base poll (base = row k23-2019-12-08-kantar-kan-radio). Fieldwork/sample/MoE not stated; published Monday 9.12."
+  "note": "Arutz 7 (inn.co.il) 9.12.19 20:25 citing Kantar for Kan 11. NOTE: these are the SCENARIO figures 'גדעון סער בראשות הליכוד': הליכוד 32, כחול לבן 33, המשותפת 13, ש\"ס 9, ישראל ביתנו 8, יהדות התורה 8, הימין החדש 8, העבודה-גשר 5, המחנה הדמוקרטי 4 — all match Wikipedia, but this row is a Saar-led-Likud scenario, not the base poll (base = row k23-2019-12-08-kantar-kan-radio). Fieldwork/sample/MoE not stated; published Monday 9.12.",
+  "scenario": true
  },
  {
   "id": "k23-2019-12-10-midgam-walla",

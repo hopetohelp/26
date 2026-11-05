@@ -776,6 +776,8 @@ def build_history(results: list[dict]) -> dict:
                   [(all_tables[i][1], {k: v for k, v in {**cfg["cols"], **pre["cols"]}.items() if k not in pre.get("separate", {}).get(i, set())},
                     pre["ignore"], True) for i in pre["tables"]]
         polls, seen = [], {}
+        scenarios = {r["id"] for f in (RAW / "forecast" / "verification").glob(f"pre_k{n}_results*.json")
+                     for r in json.loads(f.read_text(encoding="utf-8")) if r.get("scenario")}
         rows = [(d, cols, ignore, lenient) for table, cols, ignore, lenient in sources
                 for d in wt.parse_table(table)[1]]
         for d, cols, ignore, lenient in rows:
@@ -824,6 +826,11 @@ def build_history(results: list[dict]) -> dict:
                 continue
             i = seen.get(base, 0)
             seen[base] = i + 1
+            pid = base if i == 0 else f"{base}-{chr(ord('a') + i)}"
+            if lenient and (i > 0 or pid in scenarios):
+                # שורת תרחיש היפותטי של אותו סקר (אותו יום, מכון ומזמין, או סומן ברשומת האימות) — אינה סקר של המערכה,
+                # כמו טבלאות התרחישים שאינן נקלטות ב-2026; מתועדת ב-raw/forecast/verification/pre_*
+                continue
             polls.append({
                 "id": base if i == 0 else f"{base}-{chr(ord('a') + i)}",
                 "start": d["date"]["start"], "end": d["date"]["end"],

@@ -1,0 +1,305 @@
+[
+ {
+  "id": "k21-2017-11-01-unknown-ten-news",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.ynet.co.il/articles/0,7340,L-5037313,00.html",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "ynet 01.11.17: Channel 10 poll: Likud 26, YA 22, ZU 19, JL 12, JH 11, Meretz 8, Kulanu 7, UTJ 6, YB 5, Shas 4. Actual pollster: Prof. Camil Fuchs with Project HaMidgam (פרויקט המדגם, Dr. Ariel Ayalon) and Stat-Net (Arab sector). nana10 link dead; archive unreachable."
+ },
+ {
+  "id": "k21-2017-11-01-unknown-news-company",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/237532 ; https://www.ynet.co.il/articles/0,7340,L-5037313,00.html",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "ynet 01.11.17 + INN: Channel 2 (Hadashot) poll: Likud 24, ZU 21, YA 20, JH 12, JL 12, Kulanu 8, UTJ 8, YB 6, Meretz 5, Shas 4. Actual pollster per ynet: Midgam (Dr. Mano Geva & Dr. Mina Tzemach)."
+ },
+ {
+  "id": "k21-2017-11-19-unknown-walla-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3112628",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 602,
+  "moe": null,
+  "note": "Walla 19/11/2017: Likud 27, YA 21, ZU 19, JL 11, JH 10, UTJ 8, Kulanu/YB/Meretz 7 each, Shas 3. Actual pollster named: Prof. Camil Fuchs, executed by Project HaMidgam (פרויקט המדגם), 602 respondents. (Scenario Lapid+Kahlon+Ashkenazi joint list 33 also reported; not used.)"
+ },
+ {
+  "id": "k21-2017-11-26-unknown-ten-news",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://news.walla.co.il/item/3114601",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Walla 26/11/2017 on Channel 10 poll aired Sunday 26 Nov: YA 24, Likud 24, ZU 17, JH 12, JL 11, Kulanu 9, UTJ 7, Meretz 7, YB 5, Shas 4. Actual pollster: Prof. Camil Fuchs with Midgam (Project HaMidgam) and Stat-Net. nana10 link dead."
+ },
+ {
+  "id": "k21-2017-12-01-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "http://www.maariv.co.il/journalists/Article-612102 (+ gallery image https://images.maariv.co.il/image/upload/f_jpg/467020, 467022)",
+  "differences": [],
+  "fieldEndSource": "2017-11-29",
+  "sample": 553,
+  "moe": null,
+  "note": "Maariv 1/12/2017 chart (Likud led by Netanyahu): Likud 25, YA 25, ZU 17, JH 12, JL 11, UTJ 8, Kulanu 7, Meretz 6, YB 5, Shas 4. Image footnote: conducted 29 Nov by Panels Politics, sample 553 (MoE cut off in image). Saar-led scenario (Likud 30) also in chart, not used."
+ },
+ {
+  "id": "k21-2017-12-04-unknown-news-company",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/238882 (mako link 403, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 525,
+  "moe": null,
+  "note": "INN 5 Dec 2017: poll publicized Monday (4 Dec), conducted by Midgam for Channel 2, 525 adults: Likud 24, YA 22, ZU 18, JH 12, JL 12, YB 7, Meretz 7, UTJ 7, Kulanu 6, Shas 5. Actual pollster: Midgam (מדגם)."
+ },
+ {
+  "id": "k21-2017-12-08-geocartography-x",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/239742 (original https://www.20il.co.il/?p=70745 is 404 - site repurposed; web.archive unreachable)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Original lost. INN 24 Dec 2017 refers back to the previous Geocartography poll (~2 weeks earlier): Jewish Home 14 and Joint List 13 - both match. Other figures (Likud 33, YA 16, ZU 12, UTJ 9, Kulanu 7, YB 6, Shas 6, Meretz 4) not found."
+ },
+ {
+  "id": "k21-2017-12-19-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/239742",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 24 Dec 2017: Geocartography survey conducted 'last week': JH 20, YA 27, Likud 24, ZU 14, JL 9, UTJ 9, Kulanu 7, YB 5, Meretz 5, Shas below threshold. Publisher not named."
+ },
+ {
+  "id": "k21-2017-12-27-maagar-mochot-makor-rishon",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/239991",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 29 Dec 2017: Maagar Mochot for Makor Rishon: YA 25, Likud 24, JH 14, ZU 12, Kulanu 11, JL 11, Meretz 7, UTJ 7, YB 5, Shas 4."
+ },
+ {
+  "id": "k21-2017-12-28-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/240112",
+  "differences": [],
+  "fieldEndSource": "2017-12-28",
+  "sample": 600,
+  "moe": null,
+  "note": "INN 1 Jan 2018: Geocartographia poll of 600 adults 'last Thursday' (28 Dec): Likud 31, YA 26, ZU 13, JH 12, JL 9, Kulanu 8, UTJ 7, Meretz 6, Shas 4, YB 4. Publisher not named."
+ },
+ {
+  "id": "k21-2018-01-11-midgam-news-company",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/240607 ; https://www.inn.co.il/News/News.aspx/363763",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 504,
+  "moe": null,
+  "note": "INN (EN+HE, 13 Jan 2018): Midgam poll on Channel 2, 504 respondents, conducted mid-week: Likud 25, YA 24, ZU 16, JL 12, JH 11, UTJ 7, YB 7, Shas 6, Meretz 5 - all match. Kulanu is not stated in either report (wiki 7 = remainder 120-113, consistent)."
+ },
+ {
+  "id": "k21-2018-01-12-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "http://www.maariv.co.il/news/politics/Article-617608",
+  "differences": [],
+  "fieldEndSource": "2018-01-10",
+  "sample": null,
+  "moe": null,
+  "note": "Maariv 12/1/2018: Panels Politics poll conducted 'שלשום' (10 Jan) for Maariv-Sofashavua: YA 27, Likud 22, ZU 14, JH 13, JL 11, Kulanu 9, UTJ 8, Meretz 7, YB 5, Shas 4."
+ },
+ {
+  "id": "k21-2018-01-21-panels-politics-walla-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3128939",
+  "differences": [],
+  "fieldEndSource": "2018-01-17",
+  "sample": 504,
+  "moe": "4.4%",
+  "note": "Walla 21/01/2018: YA 25, Likud 24, ZU 15, JH 13, JL 11, UTJ 8, Kulanu 8, Meretz 7, YB 5, Shas 4. Panels Politics, 504 online panel, conducted 17 Jan, MoE 4.4%."
+ },
+ {
+  "id": "k21-2018-02-01-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/241480",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 2 Feb 2018: Geocartography poll published by Israel Hayom (publisher = ישראל היום): Likud 30, YA 24, ZU 13, JH 12, YB 8, Kulanu 7, UTJ 7, Meretz 6, Shas 5, JL 8."
+ },
+ {
+  "id": "k21-2018-02-14-smith-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "http://www.maariv.co.il/news/politics/Article-624368 (+ chart image https://images.maariv.co.il/image/upload/f_jpg/476738) ; https://www.hidabroot.org/article/231665",
+  "differences": [],
+  "fieldEndSource": "2018-02-14",
+  "sample": 556,
+  "moe": null,
+  "note": "Maariv 16/2/2018, Smith for Maariv, chart 'אומדן מנדטים': Likud 28, ZU 15, YA 22, Kulanu 7, JH 11, Shas 5, YB 7, UTJ 7, Meretz 6, JL 12. Fieldwork date not stated. Hidabroot (press): conducted 14 Feb 2018, 556 respondents."
+ },
+ {
+  "id": "k21-2018-02-14-midgam-project-ten-news",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.timesofisrael.com/polls-show-support-for-netanyahu-may-be-rising-after-police-allegations/ (403 Cloudflare captcha, not bypassed); inn.co.il ID scan 14-15 Feb 2018 (only News2/Midgam poll found, news/366355); web searches (walla, ynet, kikar, srugim)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No accessible source with the Channel 10 (Fuchs/Project HaMidgam) 14 Feb 2018 seat numbers. Walla 21/2 (item 3137419) says the 21 Feb Ch10 poll was in line with previous; no numbers for 14 Feb."
+ },
+ {
+  "id": "k21-2018-02-14-midgam-news-company",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/241952 ; https://www.inn.co.il/news/366355",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 14 Feb 2018: Midgam for Hadashot 2: Likud 26, YA 22, ZU 15, JL 12, JH 11, Kulanu 9, Meretz 7, UTJ 7, YB 6, Shas 5."
+ },
+ {
+  "id": "k21-2018-02-19-geocartography-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/242219",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 21 Feb 2018: Geocartography (reported by Israel Hayom; INN says 'conducted at the Likud's request'): Likud 34, YA 20, JH 14, ZU 12, JL 12, UTJ 9, Kulanu 7, YB 6, Meretz 6, Shas below threshold."
+ },
+ {
+  "id": "k21-2018-02-21-midgam-project-ten-news",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://news.walla.co.il/item/3137419 (TOI link 403, not bypassed) ; https://www.inn.co.il/news/366910",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 700,
+  "moe": null,
+  "note": "Walla 21/02/2018 on Channel 10 ('Hadashot 10') poll: Likud 27, YA 23, ZU 15, JL 12, JH 10, Kulanu 8, Meretz 7, YB 7, UTJ 6, Shas 5. Prof. Camil Fuchs with Project HaMidgam panel and Stat-Net, ~700 respondents. (Scenario non-Netanyahu Likud: Likud 26, ZU 16 - not used.)"
+ },
+ {
+  "id": "k21-2018-02-22-midgam-news-company",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/367075 ; https://prophecyupdate.blogspot.com/2018/02/likud-gaining-strength-despite.html (verbatim reprint of a Times of Israel report; haaretz/TOI 403, not bypassed; https://news.walla.co.il/item/3137419 checked - no seats)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 538,
+  "moe": "4.3%",
+  "note": "inn.co.il 24.02.18: Midgam (Mano Geva & Dr. Mina Tzemach) via iPanels for 'Meet the Press', aired Sat 24 Feb: Likud 28, YA 22(!), ZU 15, JL 12, JH 9, Kulanu 7, UTJ 7, YB 7, Meretz 6, Shas 5. INN's YA 22 is internally inconsistent: its own text says YA +2 vs previous Hadashot poll (22 on 14 Feb) and gives center-left bloc 45 (=YA+ZU15+Meretz6 -> YA 24), and 22 makes the total 118. TOI text (via blog reprint; 538 resp., MoE 4.3%) gives YA 24 and all other numbers identical. Treated as match with YA 24."
+ },
+ {
+  "id": "k21-2018-02-28-geocartography-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/News/News.aspx/367582 (israelhayom.com 403, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 587,
+  "moe": null,
+  "note": "inn.co.il 2.03.18: INTERNAL poll commissioned by the Likud party, conducted by Geocartography, 587 respondents: Likud 36 (=30 + 6 from redistributed 'surplus votes' of weakened/vanished lists - i.e. adjusted figure), YA 23, JH 11, ZU 10, UTJ 10, JL 10, Meretz 6, YB 5, Kulanu 5, Shas 4. All match wiki, but note: party-commissioned poll with a non-standard reallocation; not an Israel Hayom-commissioned poll per this source."
+ },
+ {
+  "id": "k21-2018-03-01-panels-politics-walla-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3139433",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 589,
+  "moe": null,
+  "note": "Walla 01/03/2018: Panels Politics: Likud 29, YA 23, ZU 13, JH 11, JL 10, UTJ/Meretz/Kulanu 8, YB 6, Shas 4; 589 online panel."
+ },
+ {
+  "id": "k21-2018-03-04-midgam-project-ten-news",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/News/News.aspx/367673 (TOI link 403, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "inn.co.il 4.03.18: Channel 10 poll by Dr. Camil Fuchs after PM's interrogation: Likud 29, YA 24, ZU 12, JL 12, JH 10, Meretz 8, Kulanu 7, YB 7, UTJ 6, Shas 5."
+ },
+ {
+  "id": "k21-2018-03-08-panels-politics-walla-news",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3141117",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Walla 08/03/2018 (video bulletin text): 'סקר מיוחד של מכון המחקר פאנלס פוליטיקס לוואלה! NEWS... הליכוד היה מקבל 30 מנדטים, יש עתיד מתחזקת וכולנו נחלשת' - only Likud 30 stated (matches). Other numbers only in video; no text found."
+ },
+ {
+  "id": "k21-2018-03-08-maagar-mochot-israel-hayom",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/367974 (israelhayom.com 403, not bypassed)",
+  "differences": [
+   {
+    "key": "שס (ש\"ס)",
+    "wikipedia": 2,
+    "source": 0
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "inn.co.il 8.03.18: Maagar Mochot poll conducted this week for Israel Hayom: Likud 34, YA 24, JH 14, ZU 10, JL 10, UTJ 8, Meretz 7, Kulanu 6, YB 5; 'ש\"ס ... אינה עוברת את אחוז החסימה'. Listed parties sum to 118; Shas below threshold so 0 seats (wiki 2 is likely Shas's sub-threshold seat-equivalent; no percent given in source)."
+ },
+ {
+  "id": "k21-2018-03-12-midgam-project-ten-news",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/2018/03/12/... (aggregator only, not a primary source); inn.co.il ID scan 8-14 Mar 2018; INN English 243050 (News 2 poll only); web searches",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the aggregator (knessetjeremy) lists the Channel 10 12 Mar poll (Likud 29, YA 24...). No press/primary source found; TOI/mako/13tv blocked or not found."
+ },
+ {
+  "id": "k21-2018-03-12-midgam-news-company",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/243050",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 12 Mar 2018: poll for News 2 (INN writes 'Modiin Institute'): Likud 30, YA 21, ZU 13, JL 12, JH 11, Meretz 7, UTJ 7, Kulanu 6, Orly Levy party 5, YB 4, Shas 4."
+ }
+]
