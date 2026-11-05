@@ -31,7 +31,7 @@ export interface Poll {
   urls: string[];
   verified: boolean;
   verification?: {
-    status: "match" | "corrected" | "partial" | "unreachable" | "mismatch" | "secondary" | "out_of_window" | "not_a_poll";
+    status: "match" | "corrected" | "partial" | "unreachable" | "mismatch" | "secondary" | "out_of_window" | "not_a_poll" | "cross_checked" | "unverified";
     checkedAt: string;
     source: string | null;
     details: { published?: string | null; population?: string | null; moe?: string | number | null; method?: string | null; sample_respondents?: number | null };
@@ -64,6 +64,9 @@ export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "wa
   // מצבי הבדיקה של סקרי 2013–2022 (raw/forecast/verification)
   out_of_window: { text: "לא נמצא במקור שנבדק", tone: "neutral" },
   not_a_poll: { text: "לפי המקור — אינו סקר", tone: "warn" },
+  // הכרעת בעלים 05.11.2026: המקור המקורי חסום או חסר ⇐ הוצלב מול מקור חלופי; נמצא רק בוויקיפדיה ⇐ לא אומת
+  cross_checked: { text: "הוצלב", tone: "neutral" },
+  unverified: { text: "לא אומת", tone: "neutral" },
 };
 
 export function verificationLabel(status: string) {

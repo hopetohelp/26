@@ -1,0 +1,1282 @@
+[
+ {
+  "id": "k22-2019-05-26-panels-politics-maariv",
+  "knesset": 22,
+  "end": "2019-05-26",
+  "start": "2019-05-26",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 35
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Hadash": {
+    "s": 7
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 6
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k22-2019-05-28-direct-polls-makor-rishon",
+  "knesset": 22,
+  "end": "2019-05-28",
+  "start": "2019-05-28",
+  "firm": "דיירקט פולס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Gesher (2019 political party)": {
+    "p": 0.96
+   },
+   "[קודמת] Hadash": {
+    "s": 7
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 7
+   },
+   "[קודמת] Kulanu": {
+    "p": 1.67
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 5
+   },
+   "[קודמת] United Arab List": {
+    "p": 2.3
+   },
+   "[קודמת] Zehut": {
+    "p": 1.44
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/05/28/second-post-election-poll-likud-34-blue-white-33-yisrael-beitenu-9-utj-8-3-tied-at-7-right-religious-bloc-68/"
+  ]
+ },
+ {
+  "id": "k22-2019-05-30-panels-politics-maariv",
+  "knesset": 22,
+  "end": "2019-05-30",
+  "start": "2019-05-30",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 37
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "p": 1.9
+   },
+   "[קודמת] Meretz": {
+    "s": 6
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 6
+   },
+   "[קודמת] United Arab List": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 1.4
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-701460"
+  ]
+ },
+ {
+  "id": "k22-2019-05-30-midgam-project-channel-13",
+  "knesset": 22,
+  "end": "2019-05-30",
+  "start": "2019-05-30",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 36
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Hadash": {
+    "s": 7
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] Meretz": {
+    "s": 6
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 7
+   },
+   "[קודמת] United Arab List": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://13news.co.il/item/news/politics/state-policy/reelection-2019/poll_reelection-260542/"
+  ]
+ },
+ {
+  "id": "k22-2019-05-30-kantar-kan-11",
+  "knesset": 22,
+  "end": "2019-05-30",
+  "start": "2019-05-30",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 35
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Gesher (2019 political party)": {
+    "p": 2.2
+   },
+   "[קודמת] Hadash": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] United Arab List": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 3.1
+   }
+  },
+  "urls": [
+   "https://www.kan.org.il/item/?itemId=52912"
+  ]
+ },
+ {
+  "id": "k22-2019-06-02-maagar-mochot-israel-hayom",
+  "knesset": 22,
+  "end": "2019-06-02",
+  "start": "2019-06-02",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 36
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Hadash": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] Meretz": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] United Arab List": {
+    "s": 5
+   },
+   "[קודמת] Zehut": {
+    "p": 2.0
+   }
+  },
+  "urls": [
+   "https://www.israelhayom.co.il/article/662673"
+  ]
+ },
+ {
+  "id": "k22-2019-06-07-panels-politics-maariv",
+  "knesset": 22,
+  "end": "2019-06-07",
+  "start": "2019-06-07",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 37
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Gesher (2019 political party)": {
+    "p": 2.2
+   },
+   "[קודמת] Hadash": {
+    "s": 7
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] Meretz": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 6
+   },
+   "[קודמת] United Arab List": {
+    "p": 2.4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/06/07/maariv-poll-likud-37-blue-white-33-utj-8-3-tied-at-7-right-religious-bloc-71/"
+  ]
+ },
+ {
+  "id": "k22-2019-06-14-maagar-mochot-103fm",
+  "knesset": 22,
+  "end": "2019-06-14",
+  "start": "2019-06-14",
+  "firm": "מאגר מוחות",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 35
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Hadash": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 5
+   },
+   "[קודמת] United Arab List": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/264589"
+  ]
+ },
+ {
+  "id": "k22-2019-06-20-maagar-mochot-103fm",
+  "knesset": 22,
+  "end": "2019-06-20",
+  "start": "2019-06-20",
+  "firm": "מאגר מוחות",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Hadash": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 6
+   },
+   "[קודמת] United Arab List": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/elections2019/polls/Article-704686"
+  ]
+ },
+ {
+  "id": "k22-2019-06-26-midgam-project-channel-13",
+  "knesset": 22,
+  "end": "2019-06-26",
+  "start": "2019-06-26",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 32
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] Meretz": {
+    "s": 6
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/265149"
+  ]
+ },
+ {
+  "id": "k22-2019-07-03-statnet-channel-13",
+  "knesset": 22,
+  "end": "2019-07-03",
+  "start": "2019-07-03",
+  "firm": "סטטנט",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 29
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 7
+   },
+   "[קודמת] Meretz": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k22-2019-07-03-midgam-channel-12",
+  "knesset": 22,
+  "end": "2019-07-03",
+  "start": "2019-07-03",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 31
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "p": 3.0
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 8
+   },
+   "[קודמת] Meretz": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 5
+   },
+   "[קודמת] Zehut": {
+    "p": 2.1
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/tv-surveys-show-liberman-holds-balance-of-power-as-likud-blue-and-white-slip/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-04-maagar-mochot-israel-hayom",
+  "knesset": 22,
+  "end": "2019-07-04",
+  "start": "2019-07-04",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 30
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 8
+   },
+   "[קודמת] Meretz": {
+    "s": 6
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 8
+   },
+   "[קודמת] Zehut": {
+    "p": 1.0
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-shows-separate-unions-of-small-right-left-wing-parties-each-surging/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-11-midgam-walla",
+  "knesset": 22,
+  "end": "2019-07-11",
+  "start": "2019-07-11",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 30
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 5
+   },
+   "[קודמת] Zehut": {
+    "p": 2.7
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/11/walla-poll-likud-30-blue-white-30-joint-list-11-yisrael-beitenu-9-utj-8-shas-7/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-12-smith-103fm-maariv",
+  "knesset": 22,
+  "end": "2019-07-12",
+  "start": "2019-07-12",
+  "firm": "סמית'",
+  "publisher": "103FM ומעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 30
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-News/Without-Yisrael-Beiteinu-no-majority-for-ultra-Orthodox-right-wing-bloc-595436"
+  ]
+ },
+ {
+  "id": "k22-2019-07-16-midgam-channel-12",
+  "knesset": 22,
+  "end": "2019-07-16",
+  "start": "2019-07-16",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 30
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] Meretz": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 1.7
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/17/channel-12-poll-likud-31-blue-white-30-joint-list-11-scenario-polls-united-left-list-15-united-right-list-led-by-shaked-12/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-17-dialog-arutz-sheva",
+  "knesset": 22,
+  "end": "2019-07-17",
+  "start": "2019-07-17",
+  "firm": "דיאלוג",
+  "publisher": "ערוץ 7",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 28
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 8
+   },
+   "[קודמת] Meretz": {
+    "s": 7
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 1.0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/266117"
+  ]
+ },
+ {
+  "id": "k22-2019-07-19-smith-103fm-maariv",
+  "knesset": 22,
+  "end": "2019-07-19",
+  "start": "2019-07-19",
+  "firm": "סמית'",
+  "publisher": "103FM ומעריב",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 29
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 4
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/19/maariv-103-fm-radio-poll-likud-32-blue-white-29-joint-list-10-scenario-poll-labormeretz-13/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-19-direct-polls-makor-rishon",
+  "knesset": 22,
+  "end": "2019-07-19",
+  "start": "2019-07-19",
+  "firm": "דיירקט פולס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 29
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 5
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 1.0
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/19/makor-rishon-poll-likud-32-blue-white-29-joint-list-11-scenario-polls-on-shaked-vs-a-peretz-united-right-list-barak-vs-r-peretz-united-left-list/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-21-midgam-channel-12",
+  "knesset": 22,
+  "end": "2019-07-21",
+  "start": "2019-07-21",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 7
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 29
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "s": 4
+   },
+   "[קודמת] Meretz": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 5
+   },
+   "[קודמת] Zehut": {
+    "p": 1.8
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/elections_2019-q3_2019/Article-eb1a64058951c61026.htm"
+  ]
+ },
+ {
+  "id": "k22-2019-07-21-kantar-kan-11",
+  "knesset": 22,
+  "end": "2019-07-21",
+  "start": "2019-07-21",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 30
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "p": 2.8
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 8
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 1.2
+   }
+  },
+  "urls": [
+   "https://www.kan.org.il/Item/?itemId=55800"
+  ]
+ },
+ {
+  "id": "k22-2019-07-25-midgam-walla",
+  "knesset": 22,
+  "end": "2019-07-25",
+  "start": "2019-07-25",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "פה (כחול לבן)": {
+    "s": 29
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Israel": {
+    "p": 2.3
+   },
+   "[קודמת] Meretz": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 8
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 1.9
+   }
+  },
+  "urls": [
+   "https://elections.walla.co.il/item/3249412"
+  ]
+ },
+ {
+  "id": "k22-2019-07-25-midgam-project-channel-13",
+  "knesset": 22,
+  "end": "2019-07-25",
+  "start": "2019-07-25",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 7
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (המחנה הדמוקרטי)": {
+    "s": 12
+   },
+   "פה (כחול לבן)": {
+    "s": 23
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 10
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/25/channel-13-poll-likud-28-blue-white-23-democratic-union-12-joint-list-11-yb-10-shaked-10-scenario-poll-united-right-list-14/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-25-midgam-channel-12",
+  "knesset": 22,
+  "end": "2019-07-25",
+  "start": "2019-07-25",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (המחנה הדמוקרטי)": {
+    "s": 10
+   },
+   "פה (כחול לבן)": {
+    "s": 27
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 9
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 1.9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/25/channel-12-poll-likud-29-blue-white-28-joint-list-11-yb-10-democratic-union-10-shaked-9-scenario-polls-united-left-list-15-united-right-list-14/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-25-maagar-mochot-israel-hayom",
+  "knesset": 22,
+  "end": "2019-07-25",
+  "start": "2019-07-25",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (המחנה הדמוקרטי)": {
+    "s": 9
+   },
+   "פה (כחול לבן)": {
+    "s": 30
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/25/i24-news-yisrael-hayom-poll-likud-31-blue-white-30-joint-list-12-democratic-union-9-3-tied-at-7/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-25-kantar-kan-11",
+  "knesset": 22,
+  "end": "2019-07-25",
+  "start": "2019-07-25",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (המחנה הדמוקרטי)": {
+    "s": 8
+   },
+   "פה (כחול לבן)": {
+    "s": 30
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 9
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 4
+   },
+   "[קודמת] Zehut": {
+    "p": 2.4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/25/channel-11-poll-likud-30-blue-white-30-joint-list-10-yb-9-shaked-9-scenario-poll-united-right-15-united-left-14/"
+  ]
+ },
+ {
+  "id": "k22-2019-07-26-smith-103fm-maariv",
+  "knesset": 22,
+  "end": "2019-07-26",
+  "start": "2019-07-26",
+  "firm": "סמית'",
+  "publisher": "103FM ומעריב",
+  "seats": {
+   "אמת (העבודה-גשר)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (המחנה הדמוקרטי)": {
+    "s": 9
+   },
+   "פה (כחול לבן)": {
+    "s": 28
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 7
+   },
+   "[קודמת] Union of Right-Wing Parties": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/07/26/103-fm-radio-poll-likud-30-blue-white-28-joint-list-11-yisrael-beitenu-9-democratic-union-9/"
+  ]
+ }
+]

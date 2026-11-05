@@ -1,0 +1,360 @@
+[
+ {
+  "id": "k23-2019-12-15-kantar-kan-11-b",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273188 ; https://jpost.com/breaking-news/in-new-poll-611032 ; https://en.globes.co.il/en/article-1001311120",
+  "differences": [
+   {
+    "key": "ג (יהדות התורה)",
+    "wikipedia": 7,
+    "source": 8
+   },
+   {
+    "key": "[קודמת] New Right (Israel)",
+    "wikipedia": 8,
+    "source": 7
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kan 11/Kantar 15.12.2019, Sa'ar-led Likud scenario. JPost: 'Blue and White will drop to 34 seats while the Likud will drop to 27 ... Joint List with 13 seats, followed by Shas with 10 seats, UTJ with 8 seats, Yisrael Beytenu and the New Right with 7 seats each, Labor-Gesher and the Democratic Union with 5 seats each, and the United Right Parties with 4 seats' (sum 120). INN independently: 'Shas would rise to ten, and UTJ to eight', YB 7, Jewish Home-National Union 4. Wikipedia has UTJ 7 and New Right 8 (sum also 120) — press sources give UTJ 8, New Right 7."
+ },
+ {
+  "id": "k23-2019-12-15-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273188 ; https://jpost.com/breaking-news/in-new-poll-611032 ; https://en.globes.co.il/en/article-1001311120",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kan 11/Kantar poll aired Sunday 15.12.2019, as reported by INN (15.12), JPost (15.12) and Globes (16.12), Netanyahu-led Likud: Blue and White 35, Likud 31, Joint List 13, Shas 9, Yisrael Beytenu 8, UTJ 7, New Right 6, Labor-Gesher 6, Democratic Union 5; United Right and Otzma below threshold. All match. Kan original not located; sample/MoE not reported."
+ },
+ {
+  "id": "k23-2019-12-18-panels-politics-makor-rishon-b",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/421814 ; https://www.makorrishon.co.il/news/191581/ (403 - blocked, not bypassed)",
+  "differences": [
+   {
+    "key": "ג (יהדות התורה)",
+    "wikipedia": 8,
+    "source": 7
+   }
+  ],
+  "fieldEndSource": "2019-12-18",
+  "sample": 1001,
+  "moe": "3.4%",
+  "note": "Arutz 7 20.12.2019 (Makor Rishon/Panels), Sa'ar-led Likud: הליכוד 30, כחול לבן 34, המשותפת 14, ישראל ביתנו 7, הימין החדש 10, העבודה-גשר 5, המחנה הדמוקרטי-מרצ '2.6' (below threshold), הבית היהודי passes (seat number not given), right bloc 60, left-Arab 53. Haredi parties: 'גם בגזרת המפלגות החרדיות אין שינוי' i.e. Shas 8, UTJ 7 as in the main scenario — Wikipedia has UTJ 8 (and JH 4); with UTJ 7 the 60-seat right bloc implies JH 5. UTJ difference inferred from the 'no change' wording, not an explicit number; Otzma 2.0% not given."
+ },
+ {
+  "id": "k23-2019-12-18-panels-politics-makor-rishon",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/421814 ; https://www.makorrishon.co.il/news/191581/ (403 - blocked, not bypassed)",
+  "differences": [],
+  "fieldEndSource": "2019-12-18",
+  "sample": 1001,
+  "moe": "3.4%",
+  "note": "Arutz 7 20.12.2019 citing Makor Rishon/Panels Politics (Menachem Lazar; 'נערך ב־18 בדצמבר 2019', 1,001 נשאלים, טעות 3.4%), Netanyahu-led Likud: כחול לבן 38, הליכוד 34, ישראל ביתנו 7, העבודה 5, המשותפת 14, הימין החדש 7, ש\"ס 8, יהדות התורה 7; המחנה הדמוקרטי, הבית היהודי-האיחוד הלאומי ועוצמה יהודית לא עוברים. All seat numbers match; below-threshold percentages (DU 2.1, JH 2.7, Otzma 1.6) not given. JPost 2.1.2020 also refers to the previous Panels poll with 38 vs 34."
+ },
+ {
+  "id": "k23-2019-12-19-smith-103fm-b",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/421783 ; https://www.israelnationalnews.com/News/News.aspx/273412",
+  "differences": [],
+  "fieldEndSource": "2019-12-19",
+  "sample": 800,
+  "moe": "3.5%",
+  "note": "Israel National News 20.12.2019 (103FM/Smith), Likud headed by Sa'ar scenario: Blue and White 33, Likud 30, Joint List 13, Shas 9, New Right 8, UTJ 7, Yisrael Beytenu 6, United Right 5, Labor-Gesher 5, Democratic Union 4. All match (Wikipedia key 'The Jewish Home' = United Right list 5). Arutz 7 Hebrew (19.12.2019) confirms: 'סקר 103fm נערך בימים רביעי וחמישי בקרב 800 ... טעות הדגימה 3.5' (Likud 32 / 30 under Sa'ar, YB 7 / 6, blocs 56-57 / 59-55)."
+ },
+ {
+  "id": "k23-2019-12-19-smith-103fm",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/421783 ; https://www.israelnationalnews.com/News/News.aspx/273412",
+  "differences": [],
+  "fieldEndSource": "2019-12-19",
+  "sample": 800,
+  "moe": "3.5%",
+  "note": "Israel National News 20.12.2019 citing weekly Radio 103FM poll by Smith Institute, Likud headed by Netanyahu: Blue and White 35, Likud 32, Joint List 13, Shas 8, UTJ 7, Yisrael Beytenu 7, New Right 5, Labor-Gesher 5, United Right (JH+NU+Otzma) 4, Democratic Union 4. All match. Arutz 7 Hebrew (19.12.2019) confirms: 'סקר 103fm נערך בימים רביעי וחמישי בקרב 800 ... טעות הדגימה 3.5' (Likud 32 / 30 under Sa'ar, YB 7 / 6, blocs 56-57 / 59-55)."
+ },
+ {
+  "id": "k23-2019-12-29-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273822",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 30.12.2019 on the Channel 12 News poll published Sunday evening (29.12): Likud 32, Blue and White 34, Joint List 13, Yisrael Beytenu 8, Shas 8, UTJ 7, New Right 5, Labor-Gesher 5, Democratic Union 4, United Right (Jewish Home+Otzma, with National Union) 4. All match. Pollster/sample not stated in this report; Channel 12/mako original not located."
+ },
+ {
+  "id": "k23-2020-01-01-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/Article-738905",
+  "differences": [],
+  "fieldEndSource": "2020-01-01",
+  "sample": 520,
+  "moe": "4.4%",
+  "note": "Maariv 3.1.2020 (Panels Politics, 'נערך שלשום, 1 בינואר'): כחול לבן 36, הליכוד 30, המשותפת 13, ש\"ס 8, ישראל ביתנו 8, יהדות התורה 7, הבית היהודי+עוצמה+האיחוד הלאומי 7, הימין החדש 6, העבודה-גשר 5; המחנה הדמוקרטי 2.9% (מתחת לסף). 520 משיבים (Panel4all), טעות 4.4%. All match."
+ },
+ {
+  "id": "k23-2020-01-02-midgam-project-channel-13-b",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.timesofisrael.com/polls-indicate-no-drop-in-support-for-netanyahu-after-immunity-request/ (read via WebFetch; curl got 403) ; https://www.jpost.com/breaking-news/if-elections-were-today-blue-and-white-34-likud-32-612901 ; https://bechirot23.bechirot.gov.il/...seker_midgam_2_1.pdf (CEC site now returns an error page; web.archive.org unreachable from this environment)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Labor+Democratic Union merged scenario (10 seats; B&W 35, Likud 33, New Right 8, YB 7) not found in any readable source; 13tv original 403 (not bypassed)."
+ },
+ {
+  "id": "k23-2020-01-02-midgam-project-channel-13",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.timesofisrael.com/polls-indicate-no-drop-in-support-for-netanyahu-after-immunity-request/ (read via WebFetch; curl got 403) ; https://www.jpost.com/breaking-news/if-elections-were-today-blue-and-white-34-likud-32-612901 ; https://bechirot23.bechirot.gov.il/...seker_midgam_2_1.pdf (CEC site now returns an error page; web.archive.org unreachable from this environment)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Times of Israel 2.1.2020 on the Channel 13 poll aired Thursday: Blue and White 36, Likud 34, Joint List 13, New Right 8, UTJ 7, Shas 7, Yisrael Beytenu 6, Labor-Gesher 5, Democratic Camp 4; right+religious 56 vs center-left 58. All seat numbers match. United Right (Tkuma+JH+Otzma) 2.9% not reported; Channel 13 original 403 (not bypassed)."
+ },
+ {
+  "id": "k23-2020-01-02-midgam-channel-12-b",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.timesofisrael.com/polls-indicate-no-drop-in-support-for-netanyahu-after-immunity-request/ (read via WebFetch; curl got 403) ; https://www.jpost.com/breaking-news/if-elections-were-today-blue-and-white-34-likud-32-612901 ; https://bechirot23.bechirot.gov.il/...seker_midgam_2_1.pdf (CEC site now returns an error page; web.archive.org unreachable from this environment)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Times of Israel 2.1.2020 (Channel 12): if National Union unites with Jewish Home-Otzma they win 4 seats, and right+religious get 57 vs 56 for center-left+Arab parties. Consistent with Wikipedia row (Likud 32+Shas 8+UTJ 7+New Right 6+4=57; B&W 34+Labor 5+DU 4+Joint 13=56; YB 7). Individual numbers other than the 4 not reported."
+ },
+ {
+  "id": "k23-2020-01-02-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.timesofisrael.com/polls-indicate-no-drop-in-support-for-netanyahu-after-immunity-request/ (read via WebFetch; curl got 403) ; https://www.jpost.com/breaking-news/if-elections-were-today-blue-and-white-34-likud-32-612901 ; https://bechirot23.bechirot.gov.il/...seker_midgam_2_1.pdf (CEC site now returns an error page; web.archive.org unreachable from this environment)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Times of Israel 2.1.2020 on the Channel 12 poll aired Thursday 2.1: Blue and White 35, Likud 33, Joint List 13, Yisrael Beytenu 8, Shas 8, UTJ 8, New Right 6, Labor-Gesher 5, Meretz/Democratic Union 4; National Union and Jewish Home-Otzma both fail to enter; blocs right 55 / center-left+Arab 57. All seat numbers match. Below-threshold percentages (JH+Otzma 2.6%, Tkuma 0.9%, Green 0.0%) not reported; CEC filing not reachable."
+ },
+ {
+  "id": "k23-2020-01-02-kantar-kan-11",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.jpost.com/breaking-news/if-elections-were-today-blue-and-white-34-likud-32-612901 ; knessetjeremy URL in queue (aggregator, not used as source)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only found: JPost 2.1.2020 says polls on Channels 12, 13 and Kan found Blue and White with a two-seat lead over Likud (consistent with 35/33) and Kan's immunity question (52% oppose, 28% favor). No party-by-party numbers for the Kan/Kantar poll located in a primary or press source."
+ },
+ {
+  "id": "k23-2020-01-08-midgam-walla-b",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3333940",
+  "differences": [],
+  "fieldEndSource": "2020-01-08",
+  "sample": 506,
+  "moe": "4.4%",
+  "note": "Walla! NEWS 9.1.2020, Midgam, merged right+left scenario: שמאל מאוחד 9, ימין מאוחד (בנט, פרץ, סמוטריץ', בן גביר) 8, כחול לבן 34, הליכוד 32; ש\"ס, יהדות התורה, המשותפת, ישראל ביתנו ללא שינוי (8, 8, 13, 8). All match."
+ },
+ {
+  "id": "k23-2020-01-08-midgam-walla",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3333940",
+  "differences": [],
+  "fieldEndSource": "2020-01-08",
+  "sample": 506,
+  "moe": "4.4%",
+  "note": "Walla! NEWS 9.1.2020, Midgam (מועד איסוף 8-1-2020, 506 משיבים, ±4.4%), no-merger scenario: כחול לבן 35, הליכוד 33, ש\"ס 8, יהדות התורה 8, הימין החדש 6, המשותפת 13, ישראל ביתנו 8, העבודה-גשר 5, המחנה הדמוקרטי 4; הבית היהודי+עוצמה 2.8%, האיחוד הלאומי 1.1%, הירוקה 0.2%. All match."
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-e",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.makorrishon.co.il/news/196167/ (403 - blocked, not bypassed) ; scanned Arutz 7 (inn.co.il) and srugim articles 8-14.1.2020 and web search — no report of this poll found",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Makor Rishon/Panels Politics poll of 8-9.1.2020 (scenario '-e'): original article blocked (403), no press report with the numbers found; web.archive.org unreachable from this environment. Not verified."
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-d",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.makorrishon.co.il/news/196167/ (403 - blocked, not bypassed) ; scanned Arutz 7 (inn.co.il) and srugim articles 8-14.1.2020 and web search — no report of this poll found",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Makor Rishon/Panels Politics poll of 8-9.1.2020 (scenario '-d'): original article blocked (403), no press report with the numbers found; web.archive.org unreachable from this environment. Not verified."
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-c",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.makorrishon.co.il/news/196167/ (403 - blocked, not bypassed) ; scanned Arutz 7 (inn.co.il) and srugim articles 8-14.1.2020 and web search — no report of this poll found",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Makor Rishon/Panels Politics poll of 8-9.1.2020 (scenario '-c'): original article blocked (403), no press report with the numbers found; web.archive.org unreachable from this environment. Not verified."
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-b",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.makorrishon.co.il/news/196167/ (403 - blocked, not bypassed) ; scanned Arutz 7 (inn.co.il) and srugim articles 8-14.1.2020 and web search — no report of this poll found",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Makor Rishon/Panels Politics poll of 8-9.1.2020 (scenario '-b'): original article blocked (403), no press report with the numbers found; web.archive.org unreachable from this environment. Not verified."
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.makorrishon.co.il/news/196167/ (403 - blocked, not bypassed) ; scanned Arutz 7 (inn.co.il) and srugim articles 8-14.1.2020 and web search — no report of this poll found",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Makor Rishon/Panels Politics poll of 8-9.1.2020 (scenario 'main'): original article blocked (403), no press report with the numbers found; web.archive.org unreachable from this environment. Not verified."
+ },
+ {
+  "id": "k23-2020-01-09-midgam-arutz-sheva-b",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.inn.co.il/News/News.aspx/423809",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "Arutz 7 (inn.co.il) 9.1.2020: internal poll by Midgam for right-wing figures 'בשבוע האחרון' (500 נשאלים, ±4.4%) reported by Arutz 7. Scenario הימין החדש+האיחוד הלאומי 9; הבית היהודי+עוצמה 2.7%; הליכוד 32, כחול לבן 34, ש\"ס 8, יהדות התורה 8, המשותפת 13, העבודה-גשר 5, ישראל ביתנו 7, המחנה הדמוקרטי 4. All match. Exact fieldwork date not given."
+ },
+ {
+  "id": "k23-2020-01-09-midgam-arutz-sheva",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.inn.co.il/News/News.aspx/423809",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "Arutz 7 9.1.2020 (Midgam, 500, ±4.4%): for the scenario where האיחוד הלאומי runs with הבית היהודי+עוצמה they get 4 and הימין החדש 6 — both match. The article gives no other party numbers for this scenario (the 32/34/8/8/13/5/7/4 figures belong to the NR+NU scenario; Wikipedia's UTJ 7 here differs from the 8 printed for that scenario), so the remaining numbers could not be verified."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-e",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/423871 ; https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.inn.co.il/news/423867 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; CEC filing seker_israel_today_9_1.pdf (CEC site dead, web.archive.org unreachable)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 508,
+  "moe": null,
+  "note": "Arutz 7 10.1.2020: 'אם כחול לבן תתאחד עם מפלגת העבודה ומרצ - ... רשימה כזאת תקבל 39 מנדטים' — matches Wikipedia's 39 for the merged list. Other numbers for this scenario (incl. Yisrael Beytenu 11) not reported."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-d",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/423871 ; https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.inn.co.il/news/423867 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; CEC filing seker_israel_today_9_1.pdf (CEC site dead, web.archive.org unreachable)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 508,
+  "moe": null,
+  "note": "Arutz 7 10.1.2020: left union (Labor-Gesher with Meretz/DU) 'תגיע ל־11 מנדטים' — match. 103FM/INN report: left union gives center-left 57 vs right 56, consistent with Wikipedia row. Other numbers not reported."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-c",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/423871 ; https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.inn.co.il/news/423867 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; CEC filing seker_israel_today_9_1.pdf (CEC site dead, web.archive.org unreachable)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 508,
+  "moe": null,
+  "note": "Arutz 7 10.1.2020: partial right union — 'הימין החדש יזכה ב־5 מנדטים, ואילו המפלגה [פרץ-סמוטריץ'-בן גביר] תקבל 8' — both match. Other numbers for this scenario not reported."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-b",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/423871 ; https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.inn.co.il/news/423867 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; CEC filing seker_israel_today_9_1.pdf (CEC site dead, web.archive.org unreachable)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 508,
+  "moe": null,
+  "note": "Arutz 7 10.1.2020 (Israel Hayom/Maagar Mochot): full right union (JH, NU, New Right, Otzma) — 'תרד הליכוד ל־29 מנדטים - בעוד המפלגה המאוחדת תקבל 11' — match. Other parties' numbers for this scenario not reported (103FM/INN report of the same institute's poll: right 55 vs 58, consistent)."
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/423871 ; https://www.jpost.com/Israel-Elections/Blue-and-White-leads-on-Likud-by-four-seats-new-poll-finds-613784 ; https://www.inn.co.il/news/423867 ; https://www.israelhayom.co.il/article/723209 (403 - blocked, not bypassed) ; CEC filing seker_israel_today_9_1.pdf (CEC site dead, web.archive.org unreachable)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 508,
+  "moe": null,
+  "note": "Arutz 7 (inn.co.il) 10.1.2020 citing Israel Hayom/Maagar Mochot (508 נשאלים): כחול לבן 34, הליכוד 30, הבית היהודי+עוצמה 5, הימין החדש 4, יהדות התורה 8, ש\"ס 7, העבודה 5, המחנה הדמוקרטי 5, הירוקה 0.2%, ישראל ביתנו 7, המשותפת 15, האיחוד הלאומי 'אחוז תמיכה אחד' (1%). All match. JPost 11.1 gives the same seat numbers. MoE/field date not stated."
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12-c",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.israelnationalnews.com/news/274501 ; https://www.inn.co.il/news/424152",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Scenario New Right+National Union 6 / United Jewish Home 4 / Likud 32 not reported in the INN/Arutz 7 coverage of the Channel 12 poll (only the main and full-union scenarios); mako/N12 original and CEC filing seker_hadashut_13_1_20.pdf not reachable (web.archive.org unreachable)."
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12-b",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/274501 ; https://www.inn.co.il/news/424152",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 13.1.2020 (Channel 12 poll): 'if all the smaller right-wing parties ran together, the combined list would receive ten seats while the Likud would receive an additional seat' => united right 10, Likud 32, others unchanged (B&W 34, Joint 13, Labor-Meretz 9, Shas 8, UTJ 7, YB 7). Seat numbers match; Green 0.4% not reported. Status partial only because the Green Movement percentage could not be checked. Arutz 7 Hebrew 13.1.2020 gives the same numbers ('רשימת עוצמה יהודית, הבית היהודי והאיחוד הלאומי זוכה בחמישה מנדטים'; joint run of all religious-Zionist parties 10, Likud +1)."
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/274501 ; https://www.inn.co.il/news/424152",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 13.1.2020 on Channel 12 News poll released Monday evening: Blue and White 34, Likud 31, Joint List 13, Labor-Meretz 9, Shas 8, UTJ 7, Yisrael Beytenu 7, New Right 6, United Right 5. All seat numbers match; Green Movement 0.4% not in the report (only seat numbers checked). Pollster/sample not stated. Status partial only because the Green Movement percentage could not be checked. Arutz 7 Hebrew 13.1.2020 gives the same numbers ('רשימת עוצמה יהודית, הבית היהודי והאיחוד הלאומי זוכה בחמישה מנדטים'; joint run of all religious-Zionist parties 10, Likud +1)."
+ },
+ {
+  "id": "k23-2020-01-14-direct-polls-arutz-sheva",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/274560",
+  "differences": [],
+  "fieldEndSource": "2020-01-14",
+  "sample": 574,
+  "moe": "4.4%",
+  "note": "Arutz Sheva/INN 14.1.2020, Direct Polls (conducted Jan 14 2020 afternoon, 574 resp., ±4.4%): Blue and White 34, Likud 32, Joint List 13, Labor-Gesher-Meretz 10, UTJ 8, Yisrael Beytenu 8, Shas 8, New Right+National Union 7; United Jewish Home (JH+Otzma) 2.4%, Green Movement 2.3%. All match."
+ }
+]

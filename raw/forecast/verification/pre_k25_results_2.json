@@ -1,0 +1,332 @@
+[
+ {
+  "id": "k25-2021-11-28-direct-polls-channel-14",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/317737 ; https://www.israelnationalnews.com/News/Flash.aspx/559314 (now14.co.il URL blocked by Cloudflare check, 403 – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN Nov 28 2021, Direct Polls released by Channel 20/14 Sunday evening: Likud 35, Yesh Atid 19, Shas 9, B&W 8, Labor/RZ/Joint List/UTJ/YB 7, Ra'am 6, Yamina 4, Meretz 4, New Hope 0 (below threshold; 2.39% not stated) – all seats match."
+ },
+ {
+  "id": "k25-2021-12-02-smith-galei-israel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/317968",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN Dec 2 2021 reporting Rafi Smith poll for Galei Israel (Thursday morning): Likud 34, Yesh Atid 21, Shas 9, B&W/Labor/YB/Joint List/UTJ/RZ 7, Ra'am 5, Yamina 5, Meretz 4, New Hope below threshold – all match."
+ },
+ {
+  "id": "k25-2021-12-05-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2021_q4/Article-955161088ab8d71026.htm",
+  "differences": [],
+  "fieldEndSource": "2021-12-05",
+  "sample": 509,
+  "moe": "4.4%",
+  "note": "N12 (Midgam/iPanel, data collection 5/12/2021): הליכוד 34, יש עתיד 19, ש\"ס וכחול לבן שוות (9 – the article mentions 9 seats; implied by 120 total), העבודה/יהדות התורה/הציונות הדתית 7, ימינה/המשותפת/ישראל ביתנו 6, מרצ ורע\"ם 5, תקווה חדשה 2.4% – all match."
+ },
+ {
+  "id": "k25-2021-12-16-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IIJHGL&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2021-12-16",
+  "sample": 650,
+  "moe": "3.4%",
+  "note": "103FM/Maariv, Panels Politics, fieldwork 15-16 Dec, split into two surveys of 650 each: הליכוד 33, ש\"ס 8, הציונות הדתית 8, יהדות התורה 7, יש עתיד 19, כחול לבן 9, העבודה 7, ימינה 6, ישראל ביתנו 6, מרצ 5, רע\"ם 5, המשותפת 7; תקווה חדשה below threshold (2.9% not stated in text). Seats all match."
+ },
+ {
+  "id": "k25-2021-12-21-camil-fuchs-channel-13",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/319040 ; https://www.israelnationalnews.com/News/Flash.aspx/561754 (13tv.co.il URL returns 403 – not bypassed)",
+  "differences": [
+   {
+    "key": "שס (ש\"ס)",
+    "wikipedia": 8,
+    "source": 7
+   },
+   {
+    "key": "[קודמת] Blue and White (political alliance)",
+    "wikipedia": 8,
+    "source": 7
+   },
+   {
+    "key": "[קודמת] Joint List",
+    "wikipedia": 5,
+    "source": 8
+   },
+   {
+    "key": "עם (רע\"ם)",
+    "wikipedia": 5,
+    "source": 4
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Two independent INN reports (Dec 21 2021) of Camil Fuchs / Channel 13: Likud 33, Yesh Atid 19, Yamina 9, Joint List 8, B&W/RZ/Shas/UTJ 7 each, Labor 6, YB 5, Meretz/Ra'am/New Hope 4 each; Likud bloc 54 (33+7+7+7), anti-Netanyahu 58 without Joint List. Sum 120. Wikipedia row (Shas 8, B&W 8, JL 5, Ra'am 5) gives Likud bloc 55, inconsistent with the reported bloc of 54. Primary page not accessible; press source only."
+ },
+ {
+  "id": "k25-2022-01-06-smith-galei-israel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/319986",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (Jan 6 2022) reporting Rafi Smith poll for Galei Israel radio: Likud 33, Yesh Atid 20, B&W/RZ/Shas 8, UTJ/Labor/YB 7, Yamina 6, Joint List 6, Meretz 5, Ra'am 5, New Hope below threshold – all match."
+ },
+ {
+  "id": "k25-2022-01-06-direct-polls-channel-14",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://ch10.co.il/en/news/714285/ (now14.co.il URL blocked by Cloudflare check – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Haredim10 (Jan 6 2022): Direct Polls, published this evening in Now 14's main edition: Likud 35, Yesh Atid 19, Shas 9, B&W 8, YB/Labor/RZ/Joint List/UTJ 7, Ra'am 6, Meretz 4, Yamina 4, New Hope 2.91% – all match."
+ },
+ {
+  "id": "k25-2022-01-10-maagar-mochot-srugim",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.srugim.co.il/635862-סקר-דרמטי-הליכוד-עם-קואליציית-62-בלי-בנט",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 502,
+  "moe": "4.4%",
+  "note": "Srugim (Maagar Mochot, Yitzhak Katz, n=502): הליכוד 33, ש\"ס 9, יהדות התורה 7, הציונות הדתית 8, ימינה 6, יש עתיד 18, כחול לבן 11, העבודה 8, ישראל ביתנו 6, מרצ 5, רע\"ם 4, המשותפת 5; תקווה חדשה לא עוברת (2.0% not stated). All seats match. Fieldwork date not stated."
+ },
+ {
+  "id": "k25-2022-01-16-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2022_q1/Article-1e7c0fb27d36e71026.htm",
+  "differences": [],
+  "fieldEndSource": "2022-01-16",
+  "sample": 502,
+  "moe": "4.4%",
+  "note": "N12 (Midgam/iPanel, 16/1/2022): הליכוד 33, יש עתיד 18, ש\"ס וכחול לבן 9, העבודה/יהדות התורה/הציונות הדתית 7, המשותפת וישראל ביתנו 6, ימינה ורע\"ם 5, מרצ ותקווה חדשה 4 – all match."
+ },
+ {
+  "id": "k25-2022-01-18-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/320742 (israelhayom.co.il 403 – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN Jan 19 2022 reporting Maagar Mochot poll published by Israel Hayom: Likud 34, Yesh Atid 18, Shas 9, UTJ 7, B&W 9, Joint List 7, Ra'am 5, Labor 8, Meretz 4, Yamina 5, YB 6, RZ 8, New Hope below threshold – all match."
+ },
+ {
+  "id": "k25-2022-02-13-direct-polls-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/322316",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN Feb 15 2022, Direct Polls poll released Tuesday: Likud 36, Yesh Atid 17, Shas 9, UTJ 7, Joint List 7, Ra'am 5, Labor 7, Meretz 5, RZ 8, Yamina 4, YB 6, New Hope 2.9%. B&W not named but = 9 (Left-Arab bloc 50 = YA17+Labor7+Meretz5+JL7+Ra'am5+B&W; also 120 total). All match. Publisher not named."
+ },
+ {
+  "id": "k25-2022-03-15-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel/2022_q1/Article-7c951dbc8be8f71026.htm",
+  "differences": [],
+  "fieldEndSource": "2022-03-15",
+  "sample": 507,
+  "moe": "4.4%",
+  "note": "N12 (Midgam, 15/03/2022). Text gives changes vs previous poll (16/1): ימינה 5→7, יש עתיד 18→17, כחול לבן 9→7, ליכוד 33→34, 'the only change' in opposition; blocs coalition 57 / opposition 57 / משותפת 6. Others unchanged from 16/1 poll (ש\"ס 9, יהדות התורה/הציונות הדתית/העבודה 7, ישראל ביתנו 6, רע\"ם 5, מרצ/תקווה חדשה 4), consistent with the bloc totals. All match (full table in graphic)."
+ },
+ {
+  "id": "k25-2022-03-21-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/544527 (israelhayom.co.il and israelhayom.com 403 – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (22.03.22) reporting Maagar Mochot for Israel Hayom: ליכוד 34, ש\"ס 8, יהדות התורה 8, הציונות הדתית 9; יש עתיד 17, העבודה 8, כחול לבן 10, ימינה 6, ישראל ביתנו 5, מרצ 5, רע\"ם 4, תקווה חדשה לא עוברת; המשותפת 6 – all match."
+ },
+ {
+  "id": "k25-2022-03-22-direct-polls-channel-14",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/324608 (now14.co.il blocked by Cloudflare check – not bypassed)",
+  "differences": [
+   {
+    "key": "מחל (הליכוד)",
+    "wikipedia": 34,
+    "source": 36
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN Mar 24 2022, Direct Polls for Channel 14: Likud 36, Yesh Atid 18, Shas 9, B&W 8, RZ 8, UTJ 7, Labor 7, YB 7, Joint List 7, Meretz 5, Yamina 4, Ra'am 4, New Hope 2.8%. Right-wing bloc 60 (36+9+8+7). Wikipedia row sums to only 118 (Likud 34) – source total 120."
+ },
+ {
+  "id": "k25-2022-03-28-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2022_q1/Article-bf8a446d8d3df71027.htm",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 509,
+  "moe": "4.4%",
+  "note": "N12 (published 29.03.22; Midgam/iPanel, 509 respondents): הליכוד 34 יש עתיד 18 ש\"ס 9 הציונות הדתית 8 כחול לבן 8 יהדות התורה 7 ימינה 6 המשותפת 6 העבודה 6 ישראל ביתנו 5 רע\"ם 5 תקווה חדשה 4 מרצ 4 – all match. Fieldwork date not stated in text."
+ },
+ {
+  "id": "k25-2022-04-06-midgam-hahadashot-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2022_q2/Article-fe944b1cc9fff71026.htm",
+  "differences": [],
+  "fieldEndSource": "2022-04-06",
+  "sample": 510,
+  "moe": "4.4%",
+  "note": "N12 (Midgam, 6/4/2022): ליכוד 35, יש עתיד 17, ש\"ס 9, כחול לבן 8, יהדות התורה/העבודה/הציונות הדתית 7, המשותפת 6, ישראל ביתנו/מרצ/רע\"ם/ימינה 5, תקווה חדשה 4 – all match."
+ },
+ {
+  "id": "k25-2022-04-06-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/325359 (kan.org.il 403 – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN Apr 6 2022 reporting Kan News poll: Likud 35, Yesh Atid 19, Yamina 6, B&W 8, Meretz 5, New Hope 5, Labor 5, YB 4, RZ 8, Shas 8, UTJ 7, Joint List 6, Ra'am 4 – all match. Pollster not named in INN text."
+ },
+ {
+  "id": "k25-2022-04-06-direct-polls-channel-14",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/546337 ; https://www.israelnationalnews.com/News/Flash.aspx/573501 (now14.co.il blocked by Cloudflare check – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (7.04.22) Direct Polls for Channel 14: ליכוד 35, יש עתיד 20, ש\"ס 10, הציונות הדתית 9, יהדות התורה 8, כחול לבן 8, העבודה 7, המשותפת 7, ישראל ביתנו 6, מרצ 5, רע\"ם 5; ימינה ותקווה חדשה לא עוברות (percentages 2.9/2.5 not stated); Netanyahu bloc 62. All seats match."
+ },
+ {
+  "id": "k25-2022-04-06-camil-fuchs-channel-13",
+  "status": "inconsistent",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/546208 ; https://www.israelnationalnews.com/news/325363 (13tv.co.il 403 – not bypassed)",
+  "differences": [
+   {
+    "key": "עם (רע\"ם)",
+    "wikipedia": 4,
+    "source": 5
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 / INN (6.04.22), Camil Fuchs for Channel 13: ליכוד 38, יש עתיד 17, כחול לבן 9, הציונות הדתית 8, ימינה 7, יהדות התורה 7, ש\"ס 7, ישראל ביתנו 6, העבודה 6, המשותפת 6, מרצ 5, רע\"ם 5, תקווה חדשה לא עוברת. But the same report gives blocs Netanyahu 60 / coalition 54 / Joint 6 – coalition parties listed sum to 55 and all parties to 121, so Ra'am 5 contradicts the report's own totals; Wikipedia's Ra'am 4 is consistent with the 54 bloc and 120 total. All other numbers match Wikipedia. Primary page unavailable."
+ },
+ {
+  "id": "k25-2022-04-07-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-909947",
+  "differences": [],
+  "fieldEndSource": "2022-04-07",
+  "sample": 506,
+  "moe": "4.3%",
+  "note": "Maariv 08/04/2022 (Panels Politics, conducted 'yesterday'): ליכוד 37, הציונות הדתית 9, ש\"ס 7, יהדות התורה 7, יש עתיד 18, כחול לבן 7, ימינה 5, ישראל ביתנו 5, העבודה 6, מרצ 5, תקווה חדשה 4 (3.4%), המשותפת 6, רע\"ם 4 – all match."
+ },
+ {
+  "id": "k25-2022-04-07-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/546377 (israelhayom.co.il 403 – not bypassed)",
+  "differences": [],
+  "fieldEndSource": "2022-04-07",
+  "sample": 502,
+  "moe": "4.4%",
+  "note": "Arutz 7 (8.04.22) quoting the Israel Hayom poll incl. methodology (Maagar Mochot, Prof. Yitzhak Katz, internet panel, 6.4.2022–7.4.2022, 502 respondents, 4.4%): ליכוד 35, יש עתיד 19, ש\"ס 9, העבודה 8, כחול לבן 8, הציונות הדתית 8, יהדות התורה 8, ישראל ביתנו 6, המשותפת 6, ימינה 5, מרצ 4, רע\"ם 4, תקווה חדשה לא עוברת – all match."
+ },
+ {
+  "id": "k25-2022-05-03-smith-galei-israel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/news/548585 ; https://www.gly.co.il/item?id=11740 (primary, partial)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Galei Israel page (03.05.2022) gives only: right bloc 59, ימינה 5, הציונות הדתית 8, תקווה חדשה below threshold. Full list from Arutz 7 (3.05.22) on Rafi Smith for Galei Israel: ליכוד 36, יש עתיד 20, ש\"ס 8, הציונות הדתית 8, יהדות התורה 7, העבודה 7, כחול לבן 7, המשותפת 6, ישראל ביתנו 6, ימינה 5, מרצ 5, רע\"ם 5; right bloc 59, coalition 55 – all match."
+ },
+ {
+  "id": "k25-2022-05-09-camil-fuchs-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/327246 (13tv.co.il 403 – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN May 10 2022 (Channel 13, Camil Fuchs, published Monday): Likud 36, Yesh Atid 18, RZ 9, Yamina 8, Joint List 8, B&W/Shas/UTJ 7, Labor 6, YB 5, Meretz 5, New Hope 4; Ra'am below threshold (no row in Wikipedia seats). All match."
+ },
+ {
+  "id": "k25-2022-05-21-panels-politics-103fm",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://103fm.maariv.co.il/programs/media.aspx?ZrqvnVq=IKHJJI&c41t4nzVQ=GJL",
+  "differences": [],
+  "fieldEndSource": "2022-05-21",
+  "sample": 508,
+  "moe": "4.4%",
+  "note": "103FM 22/05/2022 (Panels, conducted Saturday night): ליכוד 36, הציונות הדתית 9, ש\"ס 8, יהדות התורה 7, יש עתיד 18, העבודה 8, כחול לבן 8, ימינה 6, ישראל ביתנו 5, תקווה חדשה 4, רע\"ם 4, המשותפת 7; מרצ outside the Knesset (2.5% not stated). Seats all match."
+ },
+ {
+  "id": "k25-2022-05-25-panels-politics-the-jerusalem-post",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/328328 (msn.com link returned empty page)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN May 27 2022 reporting Panels Politics poll published by the Jerusalem Post: Likud 35, Yesh Atid 20, B&W 8, Labor 7, Meretz 2.6%, RZ 9, Yamina 6, UTJ 7, Shas 8, YB 5, New Hope 4, Joint List 7, Ra'am 4 – all match."
+ },
+ {
+  "id": "k25-2022-06-07-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://ch10.co.il/en/news/749474/ (kan.org.il 403 – not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Haredim10 (7 June 2022) on the Kan News poll published Tuesday evening: Likud 35, Yesh Atid 20, RZ 10, B&W 8, Shas 8, Labor 7, UTJ 7, Yamina 6, Joint List 6, YB 5, Meretz 4, Ra'am 4, New Hope 2.8%; blocs 60/54/6 – all match. Pollster not named in text."
+ },
+ {
+  "id": "k25-2022-06-08-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-924011",
+  "differences": [],
+  "fieldEndSource": "2022-06-08",
+  "sample": 519,
+  "moe": "4.3%",
+  "note": "Maariv 10/06/2022 (Panels, conducted 8 June): ליכוד 34, יש עתיד 21, הציונות הדתית 11, כחול לבן 8, ש\"ס 8, יהדות התורה 7, המשותפת 7, העבודה 6, ימינה 5, ישראל ביתנו 5, תקווה חדשה 4, רע\"ם 4, מרצ 2.5% – all match."
+ }
+]

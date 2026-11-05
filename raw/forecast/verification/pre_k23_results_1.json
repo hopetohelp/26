@@ -1,0 +1,370 @@
+[
+ {
+  "id": "k23-2019-10-06-midgam-walla-b",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "No URL in queue; web searches (walla.co.il, israelnationalnews, jpost, jns) found no report of this Walla/Midgam Saar-led-Likud scenario; web.archive.org not reachable from this environment",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Not found in any primary or press source. Knessetjeremy (aggregator, 7.10.2019) lists a scenario B&W 33, Likud-led-by-Saar 26, JL 13, Yamina 12 — aggregator only, not verified."
+ },
+ {
+  "id": "k23-2019-10-06-midgam-walla",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/2019/10/07/1st-poll-of-possible-3rd-election-blue-white-33-likud-33-joint-list-13-shas-9-scenario-poll-blue-white-33-likud-led-by-saar-26-joint-list-13-yamina-12/ (aggregator) ; searches of walla.co.il / INN / JPost found no original",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the KnessetJeremy aggregator headline (B&W 33, Likud 33, JL 13, Shas 9) was located; original Walla article not found and web.archive.org unreachable. Not verified."
+ },
+ {
+  "id": "k23-2019-10-22-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.timesofisrael.com/third-election-wont-break-political-deadlock-in-israel-poll-finds/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 706,
+  "moe": "4.1%",
+  "note": "Times of Israel 22.10.2019 citing Channel 13 (Camil Fuchs): Blue and White 34, Likud 33, Joint List 13, Yisrael Beytenu 8, Shas 7, UTJ 7, Labor-Gesher 5, Jewish Home-National Union 5, New Right 4, Democratic Camp 4. All match. 706 respondents, MoE 4.1%; fieldwork date not stated."
+ },
+ {
+  "id": "k23-2019-10-31-maagar-mochot-103fm",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/2019/10/31/3rd-poll-of-possible-3rd-election-blue-white-34-likud-33-joint-list-12-shas-9-yisrael-beitenu-8-center-left-bloc-at-58/ (aggregator) ; searches of maariv.co.il/103fm, INN, JPost found no original",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the KnessetJeremy aggregator headline (B&W 34, Likud 33, JL 12, Shas 9, YB 8) was located; no 103FM/Maariv or press report found. Not verified."
+ },
+ {
+  "id": "k23-2019-11-10-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/271416 ; https://knessetjeremy.com/2019/11/10/4th-poll-of-possible-3rd-election-blue-white-35-likud-34-joint-list-13-yisrael-beitenu-9-shas-6-utj-6/ (aggregator, not used)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva 10.11.2019 23:16 citing Channel 13 (Prof. Camil Fuchs), 'published Sunday evening': Blue and White 35, Likud 34, Joint List 13, Yisrael Beytenu 9, Shas 6, UTJ 6, Labor 5, Democratic Union 4, New Right 4, Jewish Home-National Union 4. All match. Sample/MoE not stated."
+ },
+ {
+  "id": "k23-2019-11-15-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.israelnationalnews.com/News/News.aspx/271715",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (INN) 15.11.2019 08:00 citing Maagar Mochot for Israel Hayom: Blue and White 33, Likud 31, Joint List 13, Shas 10, Yisrael Beytenu 9, UTJ 7, Democratic Party 6, Labor-Gesher 6, Yamina 5. All match (Yamina = [קודמת] JH+NR). Sample/MoE/fieldwork not stated."
+ },
+ {
+  "id": "k23-2019-11-21-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-2019_q4/Article-56f94e4706f8e61027.htm",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "N12/mako 21.11.19 22:06, Midgam (Mano Geva): הליכוד 33, כחול לבן 33, הרשימה המשותפת 13, ישראל ביתנו 9, ש\"ס 8, ימינה 7, יהדות התורה 7, העבודה-גשר 5, המחנה הדמוקרטי 5. All match (Yamina 7 = [קודמת] JH+NR). Article says 'שנערך אתמול (חמישי)' (Thursday = 21.11) but exact date ambiguous vs. timestamp; sample/MoE not stated."
+ },
+ {
+  "id": "k23-2019-11-21-kantar-kan-11",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/2019/11/24/7th-poll-of-possible-3rd-election-likud-33-blue-white-33-joint-list-12-yisrael-beitenu-8-utj-8-shas-7/ (aggregator) ; searches of kan.org.il, INN, JPost, TOI found no original",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the KnessetJeremy aggregator (Likud 33, B&W 33, JL 12, YB 8, UTJ 8, Shas 7) was located; no Kan/Kantar report found. Not verified."
+ },
+ {
+  "id": "k23-2019-11-22-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/reelection-2019/elections-survey-943042/ (-> 13tv.co.il) ; https://www.timesofisrael.com/poll-finds-most-israelis-think-netanyahu-must-step-down-now-charges-announced/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 749,
+  "moe": "4.0%",
+  "note": "Channel 13 published Friday 22.11.2019 (Camil Fuchs; Project HaMidgam / Stat-Net): כחול לבן 36, הליכוד 33, ישראל ביתנו 8, המשותפת 13, יהדות התורה 6, ש\"ס 6, הימין החדש 6, 'העבודה-גשר, המחנה הדמוקרטי ואיחוד מפלגות הימין עם 4 מנדטים כל אחת'. All match. 749 respondents, MoE 4.0%; fieldwork date not stated."
+ },
+ {
+  "id": "k23-2019-11-22-maagar-mochot-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.jns.org/israel-news/poll-64-of-israelis-say-netanyahu-indictment-wont-affect-their-vote ; https://knessetjeremy.com/2019/11/24/8th-poll-of-possible-3rd-election-blue-white-34-likud-33-joint-list-13-shas-8-utj-8/ (aggregator, not used)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.3%",
+  "note": "JNS republishing Israel Hayom (Nov. 24, 2019), Maagar Mochot: 'Likud would win 33 mandates, Blue and White 34 and Yisrael Beiteinu ... seven'; right bloc 56, centre-left incl. Joint List 57. Stated figures match and blocs are consistent with Wikipedia (33+8+8+7=56; 34+13+6+4=57). Other parties and Otzma 2.0% not stated. Poll 'held just before Mandelblit made his announcement' (21.11), n=500, MoE 4.3."
+ },
+ {
+  "id": "k23-2019-11-25-panels-politics-channel-12",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/tv-morning-news/articles/Article-f4749f09224ae61027.htm",
+  "differences": [],
+  "fieldEndSource": "2019-11-25",
+  "sample": 510,
+  "moe": "4.2%",
+  "note": "N12/mako (morning news) 26.11.19, Panels Politics: 'כחול לבן ... 37 מנדטים לעומת 30 מנדטים לליכוד', הימין החדש 6, ישראל ביתנו 7; גוש הימין 55, מרכז-שמאל 58. Stated figures match; other parties only in chart images (not readable). Blocs consistent with Wikipedia. 'הסקר נערך ביום 25 בנובמבר 2019', 510 respondents, MoE 4.2%."
+ },
+ {
+  "id": "k23-2019-11-26-midgam-walla",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3326004 (-> https://www.walla.co.il/news/politics/3326004)",
+  "differences": [],
+  "fieldEndSource": "2019-11-26",
+  "sample": 508,
+  "moe": "4.4%",
+  "note": "Walla 26.11.2019 14:12, Midgam: כחול לבן 34, הליכוד 33, המשותפת 13, ישראל ביתנו 8, הימין החדש 7, העבודה-גשר 5, המחנה הדמוקרטי 4; הבית היהודי 2.3%, עוצמה יהודית 1.2%; גוש ימין-חרדים 56, מרכז-שמאל 43. All stated figures match. Shas and UTJ not stated individually in text (bloc implies Shas+UTJ=16, consistent with 9+7). 'מועד איסוף הנתונים: 25-11-2019 עד 26-11-2019', 508 respondents, MoE 4.4%."
+ },
+ {
+  "id": "k23-2019-11-26-midgam-channel-12-b",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2019_q4/Article-f9a29b44fd8ae61027.htm",
+  "differences": [],
+  "fieldEndSource": "2019-11-26",
+  "sample": 510,
+  "moe": "4.4%",
+  "note": "N12/mako 26.11.19 20:13, Midgam, scenario Likud led by Gideon Saar: כחול לבן 35, הליכוד 26, המשותפת 13, ש\"ס 10, יהדות התורה 8, ישראל ביתנו 9, הימין החדש 9, העבודה-גשר 6, המחנה הדמוקרטי 4; הבית היהודי-האיחוד הלאומי 2.9%, עוצמה יהודית 2.2%. All match. 'מועד איסוף הנתונים: 26 בנובמבר 2019', 510, MoE 4.4."
+ },
+ {
+  "id": "k23-2019-11-26-midgam-channel-12",
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-politics/2019_q4/Article-f9a29b44fd8ae61027.htm",
+  "differences": [
+   {
+    "key": "נץ (עוצמה יהודית)",
+    "wikipedia": 1.2,
+    "source": 2.2
+   },
+   {
+    "key": "[קודמת] The Jewish Home",
+    "wikipedia": 2.3,
+    "source": 2.9
+   }
+  ],
+  "fieldEndSource": "2019-11-26",
+  "sample": 510,
+  "moe": "4.4%",
+  "note": "N12/mako 26.11.19, Midgam, base scenario: כחול לבן 34, הליכוד 33, המשותפת 13, ש\"ס 8, יהדות התורה 8, ישראל ביתנו 9, הימין החדש 6, העבודה-גשר 5, המחנה הדמוקרטי 4 (seats all match). Below threshold: 'הבית היהודי-האיחוד הלאומי ... 2.9% תמיכה בלבד', 'עוצמה יהודית שזוכה ל-2.2% בלבד' — Wikipedia's 2.3/1.2 appear copied from the same-day Walla/Midgam poll. Fieldwork 26.11.2019, n=510, MoE 4.4."
+ },
+ {
+  "id": "k23-2019-11-27-smith-maariv-b",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/news/politics/Article-732299 (headline/lead only) ; https://www.kikar.co.il/338528.html",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar 29.11.19 citing Smith/Maariv, scenario Saar leads Likud: כחול לבן 35, הליכוד 31, המשותפת 13, ש\"ס 8, יהדות התורה 7, ישראל ביתנו 7, הימין החדש 6, העבודה-גשר 5, המחנה הדמוקרטי 4, הבית היהודי-האיחוד הלאומי 4; right bloc 56. Maariv lead confirms Likud 31 under Saar. All match."
+ },
+ {
+  "id": "k23-2019-11-27-smith-maariv",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/news/politics/Article-732299 (headline/lead only) ; https://www.kikar.co.il/338528.html",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv lead: 'הליכוד בהנהגת רה\"מ זוכה ל-33 מנדטים לעומת 31 בהובלת יריבו... 56 לעומת 54'. Kikar 29.11.19 citing Smith/Maariv base (Netanyahu): כחול לבן 35, הליכוד 33, המשותפת 13, ש\"ס 8, יהדות התורה 7, ישראל ביתנו 8, הימין החדש 6, העבודה-גשר 5, המחנה הדמוקרטי 5; JH-NU below threshold. All match."
+ },
+ {
+  "id": "k23-2019-11-28-maagar-mochot-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/338528.html ; https://knessetjeremy.com/2019/11/28/14th-poll-of-possible-3rd-election-blocs-tied-at-56-56-other-additional-questions-answered/ (aggregator, not used as source)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar 29.11.19 citing Maagar Mochot/Israel Hayom: הליכוד 33, כחול לבן 35, ש\"ס 9, המשותפת 13, יהדות התורה 8, ישראל ביתנו 8, הימין החדש 6, העבודה והמחנה הדמוקרטי 4 כל אחת; JH-NU and Otzma below threshold (no %). Seats all match; percentages (Otzma 1.0, JH 2.0) unverified."
+ },
+ {
+  "id": "k23-2019-11-28-maagar-mochot-103fm-b",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/272429 ; https://www.maariv.co.il/news/politics/Article-732299 (lead only)",
+  "differences": [],
+  "fieldEndSource": "2019-11-28",
+  "sample": 481,
+  "moe": "4.1%",
+  "note": "Arutz Sheva 28.11.2019 citing 103FM, scenario Sa'ar leads Likud: Likud 28, New Right 12, Shas 11, UTJ 9, Yisrael Beiteinu 9; Sa'ar-led right bloc 60 (Maariv lead also: 'הימין מגיע ל-60 עם סער'). These match. Blue and White 33, Joint List 14, Labor 4 in this scenario are not stated in the source."
+ },
+ {
+  "id": "k23-2019-11-28-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/272429 ; https://www.maariv.co.il/news/politics/Article-732299 (lead only: 'בסקר 103FM הימין מגיע ל-60 עם סער')",
+  "differences": [],
+  "fieldEndSource": "2019-11-28",
+  "sample": 481,
+  "moe": "4.1%",
+  "note": "Arutz Sheva 28.11.2019 22:13 citing Radio 103FM poll (Maagar Mochot per Wikipedia; firm not named in article), Netanyahu-led Likud: Blue and White 35, Likud 33, Joint Arab List 13, Shas 9, UTJ 8, Yisrael Beiteinu 8, New Right 6, Labor-Gesher 4, Democratic Union 4. All match. Conducted Thursday (28.11), 481 respondents, MoE ~4.1%."
+ },
+ {
+  "id": "k23-2019-12-05-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.mako.co.il/news-israel-elections/elections_2019-2019_q4/Article-1e1addec6dbde61027.htm",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "N12/mako published 06.12.19 20:11, Midgam with iPanel: כחול לבן 34, הליכוד 33, המשותפת 13, ישראל ביתנו 8, ש\"ס 8, יהדות התורה 8, הימין החדש 6, העבודה-גשר 5, המחנה הדמוקרטי 5 — all seats match. Below threshold: 'הבית היהודי-האיחוד הלאומי, עם מעט יותר מ-2%' (Wikipedia 2.2 not exactly stated), 'עוצמה יהודית עם 1.9%' (matches). Fieldwork date, sample, MoE not stated (published Friday 6.12; Wikipedia end 5.12)."
+ },
+ {
+  "id": "k23-2019-12-05-maagar-mochot-103fm",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/272777",
+  "differences": [],
+  "fieldEndSource": "2019-12-05",
+  "sample": 503,
+  "moe": "4.1%",
+  "note": "Arutz Sheva 6.12.2019 03:00 citing Maagar Mohot for Radio 103FM: Blue and White 34, Likud 32, Joint List 12, Shas 8, UTJ 8, Yisrael Beytenu 8, New Right 6, Democratic Union 4, Labor-Gesher 4, United Right 4. All match. 'conducted online on Thursday' (5.12), n=503, MoE ~4.1%."
+ },
+ {
+  "id": "k23-2019-12-08-kantar-kan-radio",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/News/News.aspx/420701",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (inn.co.il) 9.12.19 citing Kantar for Kan 11 (Netanyahu-led scenario): הליכוד 34, כחול לבן 35, המשותפת 13, ש\"ס 8, יהדות התורה 8, ישראל ביתנו 7, הימין החדש 6, העבודה-גשר 5, המחנה הדמוקרטי 4 — all seats match. URWP and Otzma 'לא עוברות את אחוז החסימה' with no % (Wikipedia 2.4 / 1.9 unverified). Appears to be the same Kantar poll as k23-2019-12-08-kantar-kan-11 (its base scenario), reported on Kan 11 not specifically radio."
+ },
+ {
+  "id": "k23-2019-12-08-kantar-kan-11",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/News/News.aspx/420701",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 (inn.co.il) 9.12.19 20:25 citing Kantar for Kan 11. NOTE: these are the SCENARIO figures 'גדעון סער בראשות הליכוד': הליכוד 32, כחול לבן 33, המשותפת 13, ש\"ס 9, ישראל ביתנו 8, יהדות התורה 8, הימין החדש 8, העבודה-גשר 5, המחנה הדמוקרטי 4 — all match Wikipedia, but this row is a Saar-led-Likud scenario, not the base poll (base = row k23-2019-12-08-kantar-kan-radio). Fieldwork/sample/MoE not stated; published Monday 9.12."
+ },
+ {
+  "id": "k23-2019-12-10-midgam-walla",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://news.walla.co.il/item/3328640 (-> https://www.walla.co.il/news/politics/3328640)",
+  "differences": [],
+  "fieldEndSource": "2019-12-10",
+  "sample": 506,
+  "moe": "4.4%",
+  "note": "Walla 10.12.2019 13:42, Midgam: כחול לבן 35, הליכוד 33, ש\"ס 8, יהדות התורה 8, הימין החדש 6, ישראל ביתנו 8, המשותפת 13; centre-left 44 '(35 כחול לבן, 5 מפלגת העבודה, 4 המחנה הדמוקרטי)'; 'הבית היהודי ועוצמה יהודית לא עוברות את אחוז החסימה עם 2.1% ו-1.3%'. All match. Fieldwork 9-10/12/2019, 506 respondents, MoE 4.4%."
+ },
+ {
+  "id": "k23-2019-12-10-midgam-project-channel-13-b",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/left-center-block-getting-stronger-957440/ (-> 13tv.co.il)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 803,
+  "moe": "3.6%",
+  "note": "Channel 13 10.12.2019, scenario Saar leads Likud: כחול לבן 35, הליכוד 29, המשותפת 13, ישראל ביתנו 8, 'הימין החדש, ש\"ס ויהדות התורה ... שבעה', איחוד מפלגות הימין 5, העבודה-גשר 4; centre-left bloc 57, right 55. Democratic Camp not named in scenario text but bloc 57 = 35+13+4+DC implies DC 5 (= Wikipedia). All match. 803 respondents, MoE 3.6%."
+ },
+ {
+  "id": "k23-2019-12-10-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://13news.co.il/item/news/politics/state-policy/left-center-block-getting-stronger-957440/ (-> 13tv.co.il)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 803,
+  "moe": "3.6%",
+  "note": "Channel 13 published Tuesday 10.12.2019 (Camil Fuchs; Project HaMidgam / Stat-Net), base scenario: כחול לבן 37, הליכוד 33, המשותפת 13, ש\"ס 6, יהדות התורה 7, ישראל ביתנו 8, הימין החדש 6, העבודה-גשר 5, המחנה הדמוקרטי 5; איחוד מפלגות הימין below threshold (no %). All match. 803 respondents, MoE 3.6%; fieldwork date not stated."
+ },
+ {
+  "id": "k23-2019-12-12-smith-maariv",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/news/politics/Article-735018",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv 13/12/2019 06:00 (title 'סקר מנדטים \"מעריב\": כחול לבן 35, הליכוד 33, ישראל ביתנו 7'; 'גוש הימין עולה ל־57, המרכז־שמאל יורד ל־56'). Stated figures match; body with other parties not rendered. Blocs consistent with Wikipedia (33+8+7+5+4=57; 35+12+5+4=56). Scenario Saar: B&W 35, Likud 26, right bloc 55 (not in queue)."
+ },
+ {
+  "id": "k23-2019-12-12-midgam-channel-12-b",
+  "status": "inconsistent",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273083",
+  "differences": [
+   {
+    "key": "ג (יהדות התורה)",
+    "wikipedia": 7,
+    "source": 8
+   },
+   {
+    "key": "ל (ישראל ביתנו)",
+    "wikipedia": 8,
+    "source": 7
+   },
+   {
+    "key": "[קודמת] The Jewish Home",
+    "wikipedia": 4,
+    "source": 5
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": 513,
+  "moe": null,
+  "note": "Arutz Sheva 12.12.2019 citing Channel 12, scenario Saar heads Likud: Blue and White 35, Likud 26, Joint List 13, New Right 9, UTJ and Shas 'eight' each, Yisrael Beiteinu 'seven', Labor-Gesher 5, Democratic Union 5, Bayit Yehudi-National Union 5, Otzma below threshold. These sum to 121, and the stated blocs (right 55, left+Arabs 58, Liberman 7) imply JH-NU = 4; the report is internally inconsistent. Agreeing with Wikipedia: B&W 35, Likud 26, JL 13, NR 9, Shas 8, Labor 5, DU 5. Differences listed are vs. the INN text (UTJ 8/YB 7/JH 5) but cannot be confirmed; Otzma 2.1% not given."
+ },
+ {
+  "id": "k23-2019-12-12-midgam-channel-12",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/273083 ; https://knessetjeremy.com/2019/12/12/1st-poll-of-2020-election-blue-white-35-likud-32-joint-list-13-yisrael-beitenu-8-utj-8-shas-8-hayamin-hehadash-6/ (aggregator, not used)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 513,
+  "moe": null,
+  "note": "Arutz Sheva 12.12.2019 21:39 citing Channel 12 ('a sample institute', 513 respondents), base scenario: Blue and White 35, Likud 32, Joint List 13, Yisrael Beiteinu 8, UTJ 8, Shas 8, New Right 6, Labor-Gesher 5, Democratic Union 5; JH-NU and Otzma 'won't pass the threshold' (no %). All seats match; Wikipedia % (JH 2.8, Otzma 1.3) unverified. Mako original not located."
+ },
+ {
+  "id": "k23-2019-12-12-maagar-mochot-israel-hayom-b",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.israelhayom.co.il/article/715265 (403 - blocked, not bypassed) ; https://maki.org.il/en/?p=21085",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "The only alternative figure found for this Israel Hayom poll is the Saar-led-Likud scenario: Likud 'would only get 29 Knesset seats' (maki.org.il). Wikipedia's row b (Likud 31, B&W 33, JL 15, Shas 11, ...) could not be found in any source; it is unclear whether row b is that scenario (if so, Likud 31 vs 29) or something else. Not verified."
+ },
+ {
+  "id": "k23-2019-12-12-maagar-mochot-israel-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelhayom.co.il/article/715265 (403 - blocked, not bypassed) ; https://maki.org.il/en/?p=21085",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maki.org.il 15.12.2019 reporting the Israel Hayom/Maagar Mochot poll released Friday 13.12.2019: Blue & White 37, Likud 31, Joint List 14, Yisrael Beytenu 8, Shas 8, UTJ 7, New Right 5, Labor-Gesher 6, Democratic Camp 4; Union of Right-Wing Parties 2%, Otzma Yehudit 1% (below threshold). All match. Sample/MoE not stated."
+ }
+]

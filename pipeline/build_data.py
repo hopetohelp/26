@@ -853,13 +853,45 @@ def build_history(results: list[dict]) -> dict:
 
 def attach_verification(cycles: list[dict]) -> None:
     """סטטוס האימות ורמת המקור של כל סקר עבר — מ-raw/forecast/polls.json (מקור אמת אחד, כלל ברזל 9).
+    סקרים שלפני הגשת הרשימות (preLists) — מרשומות raw/forecast/verification/pre_*_results*.json; הבדל מול המקור
+    (differences: מפתח, ערך ויקיפדיה, ערך המקור) מתקן את הערך — המקור גובר, והתיקון מתועד ברשומה.
     סקר שאין לו רשומת אימות מקבל "unverified", כך שכל סקר בכל מחזור נושא את השדה (חוזה הנתונים, 04.11.2026)."""
     rows = {r["id"]: r for r in json.loads((RAW / "forecast" / "polls.json").read_text(encoding="utf-8"))}
+    pre = {}
+    for path in sorted((RAW / "forecast" / "verification").glob("pre_k*_results*.json")):
+        pre.update({r["id"]: r for r in json.loads(path.read_text(encoding="utf-8"))})
     for c in cycles:
         for p in c["polls"]:
             r = rows.get(p["id"])
-            p["verificationStatus"] = r["status"] if r else "unverified"
-            p["sourceLevel"] = r.get("sourceLevel", "primary") if r else "aggregator"
+            if r:
+                p["verificationStatus"], p["sourceLevel"] = r["status"], r.get("sourceLevel", "primary")
+                if r["status"] == "match" and p["sourceLevel"] != "primary":
+                    p["verificationStatus"] = "cross_checked"  # הכרעת בעלים 05.11.2026 (גם לרשומות האימות הקודמות)
+                continue
+            v = pre.get(p["id"]) if p.get("preLists") else None
+            if not v:
+                p["verificationStatus"], p["sourceLevel"] = "unverified", "aggregator"
+                continue
+            p["verificationStatus"], p["sourceLevel"] = v["status"], v.get("sourceLevel") or "aggregator"
+            if v["status"] == "match" and p["sourceLevel"] != "primary":
+                p["verificationStatus"] = "cross_checked"  # הכרעת בעלים 05.11.2026: תואם רק במקור חלופי ⇐ "הוצלב"
+            if v["status"] == "unavailable":
+                p["verificationStatus"], p["sourceLevel"] = "unverified", "aggregator"  # נמצא רק בוויקיפדיה ⇐ "לא אומת"
+            for d in (v.get("differences") or []) if v["status"] == "corrected" else []:  # רק תיקון ודאי; חלקי — תיעוד בלבד
+                key, val = d["key"], d["source"]
+                if not isinstance(val, (int, float)) or isinstance(val, bool):
+                    continue
+                entry = {"p": val} if isinstance(val, float) else {"s": val}
+                if key.startswith("[קודמת] "):
+                    p.setdefault("unmapped", {})[key[len("[קודמת] "):]] = entry
+                else:
+                    p["values"][key.split(" ", 1)[0]] = entry
+            if v["status"] == "corrected" and v.get("differences"):
+                total = sum(e.get("s", 0) for e in [*p["values"].values(), *p.get("unmapped", {}).values()])
+                p["seatSum"], p["consistent"] = total, 118 <= total <= 122
+            if p["sourceLevel"] in ("primary", "press"):
+                found = re.findall(r"https?://[^\s;()]+", v.get("source") or "")
+                p["urls"] = list(dict.fromkeys([*found, *p["urls"]]))[:3]
 
 # ---------------------------------------------------------------- המודל ותרחישי יום הבחירות
 

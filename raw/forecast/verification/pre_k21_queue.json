@@ -1,0 +1,7501 @@
+[
+ {
+  "id": "k21-2015-11-30-maagar-mochot-x",
+  "knesset": 21,
+  "end": "2015-11-30",
+  "start": "2015-11-30",
+  "firm": "מאגר מוחות",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 15
+   },
+   "[קודמת] Zionist Union": {
+    "s": 20
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2015/12/03/first-public-poll-since-march-likud-31-zionist-union-20-yesh-atid-15-joint-list-13-bayit-yehudi-9/"
+  ]
+ },
+ {
+  "id": "k21-2016-01-01-midgam-yediot-ahronot",
+  "knesset": 21,
+  "end": "2016-01-01",
+  "start": "2016-01-01",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ידיעות אחרונות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 18
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/01/01/last-poll-of-2015-likud-25-herzog-18-lapid-18-joint-list-13-bayit-yehudi-12/"
+  ]
+ },
+ {
+  "id": "k21-2016-01-21-unknown-channel-10",
+  "knesset": 21,
+  "end": "2016-01-21",
+  "start": "2016-01-21",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 14
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 16
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/01/24/thursday-channel-10-poll-27-likud-16-yesh-atid-15-zionist-union-14-joint-list-13-bayit-yehudi/"
+  ]
+ },
+ {
+  "id": "k21-2016-01-28-maagar-mochot-x",
+  "knesset": 21,
+  "end": "2016-01-28",
+  "start": "2016-01-28",
+  "firm": "מאגר מוחות",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 18
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/01/28/maagar-mochot-poll-likud-30-zionist-union-18-yesh-atid-18-joint-list-13-kulanu-4/"
+  ]
+ },
+ {
+  "id": "k21-2016-02-19-panels-politics-x",
+  "knesset": 21,
+  "end": "2016-02-19",
+  "start": "2016-02-19",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/02/19/panels-poll-likud-27-yesh-atid-18-zionist-union-15-bayit-yehudi-12-joint-list-12/"
+  ]
+ },
+ {
+  "id": "k21-2016-02-26-smith-reshet-bet",
+  "knesset": 21,
+  "end": "2016-02-26",
+  "start": "2016-02-26",
+  "firm": "סמית'",
+  "publisher": "כאן — רשת ב'",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 19
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/02/26/smith-poll-likud-27-zionist-union-19-yesh-atid-18-joint-list-13-bayit-yehudi-11/"
+  ]
+ },
+ {
+  "id": "k21-2016-03-05-midgam-channel-2",
+  "knesset": 21,
+  "end": "2016-03-05",
+  "start": "2016-03-05",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ערוץ 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 18
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/03/05/midgam-poll-likud-26-yesh-atid-19-zionist-union-18-joint-list-13-bayit-yehudi-11/"
+  ]
+ },
+ {
+  "id": "k21-2016-03-09-kantar-channel-1",
+  "knesset": 21,
+  "end": "2016-03-09",
+  "start": "2016-03-09",
+  "firm": "קנטר",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/03/09/telesekerchannel-1-poll-likud-25-yesh-atid-21-zionist-union-15-joint-list-13-bayit-yehudi-12/"
+  ]
+ },
+ {
+  "id": "k21-2016-03-18-unknown-maariv",
+  "knesset": 21,
+  "end": "2016-03-18",
+  "start": "2016-03-18",
+  "firm": "מכון לא צוין",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://www.israelnationalnews.com/News/News.aspx/209576"
+  ]
+ },
+ {
+  "id": "k21-2016-03-24-dialog-haaretz",
+  "knesset": 21,
+  "end": "2016-03-24",
+  "start": "2016-03-24",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/03/24/a-dialoghaaretz-scenario-poll/"
+  ]
+ },
+ {
+  "id": "k21-2016-03-25-smith-reshet-bet",
+  "knesset": 21,
+  "end": "2016-03-25",
+  "start": "2016-03-25",
+  "firm": "סמית'",
+  "publisher": "כאן — רשת ב'",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 17
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/03/25/smithreshet-bet-poll-likud-26-yesh-atid-19-zionist-union-17-joint-list-12-bayit-yehudi-11/"
+  ]
+ },
+ {
+  "id": "k21-2016-05-16-midgam-channel-2",
+  "knesset": 21,
+  "end": "2016-05-16",
+  "start": "2016-05-16",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ערוץ 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 17
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/05/16/channel-2-poll-likud-27-yesh-atid-18-zionist-union-17-joint-list-13-bayit-yehudi-10/"
+  ]
+ },
+ {
+  "id": "k21-2016-05-16-midgam-channel-10",
+  "knesset": 21,
+  "end": "2016-05-16",
+  "start": "2016-05-16",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 14
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/05/16/channel-10-poll-likud-25-yesh-atid-20-joint-list-14-zionist-union-13-bayit-yehudi-12-22-of-zionist-union-voters-moved-to-yesh-atid/"
+  ]
+ },
+ {
+  "id": "k21-2016-05-17-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2016-05-17",
+  "start": "2016-05-17",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/05/17/maariv-poll-likud-26-yesh-atid-18-bayit-yehudi-14-zionist-union-13-joint-list-11-yisrael-beitenu-11-3-yaalon-scenario-polls/"
+  ]
+ },
+ {
+  "id": "k21-2016-05-17-geocartography-channel-1",
+  "knesset": 21,
+  "end": "2016-05-17",
+  "start": "2016-05-17",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 10
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 8
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/05/20/channel-1-poll-likud-27-yesh-atid-24-joint-list-13-zionist-union-11/"
+  ]
+ },
+ {
+  "id": "k21-2016-05-27-smith-reshet-bet",
+  "knesset": 21,
+  "end": "2016-05-27",
+  "start": "2016-05-27",
+  "firm": "סמית'",
+  "publisher": "כאן — רשת ב'",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/05/27/smith-poll-likud-28-yesh-atid-19-zionist-union-15-joint-list-13-bayit-yehudi-10-scenario-poll-kahlonsaaryaalon-25-likud-21/"
+  ]
+ },
+ {
+  "id": "k21-2016-05-29-geocartography-kol-chai",
+  "knesset": 21,
+  "end": "2016-05-29",
+  "start": "2016-05-29",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "קול חי",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 10
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 8
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/05/29/geocartography-poll-likud-27-yesh-atid-21-bayit-yehudi-14-joint-list-13-utj-10-zionist-union-8/"
+  ]
+ },
+ {
+  "id": "k21-2016-06-03-smith-jerusalem-post",
+  "knesset": 21,
+  "end": "2016-06-03",
+  "start": "2016-06-03",
+  "firm": "סמית'",
+  "publisher": "ג'רוזלם פוסט",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/06/03/jerusalem-postsmith-poll-likud-27-yesh-atid-19-zionist-union-15-joint-list-13-bayit-yehudi-11-yisrael-beitenuutj-8/"
+  ]
+ },
+ {
+  "id": "k21-2016-08-07-geocartography-x",
+  "knesset": 21,
+  "end": "2016-08-07",
+  "start": "2016-08-07",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 11
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 16
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 8
+   }
+  },
+  "urls": [
+   "http://www.inn.co.il/News/News.aspx/327711"
+  ]
+ },
+ {
+  "id": "k21-2016-08-11-maagar-mochot-x",
+  "knesset": 21,
+  "end": "2016-08-11",
+  "start": "2016-08-11",
+  "firm": "מאגר מוחות",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/08/11/maagar-mochot-poll-likud-27-yesh-atid-21-bayit-yehudi-13-joint-list-13-zionist-union-10-yisrael-beitenu-9/"
+  ]
+ },
+ {
+  "id": "k21-2016-09-06-midgam-channel-2",
+  "knesset": 21,
+  "end": "2016-09-06",
+  "start": "2016-09-06",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ערוץ 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/09/06/dramatic-channel-2-poll-yesh-atid-24-likud-22-bayit-yehudi-14-zionist-union-13-joint-list-13-scenario-poll-likud-21-yesh-atid-21-bayit-yehudi-14-yaalon-7/"
+  ]
+ },
+ {
+  "id": "k21-2016-09-09-geocartography-channel-1",
+  "knesset": 21,
+  "end": "2016-09-09",
+  "start": "2016-09-09",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 27
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/09/11/channel-1-poll-yesh-atid-27-likud-23-joint-list-13-zionist-unionbayit-yehudi-11/"
+  ]
+ },
+ {
+  "id": "k21-2016-09-26-kantar-channel-1",
+  "knesset": 21,
+  "end": "2016-09-26",
+  "start": "2016-09-26",
+  "firm": "קנטר",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/09/27/channel-1-poll-yesh-atid-25-likud-21-bayit-yehudi-13-joint-list-13-zionist-union-12/"
+  ]
+ },
+ {
+  "id": "k21-2016-10-02-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2016-10-02",
+  "start": "2016-10-02",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 27
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/10/02/maariv-poll-yesh-atid-27-likud-22-bayit-yehudi-14-joint-list-13-zionist-union-10/"
+  ]
+ },
+ {
+  "id": "k21-2016-11-04-smith-reshet-bet",
+  "knesset": 21,
+  "end": "2016-11-04",
+  "start": "2016-11-04",
+  "firm": "סמית'",
+  "publisher": "כאן — רשת ב'",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/11/04/smithreshet-bet-poll-likud-26-yesh-atid-21-zionist-unionjoint-list-13-bayit-yehudi-12-yisrael-beitenu-8/"
+  ]
+ },
+ {
+  "id": "k21-2016-12-02-midgam-x",
+  "knesset": 21,
+  "end": "2016-12-02",
+  "start": "2016-12-02",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2016/12/03/channel-2-poll-likud-yesh-atid-tied-at-25-joint-list-13-bayit-yehudi-11-zionist-union-10-yisrael-beitenu-8-4-others-tie-at-7-each/"
+  ]
+ },
+ {
+  "id": "k21-2016-12-30-statnet-channel-10",
+  "knesset": 21,
+  "end": "2016-12-30",
+  "start": "2016-12-30",
+  "firm": "סטטנט",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 27
+   },
+   "[קודמת] Zionist Union": {
+    "s": 8
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-News/Lapids-Yesh-Atid-surpasses-Netanyahus-Likud-in-new-poll-477026"
+  ]
+ },
+ {
+  "id": "k21-2017-01-01-smith-reshet-moreshet",
+  "knesset": 21,
+  "end": "2017-01-01",
+  "start": "2017-01-01",
+  "firm": "סמית'",
+  "publisher": "רשת מורשת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "http://www.ch10.co.il/news/336696/#.WGvgeVN96po"
+  ]
+ },
+ {
+  "id": "k21-2017-01-05-kantar-channel-1",
+  "knesset": 21,
+  "end": "2017-01-05",
+  "start": "2017-01-05",
+  "firm": "קנטר",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 26
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/01/05/channel-1-poll-yesh-atid-26-likud-22-bayit-yehudi-14-zionist-union-13-joint-list-12/"
+  ]
+ },
+ {
+  "id": "k21-2017-01-09-geocartography-globes",
+  "knesset": 21,
+  "end": "2017-01-09",
+  "start": "2017-01-09",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "גלובס",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 10
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 27
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/01/09/geocartography-poll-yesh-atid-27-likud-22-zionist-union-13-joint-list-13-utj-10/"
+  ]
+ },
+ {
+  "id": "k21-2017-01-12-unknown-walla",
+  "knesset": 21,
+  "end": "2017-01-12",
+  "start": "2017-01-12",
+  "firm": "מכון לא צוין",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 27
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/01/12/188237/"
+  ]
+ },
+ {
+  "id": "k21-2017-01-17-unknown-channel-2",
+  "knesset": 21,
+  "end": "2017-01-17",
+  "start": "2017-01-17",
+  "firm": "מכון לא צוין",
+  "publisher": "ערוץ 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 26
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/01/17/channel-2-poll-yesh-atid-26-likud-24-joint-list-13-bayit-yehudi-12-zionist-union-11/"
+  ]
+ },
+ {
+  "id": "k21-2017-01-20-panels-politics-x",
+  "knesset": 21,
+  "end": "2017-01-20",
+  "start": "2017-01-20",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 26
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/01/20/panels-poll-yesh-atid-26-likud-23-bayit-yehudi-13-joint-list-13-zionist-union-9-5-scenario-polls-inside-including-29-for-a-bennett-led-likud/"
+  ]
+ },
+ {
+  "id": "k21-2017-03-17-unknown-channel-10",
+  "knesset": 21,
+  "end": "2017-03-17",
+  "start": "2017-03-17",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://www.haaretz.com/israel-news/1.777963",
+   "https://web.archive.org/web/20170317232237/http://www.haaretz.com/israel-news/1.777963"
+  ]
+ },
+ {
+  "id": "k21-2017-03-24-panels-politics-maariv-jerusalem-post",
+  "knesset": 21,
+  "end": "2017-03-24",
+  "start": "2017-03-24",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב וג'רוזלם פוסט",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 28
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/03/24/panels-poll-only-21-want-early-elections-yesh-atid-28-likud-25-bayit-yehudi-13-joint-list-13-zionist-union-10/"
+  ]
+ },
+ {
+  "id": "k21-2017-03-29-unknown-walla",
+  "knesset": 21,
+  "end": "2017-03-29",
+  "start": "2017-03-29",
+  "firm": "מכון לא צוין",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 28
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/03/29/walla-poll-only-16-think-netanyahu-wants-elex-yesh-atid-28-likud-24-bayit-yehudi-13-joint-list-12-zionist-union-10/"
+  ]
+ },
+ {
+  "id": "k21-2017-04-05-dialog-channel-10",
+  "knesset": 21,
+  "end": "2017-04-05",
+  "start": "2017-04-05",
+  "firm": "דיאלוג",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 29
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/04/05/channel-10-poll-yesh-atid-29-likud-27-joint-list-12-bayit-yehudi-10-zionist-union-10/"
+  ]
+ },
+ {
+  "id": "k21-2017-04-22-unknown-channel-22",
+  "knesset": 21,
+  "end": "2017-04-22",
+  "start": "2017-04-22",
+  "firm": "מכון לא צוין",
+  "publisher": "ערוץ 22",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-puts-likud-4-seats-ahead-of-yesh-atid-though-most-unhappy-with-netanyahu/"
+  ]
+ },
+ {
+  "id": "k21-2017-04-27-geocartography-radio-103fm",
+  "knesset": 21,
+  "end": "2017-04-27",
+  "start": "2017-04-27",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/04/27/radio-103-fm-poll-yesh-atid-25-likud-23-bayit-yehudi-13-joint-list-13-zionist-union-11/"
+  ]
+ },
+ {
+  "id": "k21-2017-05-26-midgam-channel-2",
+  "knesset": 21,
+  "end": "2017-05-26",
+  "start": "2017-05-26",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ערוץ 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "http://www.mako.co.il/news-military/politics-q2_2017/Article-f029cdf62d54c51004.htm"
+  ]
+ },
+ {
+  "id": "k21-2017-05-26-geocartography-x",
+  "knesset": 21,
+  "end": "2017-05-26",
+  "start": "2017-05-26",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "http://www.nrg.co.il/online/1/ART2/879/728.html",
+   "http://www.ch10.co.il/news/369455/#.WSpmS-uGOUk"
+  ]
+ },
+ {
+  "id": "k21-2017-07-11-midgam-project-channel-10",
+  "knesset": 21,
+  "end": "2017-07-11",
+  "start": "2017-07-11",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 8
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 16
+   },
+   "[קודמת] Zionist Union": {
+    "s": 24
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/polls-show-gabbay-win-boosting-zionist-union-back-into-second-place/"
+  ]
+ },
+ {
+  "id": "k21-2017-07-11-midgam-channel-2",
+  "knesset": 21,
+  "end": "2017-07-11",
+  "start": "2017-07-11",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ערוץ 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 20
+   }
+  },
+  "urls": [
+   "http://www.mako.co.il/news-military/politics-q3_2017/Article-db34f1557723d51004.htm"
+  ]
+ },
+ {
+  "id": "k21-2017-07-12-panels-politics-walla",
+  "knesset": 21,
+  "end": "2017-07-12",
+  "start": "2017-07-12",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 19
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k21-2017-07-12-geocartography-kol-brama",
+  "knesset": 21,
+  "end": "2017-07-12",
+  "start": "2017-07-12",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "קול ברמה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 19
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2017/07/13/walla-poll-likud-25-yesh-atid-21-zionist-union-19-kol-brama-poll-likud-29-yesh-atid-21-zionist-union-19/"
+  ]
+ },
+ {
+  "id": "k21-2017-07-21-panels-politics-maariv-jerusalem-post",
+  "knesset": 21,
+  "end": "2017-07-21",
+  "start": "2017-07-21",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב וג'רוזלם פוסט",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 19
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-News/Poll-Israelis-dont-believe-Netanyahu-on-submarine-scandal-500284/"
+  ]
+ },
+ {
+  "id": "k21-2017-07-23-geocartography-x",
+  "knesset": 21,
+  "end": "2017-07-23",
+  "start": "2017-07-23",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 18
+   }
+  },
+  "urls": [
+   "http://www.nrg.co.il/online/1/ART2/887/816.html?hp=1&cat=404&loc=4"
+  ]
+ },
+ {
+  "id": "k21-2017-07-27-midgam-project-channel-10",
+  "knesset": 21,
+  "end": "2017-07-27",
+  "start": "2017-07-27",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 20
+   }
+  },
+  "urls": [
+   "http://news.nana10.co.il/Article/?ArticleID=1257199",
+   "https://web.archive.org/web/20170728014237/http://news.nana10.co.il/Article/?ArticleID=1257199"
+  ]
+ },
+ {
+  "id": "k21-2017-08-03-maagar-mochot-makor-rishon",
+  "knesset": 21,
+  "end": "2017-08-03",
+  "start": "2017-08-03",
+  "firm": "מאגר מוחות",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 16
+   }
+  },
+  "urls": [
+   "http://www.nrg.co.il/online/1/ART2/889/409.html?hp=1&cat=404&loc=1"
+  ]
+ },
+ {
+  "id": "k21-2017-08-13-panels-politics-x",
+  "knesset": 21,
+  "end": "2017-08-13",
+  "start": "2017-08-13",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 16
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-News/Politics-And-Diplomacy/Poll-Bennett-Saar-top-potential-successors-to-Netanyahu-502259"
+  ]
+ },
+ {
+  "id": "k21-2017-08-22-geocartography-x",
+  "knesset": 21,
+  "end": "2017-08-22",
+  "start": "2017-08-22",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 14
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/234467"
+  ]
+ },
+ {
+  "id": "k21-2017-09-21-panels-politics-x",
+  "knesset": 21,
+  "end": "2017-09-21",
+  "start": "2017-09-21",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 17
+   }
+  },
+  "urls": [
+   "http://www.mako.co.il/tv-people/articles/Article-187f533caf3ae51006.htm"
+  ]
+ },
+ {
+  "id": "k21-2017-10-17-panels-politics-x",
+  "knesset": 21,
+  "end": "2017-10-17",
+  "start": "2017-10-17",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 20
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3104944"
+  ]
+ },
+ {
+  "id": "k21-2017-10-28-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2017-10-28",
+  "start": "2017-10-28",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 3
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 20
+   }
+  },
+  "urls": [
+   "https://www.10.tv/news/63936",
+   "https://web.archive.org/web/20190110013903/https://www.10.tv/news/63936"
+  ]
+ },
+ {
+  "id": "k21-2017-11-01-unknown-ten-news",
+  "knesset": 21,
+  "end": "2017-11-01",
+  "start": "2017-11-01",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 19
+   }
+  },
+  "urls": [
+   "http://news.nana10.co.il/Article/?ArticleID=1272053&sid=126",
+   "https://web.archive.org/web/20171107012602/http://news.nana10.co.il/Article/?ArticleID=1272053&sid=126"
+  ]
+ },
+ {
+  "id": "k21-2017-11-01-unknown-news-company",
+  "knesset": 21,
+  "end": "2017-11-01",
+  "start": "2017-11-01",
+  "firm": "מכון לא צוין",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 21
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/237532"
+  ]
+ },
+ {
+  "id": "k21-2017-11-19-unknown-walla-news",
+  "knesset": 21,
+  "end": "2017-11-19",
+  "start": "2017-11-19",
+  "firm": "מכון לא צוין",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 3
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 19
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3112628"
+  ]
+ },
+ {
+  "id": "k21-2017-11-26-unknown-ten-news",
+  "knesset": 21,
+  "end": "2017-11-26",
+  "start": "2017-11-26",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 17
+   }
+  },
+  "urls": [
+   "http://news.nana10.co.il/Article/?ArticleID=1275607",
+   "https://web.archive.org/web/20171126204859/http://news.nana10.co.il/Article/?ArticleID=1275607"
+  ]
+ },
+ {
+  "id": "k21-2017-12-01-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2017-12-01",
+  "start": "2017-12-01",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 17
+   }
+  },
+  "urls": [
+   "http://www.maariv.co.il/journalists/Article-612102"
+  ]
+ },
+ {
+  "id": "k21-2017-12-04-unknown-news-company",
+  "knesset": 21,
+  "end": "2017-12-04",
+  "start": "2017-12-04",
+  "firm": "מכון לא צוין",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 18
+   }
+  },
+  "urls": [
+   "http://www.mako.co.il/news-military/politics-q4_2017/Article-9f7d3ac8cb22061004.htm"
+  ]
+ },
+ {
+  "id": "k21-2017-12-08-geocartography-x",
+  "knesset": 21,
+  "end": "2017-12-08",
+  "start": "2017-12-08",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 16
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://www.20il.co.il/?p=70745"
+  ]
+ },
+ {
+  "id": "k21-2017-12-19-geocartography-x",
+  "knesset": 21,
+  "end": "2017-12-19",
+  "start": "2017-12-18",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 9
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 20
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 27
+   },
+   "[קודמת] Zionist Union": {
+    "s": 14
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/239742"
+  ]
+ },
+ {
+  "id": "k21-2017-12-27-maagar-mochot-makor-rishon",
+  "knesset": 21,
+  "end": "2017-12-27",
+  "start": "2017-12-25",
+  "firm": "מאגר מוחות",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/239991"
+  ]
+ },
+ {
+  "id": "k21-2017-12-28-geocartography-x",
+  "knesset": 21,
+  "end": "2017-12-28",
+  "start": "2017-12-28",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 9
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 26
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/240112"
+  ]
+ },
+ {
+  "id": "k21-2018-01-11-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-01-11",
+  "start": "2018-01-10",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 16
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/240607"
+  ]
+ },
+ {
+  "id": "k21-2018-01-12-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2018-01-12",
+  "start": "2018-01-12",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 27
+   },
+   "[קודמת] Zionist Union": {
+    "s": 14
+   }
+  },
+  "urls": [
+   "http://www.maariv.co.il/news/politics/Article-617608"
+  ]
+ },
+ {
+  "id": "k21-2018-01-21-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-01-21",
+  "start": "2018-01-21",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3128939"
+  ]
+ },
+ {
+  "id": "k21-2018-02-01-geocartography-x",
+  "knesset": 21,
+  "end": "2018-02-01",
+  "start": "2018-02-01",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 8
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/241480"
+  ]
+ },
+ {
+  "id": "k21-2018-02-14-smith-maariv",
+  "knesset": 21,
+  "end": "2018-02-14",
+  "start": "2018-02-14",
+  "firm": "סמית'",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "http://www.maariv.co.il/news/politics/Article-624368"
+  ]
+ },
+ {
+  "id": "k21-2018-02-14-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-02-14",
+  "start": "2018-02-14",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 25
+   },
+   "[קודמת] Zionist Union": {
+    "s": 16
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/polls-show-support-for-netanyahu-may-be-rising-after-police-allegations/"
+  ]
+ },
+ {
+  "id": "k21-2018-02-14-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-02-14",
+  "start": "2018-02-14",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 22
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/241952"
+  ]
+ },
+ {
+  "id": "k21-2018-02-19-geocartography-israel-hayom",
+  "knesset": 21,
+  "end": "2018-02-19",
+  "start": "2018-02-19",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/242219"
+  ]
+ },
+ {
+  "id": "k21-2018-02-21-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-02-21",
+  "start": "2018-02-21",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 23
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-netanyahus-likud-would-remain-biggest-party-despite-corruption-probes/"
+  ]
+ },
+ {
+  "id": "k21-2018-02-22-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-02-22",
+  "start": "2018-02-21",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://www.haaretz.com/israel-news/netanyahu-s-party-would-still-finish-first-if-israeli-elections-were-held-today-poll-says-as-pm-s-legal-issues-grow-1.5846377",
+   "https://web.archive.org/web/20180224204258/https://www.haaretz.com/israel-news/netanyahu-s-party-would-still-finish-first-if-israeli-elections-were-held-today-poll-says-as-pm-s-legal-issues-grow-1.5846377"
+  ]
+ },
+ {
+  "id": "k21-2018-02-28-geocartography-israel-hayom",
+  "knesset": 21,
+  "end": "2018-02-28",
+  "start": "2018-02-28",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 10
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 36
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 23
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "http://www.israelhayom.com/2018/03/02/new-poll-projects-36-seats-for-likud-in-general-election/"
+  ]
+ },
+ {
+  "id": "k21-2018-03-01-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-03-01",
+  "start": "2018-03-01",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 23
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3139433"
+  ]
+ },
+ {
+  "id": "k21-2018-03-04-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-03-04",
+  "start": "2018-03-04",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-likud-would-win-29-seats-if-new-elections-held/"
+  ]
+ },
+ {
+  "id": "k21-2018-03-08-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-03-08",
+  "start": "2018-03-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3141117"
+  ]
+ },
+ {
+  "id": "k21-2018-03-08-maagar-mochot-israel-hayom",
+  "knesset": 21,
+  "end": "2018-03-08",
+  "start": "2018-03-08",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 2
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 14
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "http://www.israelhayom.com/2018/03/08/likud-sweeps-latest-poll-despite-mounting-corruption-allegations/"
+  ]
+ },
+ {
+  "id": "k21-2018-03-12-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-03-12",
+  "start": "2018-03-12",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 24
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/03/12/4-polls-channel-13-poll-likud-30-yesh-atid-21-channel-10-poll-likud-29-yesh-atid-24-lapid-poll-early-elex-poll/"
+  ]
+ },
+ {
+  "id": "k21-2018-03-12-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-03-12",
+  "start": "2018-03-12",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/243050"
+  ]
+ },
+ {
+  "id": "k21-2018-03-16-geocartography-israel-hayom",
+  "knesset": 21,
+  "end": "2018-03-16",
+  "start": "2018-03-16",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 39
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "[קודמת] Gesher": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 8
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "http://www.israelhayom.com/2018/03/16/fresh-off-coalition-crisis-likud-soars-even-higher-in-polls/"
+  ]
+ },
+ {
+  "id": "k21-2018-03-29-smith-channel-20",
+  "knesset": 21,
+  "end": "2018-03-29",
+  "start": "2018-03-29",
+  "firm": "סמית'",
+  "publisher": "ערוץ 20",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/243835"
+  ]
+ },
+ {
+  "id": "k21-2018-04-03-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-04-03",
+  "start": "2018-04-03",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 5
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 21
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/244010"
+  ]
+ },
+ {
+  "id": "k21-2018-04-15-panels-politics-knesset-channel",
+  "knesset": 21,
+  "end": "2018-04-15",
+  "start": "2018-04-15",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/244488"
+  ]
+ },
+ {
+  "id": "k21-2018-04-23-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-04-23",
+  "start": "2018-04-23",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 8
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 14
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-shows-ex-fms-daughter-today-a-solo-mk-could-hold-israel-balance-of-power/"
+  ]
+ },
+ {
+  "id": "k21-2018-04-26-geocartography-israel-hayom",
+  "knesset": 21,
+  "end": "2018-04-26",
+  "start": "2018-04-26",
+  "firm": "גיאוקרטוגרפיה",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/244998"
+  ]
+ },
+ {
+  "id": "k21-2018-04-29-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-04-29",
+  "start": "2018-04-29",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/245161"
+  ]
+ },
+ {
+  "id": "k21-2018-05-01-smith-channel-20",
+  "knesset": 21,
+  "end": "2018-05-01",
+  "start": "2018-05-01",
+  "firm": "סמית'",
+  "publisher": "ערוץ 20",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/245297"
+  ]
+ },
+ {
+  "id": "k21-2018-05-09-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2018-05-09",
+  "start": "2018-05-09",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 36
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/05/11/maariv-panels-poll-likud-36-yesh-atid-17-joint-list-12-zionist-union-10/"
+  ]
+ },
+ {
+  "id": "k21-2018-05-09-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-05-09",
+  "start": "2018-05-09",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 35
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 8
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 14
+   }
+  },
+  "urls": [
+   "https://hamodia.com/2018/05/10/poll-likud-netanyahu-shoot-35-seats-iran-deal-announcement/"
+  ]
+ },
+ {
+  "id": "k21-2018-06-01-smith-maariv",
+  "knesset": 21,
+  "end": "2018-06-01",
+  "start": "2018-06-01",
+  "firm": "סמית'",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/246799"
+  ]
+ },
+ {
+  "id": "k21-2018-06-03-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-06-03",
+  "start": "2018-06-03",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 16
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/246865"
+  ]
+ },
+ {
+  "id": "k21-2018-06-08-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-06-08",
+  "start": "2018-06-08",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-likud-would-win-31-seats-if-new-elections-held/"
+  ]
+ },
+ {
+  "id": "k21-2018-06-25-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-06-25",
+  "start": "2018-06-25",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 7
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/06/25/midgam-poll-likud-32-yesh-atid-18-zionist-union-15-joint-list-12/"
+  ]
+ },
+ {
+  "id": "k21-2018-07-04-midgam-yediot-ahronot",
+  "knesset": 21,
+  "end": "2018-07-04",
+  "start": "2018-07-04",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ידיעות אחרונות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 7
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://www.ynetnews.com/articles/0,7340,L-5303895,00.html"
+  ]
+ },
+ {
+  "id": "k21-2018-07-08-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-07-08",
+  "start": "2018-07-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 35
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/248605",
+   "https://knessetjeremy.com/2018/07/08/walla-poll-likud-31-yesh-atid-17-zionist-union-12-joint-list-12-bayit-yehudi-10-3-scenario-polls-livni-leading-zionist-union-new-ashkenazi-party-joint-lapid-kahlon-ashkenazi-party/"
+  ]
+ },
+ {
+  "id": "k21-2018-07-12-maagar-mochot-makor-rishon",
+  "knesset": 21,
+  "end": "2018-07-12",
+  "start": "2018-07-12",
+  "firm": "מאגר מוחות",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/Flash.aspx/423751"
+  ]
+ },
+ {
+  "id": "k21-2018-07-24-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-07-24",
+  "start": "2018-07-24",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 8
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-News/Poll-Netanyahus-Likud-would-win-30-seats-if-elections-held-today-563318"
+  ]
+ },
+ {
+  "id": "k21-2018-07-30-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-07-30",
+  "start": "2018-07-30",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/07/30/panels-poll-58-support-nation-state-law-likud-33-yesh-atid-19-zionist-union-12-joint-list-11-bayit-yehudi-10/"
+  ]
+ },
+ {
+  "id": "k21-2018-08-21-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2018-08-21",
+  "start": "2018-08-21",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 20
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-News/Poll-finds-Likud-would-win-by-a-landslide-565462"
+  ]
+ },
+ {
+  "id": "k21-2018-09-03-panels-politics-keshet",
+  "knesset": 21,
+  "end": "2018-09-03",
+  "start": "2018-09-02",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 36
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/liveblog_entry/poll-finds-netanyahus-likud-party-gaining-in-popularity/"
+  ]
+ },
+ {
+  "id": "k21-2018-10-07-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-10-07",
+  "start": "2018-10-07",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/252881"
+  ]
+ },
+ {
+  "id": "k21-2018-10-11-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-10-11",
+  "start": "2018-10-11",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Gesher": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 15
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/liveblog_entry/poll-likud-would-win-over-twice-as-many-seats-as-next-biggest-party-in-election/"
+  ]
+ },
+ {
+  "id": "k21-2018-10-25-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-10-25",
+  "start": "2018-10-25",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Gesher": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 14
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 19
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-likud-would-win-elections-with-netanyahu-rival-at-helm/"
+  ]
+ },
+ {
+  "id": "k21-2018-11-14-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2018-11-14",
+  "start": "2018-11-14",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-670961"
+  ]
+ },
+ {
+  "id": "k21-2018-11-14-midgam-news-company-b",
+  "knesset": 21,
+  "end": "2018-11-14",
+  "start": "2018-11-14",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen": {
+    "s": 15
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   },
+   "[קודמת] Zionist Union": {
+    "s": 8
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k21-2018-11-14-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-11-14",
+  "start": "2018-11-14",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/254742"
+  ]
+ },
+ {
+  "id": "k21-2018-11-15-smith-channel-20",
+  "knesset": 21,
+  "end": "2018-11-15",
+  "start": "2018-11-14",
+  "firm": "סמית'",
+  "publisher": "ערוץ 20",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 16
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.20il.co.il/?p=223846"
+  ]
+ },
+ {
+  "id": "k21-2018-11-17-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-11-17",
+  "start": "2018-11-17",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://www.haaretz.com/israel-news/2018-11-17/ty-article/.premium/majority-of-israelis-dont-want-bennett-as-defense-minister-poll-shows/0000017f-dba0-db22-a17f-ffb165470000"
+  ]
+ },
+ {
+  "id": "k21-2018-11-19-midgam-project-ten-news-b",
+  "knesset": 21,
+  "end": "2018-11-19",
+  "start": "2018-11-19",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 15
+   },
+   "[קודמת] Joint List": {
+    "s": 14
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k21-2018-11-19-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-11-19",
+  "start": "2018-11-19",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 14
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 14
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/254956"
+  ]
+ },
+ {
+  "id": "k21-2018-11-20-midgam-army-radio",
+  "knesset": 21,
+  "end": "2018-11-20",
+  "start": "2018-11-20",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "גלי צה\"ל",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 18
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/11/20/army-radio-midgam-poll-likud-30-yesh-atid-18-zionist-union-12-joint-list-12/"
+  ]
+ },
+ {
+  "id": "k21-2018-11-21-panels-politics-walla-b",
+  "knesset": 21,
+  "end": "2018-11-21",
+  "start": "2018-11-21",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 19
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k21-2018-11-21-panels-politics-walla",
+  "knesset": 21,
+  "end": "2018-11-21",
+  "start": "2018-11-21",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 13
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/11/21/walla-poll-likud-30-yesh-atid-17-bayit-yehudi-13-joint-list-13-zionist-union-12-3-scenario-polls-gantz-saar/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-16-midgam-channel-13",
+  "knesset": 21,
+  "end": "2018-12-16",
+  "start": "2018-12-16",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 16
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/12/16/midgam-poll-likud-28-gantz-party-16-yesh-atid-13-joint-list-12-zionist-union-10/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-25-sarid-kan",
+  "knesset": 21,
+  "end": "2018-12-25",
+  "start": "2018-12-25",
+  "firm": "שריד",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 10
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   },
+   "[קודמת] Zionist Union": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://www.kan.org.il/Item/?itemId=44745"
+  ]
+ },
+ {
+  "id": "k21-2018-12-25-panels-politics-walla-b",
+  "knesset": 21,
+  "end": "2018-12-25",
+  "start": "2018-12-25",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 14
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k21-2018-12-25-panels-politics-walla",
+  "knesset": 21,
+  "end": "2018-12-25",
+  "start": "2018-12-25",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3209514"
+  ]
+ },
+ {
+  "id": "k21-2018-12-25-midgam-project-ten-news-b",
+  "knesset": 21,
+  "end": "2018-12-25",
+  "start": "2018-12-25",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 15
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k21-2018-12-25-midgam-project-ten-news",
+  "knesset": 21,
+  "end": "2018-12-25",
+  "start": "2018-12-25",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 10
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 15
+   },
+   "[קודמת] Zionist Union": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://www.10.tv/news/179032",
+   "https://web.archive.org/web/20181226084223/https://www.10.tv/news/179032"
+  ]
+ },
+ {
+  "id": "k21-2018-12-25-midgam-news-company",
+  "knesset": 21,
+  "end": "2018-12-25",
+  "start": "2018-12-25",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 16
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 9
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   },
+   "[קודמת] Zionist Union": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-channel2/Channel-2-Newscast-q4_2018/Article-0e641777dc6e761004.htm"
+  ]
+ },
+ {
+  "id": "k21-2018-12-27-panels-politics-channel-12",
+  "knesset": 21,
+  "end": "2018-12-27",
+  "start": "2018-12-27",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 13
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 15
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/12/27/channel-12-poll-likud-31-yesh-atid-15-gantz-13-2-additional-scenario-polls-gantz-ya-vs-barak-zu/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-27-maagar-mochot-israel-hayom",
+  "knesset": 21,
+  "end": "2018-12-27",
+  "start": "2018-12-27",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 15
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   },
+   "[קודמת] Zionist Union": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://www.israelhayom.co.il/article/619499",
+   "https://knessetjeremy.com/2018/12/27/yisrael-hayom-poll-likud-31-gantz-15-joint-list-12-yesh-atid-11-bayit-yehudi-11-zionist-union-7/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-30-sarid-kan",
+  "knesset": 21,
+  "end": "2018-12-30",
+  "start": "2018-12-30",
+  "firm": "שריד",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 14
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 13
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 16
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/12/30/kan-channel-likud-27-yesh-atid-16-hayamin-hehadash-14-israel-resilience-13-joint-list-12/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-30-panels-politics-walla",
+  "knesset": 21,
+  "end": "2018-12-30",
+  "start": "2018-12-30",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 10
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 11
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 15
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/12/30/walla-poll-likud-28-yesh-atid-15-joint-list-13-israel-resilience-11-hayamin-hehadash-10/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-30-midgam-project-channel-10",
+  "knesset": 21,
+  "end": "2018-12-30",
+  "start": "2018-12-30",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 14
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 3
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   },
+   "[קודמת] Zionist Union": {
+    "s": 8
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/12/30/likud-30-israel-resilience-14-joint-list-13-yesh-atid-11/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-30-midgam-channel-13",
+  "knesset": 21,
+  "end": "2018-12-30",
+  "start": "2018-12-30",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen": {
+    "s": 14
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/12/30/channel-13-poll-likud-28-israel-resilience-14-joint-list-12-yesh-atid-12/"
+  ]
+ },
+ {
+  "id": "k21-2018-12-30-direct-polls-makor-rishon",
+  "knesset": 21,
+  "end": "2018-12-30",
+  "start": "2018-12-30",
+  "firm": "דיירקט פולס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 14
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 15
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   },
+   "[קודמת] Zionist Union": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2018/12/30/189481/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-02-midgam-news-company",
+  "knesset": 21,
+  "end": "2019-01-02",
+  "start": "2019-01-02",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חברת החדשות",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 12
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://www.inn.co.il/News/News.aspx/390679"
+  ]
+ },
+ {
+  "id": "k21-2019-01-02-kantar-kan",
+  "knesset": 21,
+  "end": "2019-01-02",
+  "start": "2019-01-02",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 7
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 9
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen": {
+    "s": 14
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://www.haaretz.co.il/news/elections/1.6805738"
+  ]
+ },
+ {
+  "id": "k21-2019-01-03-smith-jerusalem-post",
+  "knesset": 21,
+  "end": "2019-01-03",
+  "start": "2019-01-03",
+  "firm": "סמית'",
+  "publisher": "ג'רוזלם פוסט",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 9
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen": {
+    "s": 14
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-News/Netanyahu-must-quit-if-indicted-majority-of-Israelis-say-in-Post-poll-576278"
+  ]
+ },
+ {
+  "id": "k21-2019-01-04-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2019-01-04",
+  "start": "2019-01-04",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 11
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 12
+   },
+   "[קודמת] Joint List": {
+    "s": 13
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/04/maariv-poll-likud-30-joint-list-13-yesh-atid-12-israel-resilience-12-hayamin-hehadash-11-labor-8/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-04-direct-polls-makor-rishon",
+  "knesset": 21,
+  "end": "2019-01-04",
+  "start": "2019-01-04",
+  "firm": "דיירקט פולס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 10
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 10
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 12
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 17
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/04/makor-rishon-poll-likud-26-yesh-atid-17-joint-list-12-israel-resilience-12-labor-10-hayamin-hehadash-10/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-05-shvakim-panorama-israel-beitenu",
+  "knesset": 21,
+  "end": "2019-01-05",
+  "start": "2019-01-05",
+  "firm": "שווקים פנורמה",
+  "publisher": "ישראל ביתנו",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Hosen": {
+    "s": 13
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/06/internal-yisrael-beitenu-poll-likud-26-israel-resilience-13-joint-list-12-yesh-atid-10-labor-8-yisrael-beitenu-8/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-08-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2019-01-08",
+  "start": "2019-01-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen": {
+    "s": 12
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3212187"
+  ]
+ },
+ {
+  "id": "k21-2019-01-16-midgam-channel-12",
+  "knesset": 21,
+  "end": "2019-01-16",
+  "start": "2019-01-16",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 13
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 14
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/liveblog_entry/latest-poll-shows-likud-in-comfortable-lead-hatnua-and-jewish-home-erased/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-16-kantar-kan",
+  "knesset": 21,
+  "end": "2019-01-16",
+  "start": "2019-01-16",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 7
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 13
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://www.kan.org.il/item/?itemId=45787"
+  ]
+ },
+ {
+  "id": "k21-2019-01-17-panels-politics-walla",
+  "knesset": 21,
+  "end": "2019-01-17",
+  "start": "2019-01-17",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 9
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 12
+   },
+   "[קודמת] Joint List": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 15
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/17/walla-poll-likud-33-yesh-atid-15-israel-resilience-12-joint-list-10-hayamin-hehadash-8-labor-7/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-17-kantar-saloona",
+  "knesset": 21,
+  "end": "2019-01-17",
+  "start": "2019-01-17",
+  "firm": "קנטר",
+  "publisher": "סלונה",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 9
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 15
+   },
+   "[קודמת] Joint List": {
+    "s": 12
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/28/teleseker-poll-likud-28-israel-resilience-15-yesh-atid-13-joint-list-taal-12-hayamin-hehadash-9-labor-8/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-22-midgam-army-radio",
+  "knesset": 21,
+  "end": "2019-01-22",
+  "start": "2019-01-22",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "גלי צה\"ל",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 13
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://www.israelnationalnews.com/News/News.aspx/257966"
+  ]
+ },
+ {
+  "id": "k21-2019-01-24-direct-polls-reshet-bet",
+  "knesset": 21,
+  "end": "2019-01-24",
+  "start": "2019-01-24",
+  "firm": "דיירקט פולס",
+  "publisher": "כאן — רשת ב'",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 15
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/24/reshet-bet-radio-poll-likud-31-israel-resilience-15-yesh-atid-11-labor-9-hayamin-hehadash-8/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-30-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2019-01-30",
+  "start": "2019-01-30",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 7
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 19
+   },
+   "[קודמת] Joint List": {
+    "s": 7
+   },
+   "[קודמת] Ta'al": {
+    "s": 5
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://elections.walla.co.il/item/3216208"
+  ]
+ },
+ {
+  "id": "k21-2019-01-30-midgam-project-channel-13",
+  "knesset": 21,
+  "end": "2019-01-30",
+  "start": "2019-01-30",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נ (הימין החדש)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 24
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 8
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/31/channel-13-poll-likud-30-israel-resilience-24-yesh-atid-9-taal-8-4-tied-at-6/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-30-midgam-channel-12",
+  "knesset": 21,
+  "end": "2019-01-30",
+  "start": "2019-01-30",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 21
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/31/channel-12-poll-likud-30-israel-resilience-21-yesh-atid-11-hayamin-hehadash-7-utj-7/"
+  ]
+ },
+ {
+  "id": "k21-2019-01-30-direct-polls-kan",
+  "knesset": 21,
+  "end": "2019-01-30",
+  "start": "2019-01-30",
+  "firm": "דיירקט פולס",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 23
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/01/31/kan-poll-likud-31-israel-resilience-23-yesh-atid-9-hayamin-hehadash-8-labor-8/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-01-panels-politics-maariv",
+  "knesset": 21,
+  "end": "2019-02-01",
+  "start": "2019-02-01",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 20
+   },
+   "[קודמת] Joint List": {
+    "s": 5
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/01/maariv-poll-likud-31-israel-resilience-20-yesh-atid-12-utj-7-3-tied-at-6/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-04-dialog-haaretz",
+  "knesset": 21,
+  "end": "2019-02-04",
+  "start": "2019-02-03",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 22
+   },
+   "[קודמת] Joint List": {
+    "s": 7
+   },
+   "[קודמת] Ta'al": {
+    "s": 5
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 6
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 9
+   }
+  },
+  "urls": [
+   "https://www.haaretz.com/israel-news/elections/2019-02-04/ty-article/.premium/haaretz-poll-gantz-keeps-momentum-but-netanyahu-still-comes-out-on-top/0000017f-e046-df7c-a5ff-e27ee4220000"
+  ]
+ },
+ {
+  "id": "k21-2019-02-06-smith-channel-20",
+  "knesset": 21,
+  "end": "2019-02-06",
+  "start": "2019-02-06",
+  "firm": "סמית'",
+  "publisher": "ערוץ 20",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 22
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/07/smith-poll-likud-30-israel-resilience-22-yesh-atid-12-hayamin-hehadash-8-4-tied-at-6/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-06-direct-polls-kan",
+  "knesset": 21,
+  "end": "2019-02-06",
+  "start": "2019-02-06",
+  "firm": "דיירקט פולס",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 22
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/07/kan-poll-likud-30-israel-resilience-22-yesh-atid-11-hayamin-hehadash-7-taal-7/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-07-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2019-02-07",
+  "start": "2019-02-07",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 6
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 22
+   },
+   "[קודמת] Joint List": {
+    "s": 7
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 6
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://elections.walla.co.il/item/3217712"
+  ]
+ },
+ {
+  "id": "k21-2019-02-07-midgam-project-channel-13",
+  "knesset": 21,
+  "end": "2019-02-07",
+  "start": "2019-02-07",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 5
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נ (הימין החדש)": {
+    "s": 9
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 24
+   },
+   "[קודמת] Joint List": {
+    "s": 7
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/08/channel-13-poll-likud-32-israel-resilience-24-yesh-atid-10-hayamin-hehadash-9-joint-list-7/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-07-midgam-channel-12",
+  "knesset": 21,
+  "end": "2019-02-07",
+  "start": "2019-02-07",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 7
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 22
+   },
+   "[קודמת] Joint List": {
+    "s": 5
+   },
+   "[קודמת] Ta'al": {
+    "s": 7
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/09/189667/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-07-maagar-mochot-israel-hayom-i24-news",
+  "knesset": 21,
+  "end": "2019-02-07",
+  "start": "2019-02-06",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום ו-i24NEWS",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 35
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 5
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 21
+   },
+   "[קודמת] Joint List": {
+    "s": 11
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 14
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/09/yisrael-hayom-poll-likud-29-israel-resilience-17-yesh-atid-11-joint-list-9-utj-7/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-08-direct-polls-makor-rishon",
+  "knesset": 21,
+  "end": "2019-02-08",
+  "start": "2019-02-08",
+  "firm": "דיירקט פולס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 7
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 23
+   },
+   "[קודמת] Joint List": {
+    "s": 5
+   },
+   "[קודמת] Ta'al": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.makorrishon.co.il/בחירות-תשעט/113213/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-12-midgam-project-channel-13",
+  "knesset": 21,
+  "end": "2019-02-12",
+  "start": "2019-02-12",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 21
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 7
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/13/channel-13-poll-likud-32-israel-resilience-21-yesh-atid-11-hayamin-hehadash-8-labor-8/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-12-midgam-labor",
+  "knesset": 21,
+  "end": "2019-02-12",
+  "start": "2019-02-12",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "מפלגת העבודה",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 19
+   },
+   "[קודמת] Joint List": {
+    "s": 5
+   },
+   "[קודמת] Ta'al": {
+    "s": 7
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/13/internal-labor-poll-likud-30-israel-resilience-19-yesh-atid-11-labor-9-3-tied-at-7/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-13-direct-polls-kan",
+  "knesset": 21,
+  "end": "2019-02-13",
+  "start": "2019-02-13",
+  "firm": "דיירקט פולס",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 11
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נ (הימין החדש)": {
+    "s": 10
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 20
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 11
+   }
+  },
+  "urls": [
+   "https://www.kan.org.il/item/?itemid=47101"
+  ]
+ },
+ {
+  "id": "k21-2019-02-14-maagar-mochot-i24-news-israel-hayom",
+  "knesset": 21,
+  "end": "2019-02-14",
+  "start": "2019-02-14",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום ו-i24NEWS",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 8
+   },
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "ז (זהות)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "נ (הימין החדש)": {
+    "s": 6
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 19
+   },
+   "[קודמת] Joint List": {
+    "s": 9
+   },
+   "[קודמת] Ta'al": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/14/yisrael-hayom-poll-likud-30-israel-resilience-19-yesh-atid-12-joint-list-9-utj-9/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-16-direct-polls-kan",
+  "knesset": 21,
+  "end": "2019-02-16",
+  "start": "2019-02-16",
+  "firm": "דיירקט פולס",
+  "publisher": "כאן 11",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 10
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "שס (ש\"ס)": {
+    "s": 5
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 20
+   },
+   "[קודמת] Joint List": {
+    "s": 6
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/18/kan-poll-likud-30-israel-resilience-20-labor-10-yesh-atid-10-hayamin-hehadash-8/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-17-unknown-channel-13",
+  "knesset": 21,
+  "end": "2019-02-17",
+  "start": "2019-02-17",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 13",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 5
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 4
+   },
+   "נ (הימין החדש)": {
+    "s": 9
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 24
+   },
+   "[קודמת] Joint List": {
+    "s": 7
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 10
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/elections2019/polls/Article-685441"
+  ]
+ },
+ {
+  "id": "k21-2019-02-17-midgam-channel-12",
+  "knesset": 21,
+  "end": "2019-02-17",
+  "start": "2019-02-17",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 10
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 7
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 18
+   },
+   "[קודמת] Joint List": {
+    "s": 5
+   },
+   "[קודמת] Ta'al": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 12
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/02/18/channel-12-poll-likud-30-israel-resilience-18-yesh-atid-12-labor-10-3-tied-at-7/"
+  ]
+ },
+ {
+  "id": "k21-2019-02-20-panels-politics-walla-news",
+  "knesset": 21,
+  "end": "2019-02-20",
+  "start": "2019-02-20",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (העבודה)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "כ (כולנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "נ (הימין החדש)": {
+    "s": 8
+   },
+   "נר (גשר)": {
+    "s": 4
+   },
+   "שס (ש\"ס)": {
+    "s": 4
+   },
+   "[קודמת] Hosen- Telem": {
+    "s": 19
+   },
+   "[קודמת] Joint List": {
+    "s": 5
+   },
+   "[קודמת] Ta'al": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   },
+   "[קודמת] Yesh Atid": {
+    "s": 13
+   }
+  },
+  "urls": [
+   "https://elections.walla.co.il/item/3220157"
+  ]
+ }
+]

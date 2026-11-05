@@ -1,0 +1,2618 @@
+[
+ {
+  "id": "k23-2019-10-06-midgam-walla-b",
+  "knesset": 23,
+  "end": "2019-10-06",
+  "start": "2019-10-03",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 10
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home+New Right (Israel)": {
+    "s": 12
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-10-06-midgam-walla",
+  "knesset": 23,
+  "end": "2019-10-06",
+  "start": "2019-10-03",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (העבודה-גשר-מרצ)": {
+    "s": 6
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "טב (ימינה)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/10/07/1st-poll-of-possible-3rd-election-blue-white-33-likud-33-joint-list-13-shas-9-scenario-poll-blue-white-33-likud-led-by-saar-26-joint-list-13-yamina-12/"
+  ]
+ },
+ {
+  "id": "k23-2019-10-22-midgam-project-channel-13",
+  "knesset": 23,
+  "end": "2019-10-22",
+  "start": "2019-10-22",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/third-election-wont-break-political-deadlock-in-israel-poll-finds/"
+  ]
+ },
+ {
+  "id": "k23-2019-10-31-maagar-mochot-103fm",
+  "knesset": 23,
+  "end": "2019-10-31",
+  "start": "2019-10-31",
+  "firm": "מאגר מוחות",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home+New Right (Israel)": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/10/31/3rd-poll-of-possible-3rd-election-blue-white-34-likud-33-joint-list-12-shas-9-yisrael-beitenu-8-center-left-bloc-at-58/"
+  ]
+ },
+ {
+  "id": "k23-2019-11-10-midgam-project-channel-13",
+  "knesset": 23,
+  "end": "2019-11-10",
+  "start": "2019-11-10",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/11/10/4th-poll-of-possible-3rd-election-blue-white-35-likud-34-joint-list-13-yisrael-beitenu-9-shas-6-utj-6/"
+  ]
+ },
+ {
+  "id": "k23-2019-11-15-maagar-mochot-israel-hayom",
+  "knesset": 23,
+  "end": "2019-11-15",
+  "start": "2019-11-15",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 10
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home+New Right (Israel)": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/271715"
+  ]
+ },
+ {
+  "id": "k23-2019-11-21-midgam-channel-12",
+  "knesset": 23,
+  "end": "2019-11-21",
+  "start": "2019-11-21",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] The Jewish Home+New Right (Israel)": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/elections_2019-2019_q4/Article-56f94e4706f8e61027.htm"
+  ]
+ },
+ {
+  "id": "k23-2019-11-21-kantar-kan-11",
+  "knesset": 23,
+  "end": "2019-11-21",
+  "start": "2019-11-21",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/11/24/7th-poll-of-possible-3rd-election-likud-33-blue-white-33-joint-list-12-yisrael-beitenu-8-utj-8-shas-7/"
+  ]
+ },
+ {
+  "id": "k23-2019-11-22-midgam-project-channel-13",
+  "knesset": 23,
+  "end": "2019-11-22",
+  "start": "2019-11-22",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 36
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://13news.co.il/item/news/politics/state-policy/reelection-2019/elections-survey-943042/",
+   "https://www.timesofisrael.com/poll-finds-most-israelis-think-netanyahu-must-step-down-now-charges-announced/"
+  ]
+ },
+ {
+  "id": "k23-2019-11-22-maagar-mochot-israel-hayom",
+  "knesset": 23,
+  "end": "2019-11-22",
+  "start": "2019-11-21",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 2.0
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] The Jewish Home+New Right (Israel)": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/11/24/8th-poll-of-possible-3rd-election-blue-white-34-likud-33-joint-list-13-shas-8-utj-8/"
+  ]
+ },
+ {
+  "id": "k23-2019-11-25-panels-politics-channel-12",
+  "knesset": 23,
+  "end": "2019-11-25",
+  "start": "2019-11-25",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 37
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/tv-morning-news/articles/Article-f4749f09224ae61027.htm"
+  ]
+ },
+ {
+  "id": "k23-2019-11-26-midgam-walla",
+  "knesset": 23,
+  "end": "2019-11-26",
+  "start": "2019-11-25",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.2
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.3
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3326004"
+  ]
+ },
+ {
+  "id": "k23-2019-11-26-midgam-channel-12-b",
+  "knesset": 23,
+  "end": "2019-11-26",
+  "start": "2019-11-26",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 2.2
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 10
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 9
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.9
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-11-26-midgam-channel-12",
+  "knesset": 23,
+  "end": "2019-11-26",
+  "start": "2019-11-26",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.2
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.3
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-politics/2019_q4/Article-f9a29b44fd8ae61027.htm"
+  ]
+ },
+ {
+  "id": "k23-2019-11-27-smith-maariv-b",
+  "knesset": 23,
+  "end": "2019-11-27",
+  "start": "2019-11-26",
+  "firm": "סמית'",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-11-27-smith-maariv",
+  "knesset": 23,
+  "end": "2019-11-27",
+  "start": "2019-11-26",
+  "firm": "סמית'",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-732299"
+  ]
+ },
+ {
+  "id": "k23-2019-11-28-maagar-mochot-israel-hayom",
+  "knesset": 23,
+  "end": "2019-11-28",
+  "start": "2019-11-28",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.0
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.0
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/11/28/14th-poll-of-possible-3rd-election-blocs-tied-at-56-56-other-additional-questions-answered/"
+  ]
+ },
+ {
+  "id": "k23-2019-11-28-maagar-mochot-103fm-b",
+  "knesset": 23,
+  "end": "2019-11-28",
+  "start": "2019-11-28",
+  "firm": "מאגר מוחות",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 9
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 11
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 12
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-11-28-maagar-mochot-103fm",
+  "knesset": 23,
+  "end": "2019-11-28",
+  "start": "2019-11-28",
+  "firm": "מאגר מוחות",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/11/28/13th-poll-of-possible-3rd-election-blue-white-35-likud-33-joint-list-13-shas-9-yisrael-beitenu-8-utj-8-hayamin-hehadash-6-scenario-poll-gives-saar-led-likud-a-right-bloc-of-60/"
+  ]
+ },
+ {
+  "id": "k23-2019-12-05-midgam-channel-12",
+  "knesset": 23,
+  "end": "2019-12-05",
+  "start": "2019-12-05",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.9
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.2
+   }
+  },
+  "urls": [
+   "https://www.mako.co.il/news-israel-elections/elections_2019-2019_q4/Article-1e1addec6dbde61027.htm"
+  ]
+ },
+ {
+  "id": "k23-2019-12-05-maagar-mochot-103fm",
+  "knesset": 23,
+  "end": "2019-12-05",
+  "start": "2019-12-05",
+  "firm": "מאגר מוחות",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/12/05/16th-poll-of-possible-3rd-election-blue-white-34-likud-32-joint-list-12-shas-8-utj-8-yisrael-beitenu-8-hayamin-hehadash-6/"
+  ]
+ },
+ {
+  "id": "k23-2019-12-08-kantar-kan-radio",
+  "knesset": 23,
+  "end": "2019-12-08",
+  "start": "2019-12-08",
+  "firm": "קנטר",
+  "publisher": "כאן — רדיו",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.9
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/12/09/18th-poll-of-possible-3rd-election-blue-white-35-likud-34-joint-list-13-shas-8-utj-8-yisrael-beitenu-7-hayamin-hehadash-6/"
+  ]
+ },
+ {
+  "id": "k23-2019-12-08-kantar-kan-11",
+  "knesset": 23,
+  "end": "2019-12-08",
+  "start": "2019-12-08",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 8
+   }
+  },
+  "urls": [
+   "https://www.inn.co.il/News/News.aspx/420701"
+  ]
+ },
+ {
+  "id": "k23-2019-12-10-midgam-walla",
+  "knesset": 23,
+  "end": "2019-12-10",
+  "start": "2019-12-09",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.3
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.1
+   }
+  },
+  "urls": [
+   "https://news.walla.co.il/item/3328640"
+  ]
+ },
+ {
+  "id": "k23-2019-12-10-midgam-project-channel-13-b",
+  "knesset": 23,
+  "end": "2019-12-10",
+  "start": "2019-12-10",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-12-10-midgam-project-channel-13",
+  "knesset": 23,
+  "end": "2019-12-10",
+  "start": "2019-12-10",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 37
+   },
+   "שס (ש\"ס)": {
+    "s": 6
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://13news.co.il/item/news/politics/state-policy/left-center-block-getting-stronger-957440/"
+  ]
+ },
+ {
+  "id": "k23-2019-12-12-smith-maariv",
+  "knesset": 23,
+  "end": "2019-12-12",
+  "start": "2019-12-12",
+  "firm": "סמית'",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/news/politics/Article-735018"
+  ]
+ },
+ {
+  "id": "k23-2019-12-12-midgam-channel-12-b",
+  "knesset": 23,
+  "end": "2019-12-12",
+  "start": "2019-12-12",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 2.1
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 9
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-12-12-midgam-channel-12",
+  "knesset": 23,
+  "end": "2019-12-12",
+  "start": "2019-12-12",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.3
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.8
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/12/12/1st-poll-of-2020-election-blue-white-35-likud-32-joint-list-13-yisrael-beitenu-8-utj-8-shas-8-hayamin-hehadash-6/"
+  ]
+ },
+ {
+  "id": "k23-2019-12-12-maagar-mochot-israel-hayom-b",
+  "knesset": 23,
+  "end": "2019-12-12",
+  "start": "2019-12-12",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 15
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 2.0
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 11
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.0
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-12-12-maagar-mochot-israel-hayom",
+  "knesset": 23,
+  "end": "2019-12-12",
+  "start": "2019-12-12",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.0
+   },
+   "פה (כחול לבן)": {
+    "s": 37
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.0
+   }
+  },
+  "urls": [
+   "https://www.israelhayom.co.il/article/715265"
+  ]
+ },
+ {
+  "id": "k23-2019-12-15-kantar-kan-11-b",
+  "knesset": 23,
+  "end": "2019-12-15",
+  "start": "2019-12-15",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 10
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 8
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-12-15-kantar-kan-11",
+  "knesset": 23,
+  "end": "2019-12-15",
+  "start": "2019-12-15",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/12/16/4th-poll-of-2020-election-blue-white-35-likud-31-joint-list-13-shas-9-yisrael-beitenu-8-utj-7/"
+  ]
+ },
+ {
+  "id": "k23-2019-12-18-panels-politics-makor-rishon-b",
+  "knesset": 23,
+  "end": "2019-12-18",
+  "start": "2019-12-18",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 2.0
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 10
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-12-18-panels-politics-makor-rishon",
+  "knesset": 23,
+  "end": "2019-12-18",
+  "start": "2019-12-18",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 1.6
+   },
+   "פה (כחול לבן)": {
+    "s": 38
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.1
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home": {
+    "p": 2.7
+   }
+  },
+  "urls": [
+   "https://www.makorrishon.co.il/news/191581/"
+  ]
+ },
+ {
+  "id": "k23-2019-12-19-smith-103fm-b",
+  "knesset": 23,
+  "end": "2019-12-19",
+  "start": "2019-12-19",
+  "firm": "סמית'",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 9
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 8
+   },
+   "[קודמת] The Jewish Home": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/273412"
+  ]
+ },
+ {
+  "id": "k23-2019-12-19-smith-103fm",
+  "knesset": 23,
+  "end": "2019-12-19",
+  "start": "2019-12-19",
+  "firm": "סמית'",
+  "publisher": "103FM",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2019-12-29-midgam-channel-12",
+  "knesset": 23,
+  "end": "2019-12-29",
+  "start": "2019-12-29",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2019/12/29/7th-poll-of-2020-election-blue-white-34-likud-32-joint-list-13-shas-8-yisrael-beitenu-8-utj-7/"
+  ]
+ },
+ {
+  "id": "k23-2020-01-01-panels-politics-maariv",
+  "knesset": 23,
+  "end": "2020-01-01",
+  "start": "2020-01-01",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 36
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.9
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "https://www.maariv.co.il/elections2020/polls/Article-738905"
+  ]
+ },
+ {
+  "id": "k23-2020-01-02-midgam-project-channel-13-b",
+  "knesset": 23,
+  "end": "2020-01-02",
+  "start": "2020-01-02",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Israeli Labor Party+Democratic Union (Israel)": {
+    "s": 10
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 8
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-02-midgam-project-channel-13",
+  "knesset": 23,
+  "end": "2020-01-02",
+  "start": "2020-01-02",
+  "firm": "פרויקט מדגם",
+  "publisher": "חדשות 13",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 34
+   },
+   "פה (כחול לבן)": {
+    "s": 36
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 8
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "p": 2.9
+   }
+  },
+  "urls": [
+   "https://13news.co.il/item/news/politics/state-policy/2020-elections/election-poll-immunity-974591/"
+  ]
+ },
+ {
+  "id": "k23-2020-01-02-midgam-channel-12-b",
+  "knesset": 23,
+  "end": "2020-01-02",
+  "start": "2020-01-02",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-02-midgam-channel-12",
+  "knesset": 23,
+  "end": "2020-01-02",
+  "start": "2020-01-02",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Green Movement (Israel)": {
+    "p": 0.0
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "p": 2.6
+   },
+   "[קודמת] Tkuma (political party)": {
+    "p": 0.9
+   }
+  },
+  "urls": [
+   "https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_midgam_2_1.pdf"
+  ]
+ },
+ {
+  "id": "k23-2020-01-02-kantar-kan-11",
+  "knesset": 23,
+  "end": "2020-01-02",
+  "start": "2020-01-02",
+  "firm": "קנטר",
+  "publisher": "כאן 11",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 6
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "p": 3.0
+   }
+  },
+  "urls": [
+   "https://knessetjeremy.com/2020/01/03/8th-poll-of-2020-election-channel-11-blue-white-35-likud-33-joint-list-13-utj-8-shas-7-yisrael-beitenu-7/"
+  ]
+ },
+ {
+  "id": "k23-2020-01-08-midgam-walla-b",
+  "knesset": 23,
+  "end": "2020-01-08",
+  "start": "2020-01-08",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Israeli Labor Party+Democratic Union (Israel)": {
+    "s": 9
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 8
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-08-midgam-walla",
+  "knesset": 23,
+  "end": "2020-01-08",
+  "start": "2020-01-08",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Green Movement (Israel)": {
+    "p": 0.2
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "p": 2.8
+   },
+   "[קודמת] Tkuma (political party)": {
+    "p": 1.1
+   }
+  },
+  "urls": [
+   "https://elections.walla.co.il/item/3333940"
+  ]
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-e",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "נץ (עוצמה יהודית)": {
+    "p": 2.1
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)+The Jewish Home": {
+    "s": 10
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-d",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 33
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 10
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-c",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)": {
+    "s": 8
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon-b",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 7
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 6
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-panels-politics-makor-rishon",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מקור ראשון",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 35
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "p": 2.4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 7
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.makorrishon.co.il/news/196167/"
+  ]
+ },
+ {
+  "id": "k23-2020-01-09-midgam-arutz-sheva-b",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-09",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ערוץ 7",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)": {
+    "s": 9
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "p": 2.7
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-midgam-arutz-sheva",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-09",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "ערוץ 7",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.inn.co.il/News/News.aspx/423809"
+  ]
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-e",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 39
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "s": 5
+   },
+   "[קודמת] Tkuma (political party)": {
+    "p": 1.0
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-d",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Israeli Labor Party+Democratic Union (Israel)": {
+    "s": 11
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "s": 6
+   },
+   "[קודמת] Tkuma (political party)": {
+    "p": 1.0
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-c",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "פה (כחול לבן)": {
+    "s": 33
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 8
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom-b",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 14
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 29
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)+The Jewish Home+Otzma Yehudit": {
+    "s": 11
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-09-maagar-mochot-israel-hayom",
+  "knesset": 23,
+  "end": "2020-01-09",
+  "start": "2020-01-08",
+  "firm": "מאגר מוחות",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 15
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 7
+   },
+   "[קודמת] Democratic Union (Israel)": {
+    "s": 5
+   },
+   "[קודמת] Green Movement (Israel)": {
+    "p": 0.2
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 5
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 4
+   },
+   "[קודמת] The Jewish Home+Otzma Yehudit": {
+    "s": 5
+   },
+   "[קודמת] Tkuma (political party)": {
+    "p": 1.0
+   }
+  },
+  "urls": [
+   "https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_israel_today_9_1.pdf"
+  ]
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12-c",
+  "knesset": 23,
+  "end": "2020-01-13",
+  "start": "2020-01-13",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה-גשר-מרצ)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Green Movement (Israel)": {
+    "p": 0.4
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)": {
+    "s": 6
+   },
+   "[קודמת] UJH": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12-b",
+  "knesset": 23,
+  "end": "2020-01-13",
+  "start": "2020-01-13",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה-גשר-מרצ)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Green Movement (Israel)": {
+    "p": 0.4
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)+UJH": {
+    "s": 10
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k23-2020-01-13-midgam-channel-12",
+  "knesset": 23,
+  "end": "2020-01-13",
+  "start": "2020-01-13",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 12",
+  "seats": {
+   "אמת (העבודה-גשר-מרצ)": {
+    "s": 9
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Green Movement (Israel)": {
+    "p": 0.4
+   },
+   "[קודמת] New Right (Israel)": {
+    "s": 6
+   },
+   "[קודמת] Tkuma (political party)+UJH": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://bechirot23.bechirot.gov.il/election/Decisions/Documents/כנסת%2023/סקרים/seker_hadashut_13_1_20.pdf"
+  ]
+ },
+ {
+  "id": "k23-2020-01-14-direct-polls-arutz-sheva",
+  "knesset": 23,
+  "end": "2020-01-14",
+  "start": "2020-01-14",
+  "firm": "דיירקט פולס",
+  "publisher": "ערוץ 7",
+  "seats": {
+   "אמת (העבודה-גשר-מרצ)": {
+    "s": 10
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "פה (כחול לבן)": {
+    "s": 34
+   },
+   "שס (ש\"ס)": {
+    "s": 8
+   },
+   "[קודמת] Green Movement (Israel)": {
+    "p": 2.3
+   },
+   "[קודמת] New Right (Israel)+Tkuma (political party)": {
+    "s": 7
+   },
+   "[קודמת] UJH": {
+    "p": 2.4
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/274560"
+  ]
+ }
+]
