@@ -1,0 +1,368 @@
+[
+ {
+  "id": "k21-2019-01-08-panels-politics-walla-news",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://news.walla.co.il/item/3212187 (redirects to Walla homepage - article gone); https://www.israelnationalnews.com/news/257378",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 9.1.2019 citing Panels Politics poll 'published Tuesday night by Walla!': Likud 32, Yesh Atid 13, Hosen 12, Joint List 12, New Right 8, Labor 8, UTJ 7, Jewish Home 5, Shas 5, Kulanu 5, Meretz 5, Yisrael Beytenu 4, Gesher 4; Hatnuah, Telem, Yahad, Zehut, Otzma below threshold. All match."
+ },
+ {
+  "id": "k21-2019-01-16-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.timesofisrael.com/... (403 captcha, not bypassed); https://www.israelnationalnews.com/news/257722 ; https://www.inn.co.il/news/391768 ; https://www.maariv.co.il/news/article-680557 ; https://www.hidabroot.org/article/1120439",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 16.1.2019 (Midgam, published on Channel 2/12 news): Likud 32, Yesh Atid 14, Hosen 13, Labor 9, New Right 8, UTJ 7, Shas 6, Yisrael Beytenu 6, Ta'al 6, Joint List 6, Meretz 5, Kulanu 4, Gesher 4; Jewish Home-NU, Telem, Yahad, Zehut below threshold. All match (Maariv's version has an obvious typo 'הבית היהודי 7' for UTJ)."
+ },
+ {
+  "id": "k21-2019-01-16-kantar-kan",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kan.org.il/item/?itemId=45787 (403 bot check, not bypassed); https://www.hidabroot.org/article/1120439 ; https://www.maariv.co.il/news/article-680557",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Hidabroot 17.1.2019 on the Kan News poll: Likud 31, Hosen 13, Joint List+Ta'al measured as one list 12, Yesh Atid 10, New Right 7, Labor 7, Kulanu 6, Gesher 6, UTJ 6, Shas 5, Meretz 5, Yisrael Beytenu 4, Jewish Home-NU 4, Hatnuah 4 (sum 120); Telem below. All match. Maariv 16.1 gives Shas 6 (its list then sums to 121) - treated as a Maariv typo. Pollster name not visible in the text (link stripped)."
+ },
+ {
+  "id": "k21-2019-01-17-panels-politics-walla",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://elections.walla.co.il/item/3216208 ; scan of walla items 3213650-3214000 (no article found)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Original Jan 17 Walla article not found. Walla's next Panels poll (30.1.2019) states the previous poll's figures: Likud 33, Hosen 12, Yesh Atid 15 - these 3 match. Other parties not verified."
+ },
+ {
+  "id": "k21-2019-01-17-kantar-saloona",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.israelnationalnews.com/news/258243",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 28.1.2019: TNS Teleseker poll 'conducted last week and published Sunday evening by Saloona': Likud 28, Hosen 15, Yesh Atid 13, Joint List+Ta'al combined 12, New Right 9, Labor 8, UTJ 7, Shas 5, Meretz 5, Gesher 5, Kulanu 5, Yisrael Beytenu 4, Jewish Home 4; Hatnuah below. All match (Joint List key = combined Arab lists)."
+ },
+ {
+  "id": "k21-2019-01-22-midgam-army-radio",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/257966 ; https://www.inn.co.il/news/392174",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 22.1.2019: Midgam poll published on Army Radio Tuesday: Likud 29, Yesh Atid 13, Hosen 13, Labor 9, UTJ 7, New Right 7, Shas 6, Joint List 6, Ta'al 6, Meretz 5, Gesher 5, Kulanu 5, Yisrael Beytenu 5, Jewish Home 4; Hatnuah below. All match. (Poll also had an indictment scenario: Likud 25 - not the main question.)"
+ },
+ {
+  "id": "k21-2019-01-24-direct-polls-reshet-bet",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/258077 ; https://www.maariv.co.il/elections2019/polls/article-681585",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv/INN 24.1.2019, Direct Polls on Kan Reshet Bet: Likud 31, Hosen 15, Yesh Atid 11, Labor 9, New Right 8, UTJ 6, Meretz 6, Ta'al 6, Joint List 6, Yisrael Beytenu 5, Shas 5, Kulanu 4, Gesher 4, Jewish Home 4; Hatnuah, Telem below. All match."
+ },
+ {
+  "id": "k21-2019-01-30-panels-politics-walla-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3216208 ; https://www.inn.co.il/news/392892",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1009,
+  "moe": null,
+  "note": "Walla 30.1.2019 (Panels Politics, 1,009 respondents, poll right after Gantz's speech): Likud 29, Hosen 19, Yesh Atid 12, New Right 7, Labor 7, UTJ 7, Joint List 7, Kulanu 5, Yisrael Beytenu 5, Meretz 5, Ta'al 5, Shas 4, Jewish Home-NU 4, Gesher 4; Hatnuah and others below. All match. MoE not stated in this article."
+ },
+ {
+  "id": "k21-2019-01-30-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.hidabroot.org/article/1120978 ; https://www.maariv.co.il/news/article-682661",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Hidabroot 31.1.2019 on Channel 13 poll: Likud 30, Gantz 24, Yesh Atid 9, Ta'al 8, UTJ 6, Labor 6, Joint List 6, New Right 6, Shas 5, Yisrael Beytenu 4, Meretz 4, Kulanu 4, Gesher 4, Jewish Home 4 (sum 120). All match. Maariv 30.1 gives a garbled list (JL 8, Shas 6, YB 5, no Ta'al) - not used."
+ },
+ {
+  "id": "k21-2019-01-30-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.maariv.co.il/news/article-682661 ; https://www.hidabroot.org/article/1120978 ; https://www.inn.co.il/news/392909 ; https://www.israelnationalnews.com/news/258379",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 505,
+  "moe": "4.4%",
+  "note": "Maariv & Hidabroot 30-31.1.2019 (Channel 12 News; Midgam with iPanel, Mina Tzemach & Mano Geva, 505 resp., MoE 4.4%): Likud 30, Hosen 21, Yesh Atid 11, New Right 7, UTJ 7, Labor 6, Joint List 6, Ta'al 6, Shas 5, Kulanu 5, Meretz 4, Jewish Home 4, Yisrael Beytenu 4, Gesher 4; Otzma 2.4%, Zehut 2.1%, Hatnuah 0.8%. All match. Note: Arutz 7/INN versions say Shas 6 (their list sums to 121) - outvoted by two consistent sources."
+ },
+ {
+  "id": "k21-2019-01-30-direct-polls-kan",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.hidabroot.org/article/1120978 ; https://www.maariv.co.il/news/article-682661",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Hidabroot 31.1.2019 on Kan News poll: Likud 31, Hosen 23, Yesh Atid 9, New Right 8, Labor 8, UTJ 6, Meretz 6, Ta'al 6, Joint List 6, Yisrael Beytenu 5, Shas 4, Jewish Home 4, Kulanu 4; Hatnuah and Gesher below (Maariv same, without the small-party numbers). All match. Pollster not named in the press reports."
+ },
+ {
+  "id": "k21-2019-02-01-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.maariv.co.il/news/article-682880 ; https://www.israelnationalnews.com/news/258464",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv 1.2.2019 (Panels Politics, Menachem Lazar, 'conducted in the last day'): Likud 31, Hosen 20, Yesh Atid 12, UTJ 7, New Right 6, Labor 6, Ta'al 6, Meretz 5, Joint List 5, Kulanu 5, Yisrael Beytenu 5, Shas 4, Gesher 4, Jewish Home 4; below: Otzma 2%, Zehut 1.8%, Yahad 1.7%, Green Leaf 0.7%, Hatnuah 0.6%... All match. Sample/MoE not stated in the text."
+ },
+ {
+  "id": "k21-2019-02-04-dialog-haaretz",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.haaretz.com/... (403, not bypassed); https://www.israelnationalnews.com/news/258599",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 4.2.2019: Dialog poll supervised by Camil Fuchs for Haaretz: Likud 30, Hosen-Telem 22, Yesh Atid 9, New Right 7, Joint List 7, Jewish Home 6, UTJ 6, Yisrael Beytenu 5, Kulanu 5, Shas 5, Labor 5, Ta'al 5, Gesher 4, Meretz 4; Hatnuah, Otzma, Zehut, Yahad below. All match."
+ },
+ {
+  "id": "k21-2019-02-06-smith-channel-20",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/... (aggregator only); INN English & Arutz 7 article scans 7-8.2.2019; web search",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No original or press report of the Smith/Channel 20 poll found; only the aggregator. Not verified."
+ },
+ {
+  "id": "k21-2019-02-06-direct-polls-kan",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.israelnationalnews.com/news/258707 ; https://www.maariv.co.il/elections2019/polls/article-683765",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN/Maariv 6.2.2019, Direct Polls for Kan 11: Likud 32, Hosen 22, Yesh Atid 11, New Right 7, Ta'al 7, Labor 6, UTJ 6, Joint List 6, Jewish Home-NU 5, Shas 5, Yisrael Beytenu 5, Meretz 4, Kulanu 4; Hatnuah, Gesher below. All match."
+ },
+ {
+  "id": "k21-2019-02-07-panels-politics-walla-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3217712 ; https://www.kipa.co.il/חדשות/סקר-חדש-תיקו-בין-הבית-היהודי-לימין-החדש/ ; https://www.hidabroot.org/article/1121239",
+  "differences": [],
+  "fieldEndSource": "2019-02-06",
+  "sample": 1009,
+  "moe": "3.3%",
+  "note": "Kipa reproduces the full Walla/Panels table: Likud 34, Hosen 22, Yesh Atid 13, Joint List 7, UTJ 7, Ta'al 6, Jewish Home 6, New Right 6, Labor 5, Meretz 5, Kulanu 5, Shas 4 (sum 120); below: Yisrael Beytenu 2.9%, Gesher 2.8%, Otzma 2.8%, Zehut 1.7%, Hatnuah 1.6%. All match. Caveat: Walla's own running text (and Hidabroot) says Joint List 6, which would sum to 119 - treated as a text typo. Poll conducted 'last night' (6.2) after Likud primary results; 1,009 resp., MoE 3.3%. YB/Gesher percentages not in queue keys."
+ },
+ {
+  "id": "k21-2019-02-07-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.inn.co.il/news/393624 ; https://www.israelnationalnews.com/news/258764 ; https://www.maariv.co.il/elections2019/polls/article-683993 ; https://elections.walla.co.il/item/3217712",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 761,
+  "moe": "3.7%",
+  "note": "Arutz 7 / Walla 7.2.2019, Channel 13 poll by Prof. Camil Fuchs, 761 resp., MoE 3.7%: Likud 32, Hosen 24, Yesh Atid 10, New Right 9, Joint List 7, Ta'al 6, Jewish Home-NU 5, Labor 5, Shas 5, UTJ 5 (Walla/Maariv), Yisrael Beytenu 4, Meretz 4, Kulanu 4; Hatnuah, Gesher below. All match."
+ },
+ {
+  "id": "k21-2019-02-07-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.inn.co.il/news/393680 ; https://www.israelnationalnews.com/news/258809",
+  "differences": [],
+  "fieldEndSource": "2019-02-09",
+  "sample": 503,
+  "moe": null,
+  "note": "Arutz 7 9.2.2019: Mina Tzemach (Midgam) poll for Channel 12 'Meet the Press', conducted Saturday evening 9.2: Likud 32, Hosen 22, Yesh Atid 11, New Right 8, Labor 7, UTJ 7, Ta'al 7, Shas 6, Meretz 5, Kulanu 5, Yisrael Beytenu 5, Joint List 5; Jewish Home, National Union, Otzma, Zehut below. 503 resp. All match. Note: source date is 9.2, not 7.2."
+ },
+ {
+  "id": "k21-2019-02-07-maagar-mochot-israel-hayom-i24-news",
+  "status": "inconsistent",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.israelnationalnews.com/news/258783 ; https://www.inn.co.il/news/393634 ; https://www.hidabroot.org/article/1121250",
+  "differences": [
+   {
+    "key": "מחל (הליכוד)",
+    "wikipedia": 35,
+    "source": 29
+   },
+   {
+    "key": "[קודמת] Hosen- Telem",
+    "wikipedia": 21,
+    "source": 17
+   },
+   {
+    "key": "[קודמת] Yesh Atid",
+    "wikipedia": 14,
+    "source": 11
+   },
+   {
+    "key": "[קודמת] Joint List",
+    "wikipedia": 11,
+    "source": 9
+   },
+   {
+    "key": "ג (יהדות התורה)",
+    "wikipedia": 9,
+    "source": 7
+   },
+   {
+    "key": "מרצ (מרצ)",
+    "wikipedia": 7,
+    "source": 6
+   },
+   {
+    "key": "שס (ש\"ס)",
+    "wikipedia": 6,
+    "source": 5
+   },
+   {
+    "key": "אמת (העבודה)",
+    "wikipedia": 5,
+    "source": 4
+   },
+   {
+    "key": "נר (גשר)",
+    "wikipedia": 5,
+    "source": 4
+   }
+  ],
+  "fieldEndSource": "2019-02-07",
+  "sample": null,
+  "moe": null,
+  "note": "Israel Hayom/i24NEWS Maagar Mochot poll (fieldwork Wed-Thu 6-7.2.2019), as reported by INN, Arutz 7 and Hidabroot 8.2: Likud 29, Hosen 17, Yesh Atid 11, Joint List 9, UTJ 7, Meretz 6, Shas 5, Labor 4, Gesher 4 (Hidabroot), New Right 7 (INN) or 6 (Hidabroot); Ta'al, Kulanu, Yisrael Beytenu, JH, NU, Otzma, Zehut, Yahad below threshold - reported numbers are vote-equivalent seats totalling ~98-99, with ~21 seats' worth wasted below threshold. Wikipedia's figures (35/21/14/11/9/7/7/6/5/5) appear to be these rescaled to 120. Sources also disagree on New Right (7 vs 6). Differences list the published raw figures; caller should decide whether to keep the rescaled seats."
+ },
+ {
+  "id": "k21-2019-02-08-direct-polls-makor-rishon",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.makorrishon.co.il/... (403, not bypassed); https://www.inn.co.il/news/393651 ; https://www.israelnationalnews.com/news/258791",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 694,
+  "moe": "4%",
+  "note": "Arutz 7 8.2.2019 citing Makor Rishon (Direct Polls, 694 resp., MoE ±4%): Likud 32, Hosen 23, Yesh Atid 11, New Right 8, Labor 7, Ta'al 7, UTJ 7, Shas 6, Joint List 5, Yisrael Beytenu 5, Meretz 5, Jewish Home-NU 4; Kulanu, Hatnuah, Gesher, Otzma, Zehut, Eretz Hadasha below. All match."
+ },
+ {
+  "id": "k21-2019-02-12-midgam-project-channel-13",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.maariv.co.il/elections2019/Article-684688 ; https://www.israelnationalnews.com/news/258967 ; https://www.hidabroot.org/article/1121432",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Maariv/INN/Hidabroot 12.2.2019, Channel 13 poll by Prof. Camil Fuchs: Likud 32, Hosen 21, Yesh Atid 11, New Right 8, Labor 8, UTJ 7, Ta'al 7, Joint List 6, Shas 6, Kulanu 5, Meretz 5, Yisrael Beytenu 4; Gesher 2.2%, Jewish Home and Hatnuah below. All match."
+ },
+ {
+  "id": "k21-2019-02-12-midgam-labor",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://knessetjeremy.com/... (aggregator only); web search",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Internal Labor (Midgam) poll - no original or press report found. Not verified."
+ },
+ {
+  "id": "k21-2019-02-13-direct-polls-kan",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kan.org.il/item/?itemid=47101 (403 bot check, not bypassed); https://www.maariv.co.il/elections2019/polls/Article-684928 ; https://www.inn.co.il/news/394120 ; https://www.hidabroot.org/article/1121517",
+  "differences": [],
+  "fieldEndSource": "2019-02-13",
+  "sample": null,
+  "moe": null,
+  "note": "Maariv/Arutz 7/Hidabroot 14.2.2019, Direct Polls for Kan (Reshet Bet), conducted 'last night' 13.2: Likud 30, Hosen 20, Labor 11, Yesh Atid 11, New Right 10, UTJ 7, Yisrael Beytenu 6, Ta'al 6, Joint List 6, Shas 5, Kulanu 4, Meretz 4 (sum 120); below: Jewish Home 2.5% and National Union 2.4% running separately, Gesher 2.3%, Zehut 2.1%, Hatnuah 1.8%, Otzma 1.3%. All match. (A web-search snippet of Kan's page cites n=735; page itself blocked.)"
+ },
+ {
+  "id": "k21-2019-02-14-maagar-mochot-i24-news-israel-hayom",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.israelnationalnews.com/news/259038 ; https://www.inn.co.il/news/394106",
+  "differences": [
+   {
+    "key": "נ (הימין החדש)",
+    "wikipedia": 6,
+    "source": 7
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN/Arutz 7 14.2.2019 (Israel Hayom & i24NEWS, Maagar Mochot): Likud 32, Hosen 19, Yesh Atid 12, UTJ 9, Joint List 9, Meretz 7, New Right 7, Zehut 5, Ta'al 5, Shas 4, Gesher 4; JH, NU, Otzma, Yisrael Beytenu, Hatnuah, Kulanu below. Labor not mentioned (implied 7 if total 120, vs Wikipedia 8). New Right 7 vs Wikipedia 6; others match."
+ },
+ {
+  "id": "k21-2019-02-16-direct-polls-kan",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.israelnationalnews.com/news/259204 ; https://www.maariv.co.il/elections2019/polls/article-685441 ; https://www.hidabroot.org/article/1121673",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN/Maariv 17.2.2019, Direct Polls for Kan 11 (published Sunday 17.2): Likud 30, Hosen-Telem 20, Labor 10, Yesh Atid 10, New Right 8, Joint List 6, Ta'al 6, UTJ 6, Shas 5, Yisrael Beytenu 5, Jewish Home 5, Meretz 5, Kulanu 4; Zehut, Gesher, Otzma, Hatnuah below. All match. (Search snippet of blocked Kan page: fieldwork 16.2, n=543, MoE 4.2% - not directly verified.)"
+ },
+ {
+  "id": "k21-2019-02-17-unknown-channel-13",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.maariv.co.il/elections2019/polls/Article-685441 ; Arutz 7/INN/Hidabroot scans (no other report)",
+  "differences": [
+   {
+    "key": "שס (ש\"ס)",
+    "wikipedia": 4,
+    "source": 6
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only source: Maariv 17.2.2019 roundup ('בסקר של חדשות 13'): Likud 32, Hosen 24, Yesh Atid 10, New Right 9, Joint List 7 ('one more than Ta'al and Shas' => Ta'al 6, Shas 6), Labor 5, Jewish Home 5, Kulanu 4, Meretz 4, Yisrael Beytenu 4; UTJ not given. Maariv is not the publisher (Channel 13) so this is a press citation; the figures are almost identical to the 7.2 Channel 13 poll, raising doubt whether Maariv recycled them. Shas 6 vs Wikipedia 4; UTJ unverified."
+ },
+ {
+  "id": "k21-2019-02-17-midgam-channel-12",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator, not used); https://www.inn.co.il/news/394358 ; https://www.israelnationalnews.com/news/259196 ; https://www.maariv.co.il/elections2019/polls/article-685441 ; https://www.hidabroot.org/article/1121672",
+  "differences": [],
+  "fieldEndSource": "2019-02-17",
+  "sample": 502,
+  "moe": "4.4%",
+  "note": "Arutz 7 17.2.2019, Channel 12 News poll by Midgam (Mina Tzemach & Mano Geva with iPanel), 502 resp., MoE 4.4%, data collected 17.2.2019: Likud 30, Hosen 18, Yesh Atid 12, Labor 10, UTJ 7, New Right 7, Ta'al 7, Shas 6, Meretz 5, Kulanu 5, Joint List 5, Jewish Home-NU 4, Yisrael Beytenu 4; below: Otzma 3.0%, Gesher 2.0%, Hatnuah 1.8%. All match (Maariv's text lists Kulanu twice - typo)."
+ },
+ {
+  "id": "k21-2019-02-20-panels-politics-walla-news",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/3220157 ; https://www.israelnationalnews.com/news/259349",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 1049,
+  "moe": "3.3%",
+  "note": "Walla 20.2.2019 (Panels Politics, 1,049 resp., MoE 3.3%): Likud 31, Hosen 19, Yesh Atid 13, Labor 9, New Right 8, UTJ 7, Ta'al 6, Jewish Home-NU 5, Meretz 5, Joint List 5, Kulanu 4, Shas 4, Gesher 4; Yisrael Beytenu, Otzma (2.8%), Zehut below. All match."
+ }
+]
