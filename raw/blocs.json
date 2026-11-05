@@ -72,7 +72,82 @@
       "crossCheck": [
         "https://www.mako.co.il/news-military/politics-q1_2015/Article-025660aad454c41004.htm"
       ],
-      "reportedTotal": 67
+      "reportedTotal": 67,
+      "predecessors": {
+        "Likud Beiteinu": {
+          "successors": [
+            "מחל",
+            "ל"
+          ],
+          "bloc": "netanyahu",
+          "why": "הליכוד וישראל ביתנו רצו לחוד ב-2015; שתיהן המליצו על נתניהו",
+          "source": "https://en.wikipedia.org/wiki/Likud_Yisrael_Beiteinu"
+        },
+        "Israeli Labor Party": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה במחנה הציוני (העבודה+התנועה, דצמבר 2014)",
+          "source": "https://en.wikipedia.org/wiki/Zionist_Union"
+        },
+        "Hatnuah": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה במחנה הציוני (העבודה+התנועה, דצמבר 2014)",
+          "source": "https://en.wikipedia.org/wiki/Zionist_Union"
+        },
+        "Hadash": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "UAL-Ta'al": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Balad": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "UAL-Ta'al+Balad": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצו ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Otzma Yehudit": {
+          "successors": [
+            "קץ"
+          ],
+          "bloc": null,
+          "why": "רצה ביחד, שלא עברה את אחוז החסימה — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Yachad_(political_party)"
+        },
+        "Yachad": {
+          "successors": [
+            "קץ"
+          ],
+          "bloc": null,
+          "why": "לא עברה את אחוז החסימה — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Yachad_(political_party)"
+        }
+      }
     },
     "21": {
       "recommendedNetanyahu": [

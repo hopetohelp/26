@@ -861,6 +861,11 @@ def build_history(results: list[dict]) -> dict:
             "source": {"page": cfg["page"].replace("en__", "").replace(".wiki", "").replace("_", " "),
                        "sha256": sha256(path), "tableLine": text[:pos].count("\n") + 1},
         })
+    # 2015: סקרים מטבלת ויקיפדיה שאינם בתמלולי האימות (pipeline/history_wiki_2015.py)
+    import history_wiki_2015
+    from historical_data import HIST_FIRM_NAMES, publisher_he
+    for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == 20), by_n[20], HIST_FIRM_NAMES, publisher_he, slug):
+        print(f"::warning::K20: {line} — סכום חלקי בקריאת הטבלה; הושמט עד תמלול מהמקור")
     for c in cycles:
         check_predecessors(c["knesset"], c, by_n[c["knesset"]])
     from exit_polls import load as load_exit_polls  # מדגמי ליל הבחירות (raw/exit-polls-history.json)
