@@ -9,7 +9,7 @@
 import historyFile from "../data/history.json";
 import { exitPolls as exitPolls2026, listName as listName2026, lists2026, activeLists2026, polls as polls2026, results, subgroupPolls as subgroups2026, pollsterKey, pollsterLabel, type ExitPoll, type Poll, type SubgroupPoll } from "./data";
 import { finalPolls, hasResults, results2026, ELECTION_DAY } from "./guessAccuracyData";
-import { SIMPLE_BLOCS, type BlocDef } from "./simpleSources";
+import { type BlocDef } from "./simpleSources";
 import { quality } from "./quality";
 import { blocAssignment } from "./electionBlocs";
 import { MODEL_AVERAGE, SOURCE_OPTIONS } from "./dataResolver";
@@ -96,7 +96,8 @@ function build2026(): ElectionData {
     listSubmission: quality.coverage.listSubmission,
     activeIds: activeLists2026.map((l) => l.id),
     result: hasResults() ? { seats: results2026.seats } : null,
-    blocs: SIMPLE_BLOCS,
+    // ארבעת הגושים ועוד המפלגות־הקודמות שלפני הגשת הרשימות (blocAssignment, מקור אחד; כלל ברזל 8)
+    blocs: blocAssignment(K26_ID)!,
     listName: listName2026,
     listOrder: lists2026.map((l) => l.id),
     // תקופות (הכרעת בעלים 03.11.2026): הגשת הרשימות — quality.listSubmission; פיזור הכנסת — 17.7.2026 (ויקיפדיה, טבלת הסקרים)
