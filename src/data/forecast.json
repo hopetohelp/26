@@ -2,7 +2,7 @@
  "asof": "2026-10-28",
  "attempts": {
   "bestVoteAccuracy": 0.92997,
-  "runs": 42,
+  "runs": 61,
   "versions": [
    1,
    2,
@@ -53,7 +53,7 @@
  "gate": {
   "atHorizon": {
    "invalidElections": [],
-   "logged": false,
+   "logged": true,
    "passed": false,
    "perElection": {
     "19": [
