@@ -415,8 +415,9 @@ def apply_verification(polls: list[dict]) -> None:
         status = v["status"]
         if status == "mismatch" and p.get("corrections"):
             status = "corrected"
-        # "secondary" = המנדטים הושוו לדיווח עצמאי כשהמקור הראשוני חוסם סריקה (כלל 7 — מאמתים ממקור אחר)
-        p["verified"] = status in ("match", "corrected", "partial", "secondary")
+        # "אומת" = תואם למקור או תוקן לפיו בלבד (הכרעת בעלים 04.11.2026). "secondary" (הוצלב: הושווה לדיווח עצמאי כשהמקור
+        # הראשוני חוסם) ו-"partial" (אומת חלקית) — בסטטוס עצמו (verification.status), לא כ"אומת"
+        p["verified"] = status in ("match", "corrected")
         p["verification"] = {"status": status, "checkedAt": v["checkedAt"], "source": v.get("source"),
                              "details": v.get("sourceDetails") or {}, "law16E": v.get("law16E") or {}}
 

@@ -8,13 +8,13 @@ import { polls, verificationLabel, VERIFICATION_LABEL } from "./data";
 
 it("כל סטטוס בנתוני הסקרים הנוכחיים מקבל תיאור", () => {
   for (const poll of polls) if (poll.verification) expect(VERIFICATION_LABEL[poll.verification.status]).toBeDefined();
-  expect(verificationLabel("secondary")).toEqual({ text: "מקור משני", tone: "neutral" });
+  expect(verificationLabel("secondary")).toEqual({ text: "הוצלב", tone: "neutral" });
 });
 
 // תוויות האימות עברו לנתונים המלאים שנפתחים בלחיצה (הכרעת בעלים 03.11.2026) — במצב סגור בודקים שהארכיון מוצג, והתווית נבדקת בפונקציה
 it("ארכיון הסקרים הנוכחי מוצג בלי קריסה, כולל מקורות משניים", () => {
   expect(renderToStaticMarkup(createElement(StaticRouter, { location: "/polls", children: createElement(PersonalBlocsProvider, { children: createElement(Polls) }) }))).toContain("כל הסקרים");
-  expect(polls.some(p => p.verification && verificationLabel(p.verification.status).text === "מקור משני")).toBe(true);
+  expect(polls.some(p => p.verification && verificationLabel(p.verification.status).text === "הוצלב")).toBe(true);
 });
 
 it("סטטוס חדש אינו משבית את הארכיון או מוצג כאימות מלא", () => {
