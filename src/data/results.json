@@ -280,6 +280,17 @@
     "votes": 461
    }
   ],
+  "predecessorBlocs": {
+   "arab": [
+    "UAL-Ta'al+Hadash+Balad"
+   ],
+   "netanyahu": [
+    "Likud",
+    "National Union",
+    "The Jewish Home",
+    "Yisrael Beiteinu"
+   ]
+  },
   "previous": {
    "belowThreshold": 103904,
    "blocs": {
@@ -782,6 +793,21 @@
     "votes": 223
    }
   ],
+  "predecessorBlocs": {
+   "arab": [
+    "Balad",
+    "Hadash",
+    "UAL-Ta'al",
+    "UAL-Ta'al+Balad"
+   ],
+   "eisenkot": [
+    "Hatnuah",
+    "Israeli Labor Party"
+   ],
+   "netanyahu": [
+    "Likud Beiteinu"
+   ]
+  },
   "source": {
    "agreementsSource": "ויקיפדיה העברית, ערך הבחירות לכנסת ה-20, פרק הסכמי עודפים",
    "sha256": "52c7d113e95ab501ccb2edb6a5e49978c8eb8e25ccf4ed17b51bf353276fd28e",

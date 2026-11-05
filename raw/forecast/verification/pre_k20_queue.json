@@ -1,0 +1,4875 @@
+[
+ {
+  "id": "k20-2013-11-28-smith-smith",
+  "knesset": 20,
+  "end": "2013-11-28",
+  "start": "2013-11-28",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 12
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 3
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 37
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.globes.co.il/serveen/globes/docview.asp?did=1000897779"
+  ]
+ },
+ {
+  "id": "k20-2013-11-28-panels-politics-panel-polls",
+  "knesset": 20,
+  "end": "2013-11-28",
+  "start": "2013-11-28",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "טב (הבית היהודי)": {
+    "s": 12
+   },
+   "מרצ (מרצ)": {
+    "s": 13
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 35
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Diplomacy-and-Politics/Labor-gains-in-polls-under-new-head-Herzog-333660"
+  ]
+ },
+ {
+  "id": "k20-2013-12-26-smith-x",
+  "knesset": 20,
+  "end": "2013-12-26",
+  "start": "2013-12-26",
+  "firm": "סמית׳",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 13
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 11
+   },
+   "[קודמת] Hatnuah": {
+    "s": 3
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 36
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.imra.org.il/story.php3?id=62690"
+  ]
+ },
+ {
+  "id": "k20-2013-12-26-panels-politics-panel-polls",
+  "knesset": 20,
+  "end": "2013-12-26",
+  "start": "2013-12-26",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "טב (הבית היהודי)": {
+    "s": 13
+   },
+   "מרצ (מרצ)": {
+    "s": 11
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 16
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 33
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://www.imra.org.il/story.php3?id=62691"
+  ]
+ },
+ {
+  "id": "k20-2014-01-05-unknown-dahaf",
+  "knesset": 20,
+  "end": "2014-01-05",
+  "start": "2014-01-05",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 11
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 14
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 7
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 16
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 33
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 2
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://electograph.blogspot.dk/2014/01/israel-january-2014-dahaf-channel-2.html"
+  ]
+ },
+ {
+  "id": "k20-2014-01-09-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-01-09",
+  "start": "2014-01-09",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 14
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 17
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 34
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/01/09/likud-beitenu-34-labor-17-bayit-yehudi-14-yesh-atid-13-meretz-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-01-16-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-01-16",
+  "start": "2014-01-16",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 12
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 15
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 34
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/category/knesset/polls/"
+  ]
+ },
+ {
+  "id": "k20-2014-01-21-unknown-channel-1",
+  "knesset": 20,
+  "end": "2014-01-21",
+  "start": "2014-01-21",
+  "firm": "מכון לא צוין",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 13
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 16
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 34
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/01/21/3223/"
+  ]
+ },
+ {
+  "id": "k20-2014-01-23-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-01-23",
+  "start": "2014-01-23",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "טב (הבית היהודי)": {
+    "s": 12
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 14
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 17
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 34
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/176648"
+  ]
+ },
+ {
+  "id": "k20-2014-01-24-unknown-times-of-israel",
+  "knesset": 20,
+  "end": "2014-01-24",
+  "start": "2014-01-24",
+  "firm": "מכון לא צוין",
+  "publisher": "טיימס אוף ישראל",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 7
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 11
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 18
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 46
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/likud-beytenu-jumps-15-seats-in-new-poll/"
+  ]
+ },
+ {
+  "id": "k20-2014-01-30-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-01-30",
+  "start": "2014-01-30",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "מרצ (מרצ)": {
+    "s": 11
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 4
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 30
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/01/30/bb-nb-aftermath-poll-likud-beitenu-30-labor-19-bayit-yehudi-17-yesh-atid-12-meretz-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-01-31-smith-x",
+  "knesset": 20,
+  "end": "2014-01-31",
+  "start": "2014-01-31",
+  "firm": "סמית׳",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 11
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 11
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 17
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 36
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://electograph.blogspot.dk/2014/01/israel-january-2014-smith.html"
+  ]
+ },
+ {
+  "id": "k20-2014-02-03-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-02-03",
+  "start": "2014-02-03",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "מרצ (מרצ)": {
+    "s": 11
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Balad": {
+    "s": 4
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 30
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/02/03/panels-poll-likud-beitenu-30-labor-19-bayit-yehudi-16-yesh-atid-13-meretz-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-02-06-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-02-06",
+  "start": "2014-02-06",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "מרצ (מרצ)": {
+    "s": 11
+   },
+   "פה (יש עתיד)": {
+    "s": 14
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 18
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 32
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/02/06/panels-poll-likud-beitenu-32-labor-18-bayit-yehudi-15-yesh-atid-14-meretz-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-02-11-kantar-walla",
+  "knesset": 20,
+  "end": "2014-02-11",
+  "start": "2014-02-11",
+  "firm": "טלסקר (קנטר)",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 14
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 15
+   },
+   "שס (ש״ס)": {
+    "s": 11
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 35
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/02/12/telesekerwalla-poll-likud-beitenu-35-yesh-atid-15-labor-15-bayit-yehudi-14-shas-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-02-27-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-02-27",
+  "start": "2014-02-27",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "טב (הבית היהודי)": {
+    "s": 13
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 21
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 32
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 3
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/02/27/panels-poll-likud-beitenu-32-labor-21-yesh-atid-13-bayit-yehudi-13-meretz-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-02-28-dialog-haaretz",
+  "knesset": 20,
+  "end": "2014-02-28",
+  "start": "2014-02-28",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "טב (הבית היהודי)": {
+    "s": 12
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 14
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 16
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 33
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/03/02/haaretz-poll-likud-beitenu-33-labor-16-yesh-atid-14-bayit-yehudi-12-shas-10-meretz-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-03-07-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-03-07",
+  "start": "2014-03-07",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "מרצ (מרצ)": {
+    "s": 11
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 21
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 30
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 3
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/03/07/panels-poll-likud-beitenu-30-labor-21-bayit-yehudi-15-yesh-atid-12-meretz-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-03-15-panels-politics-x",
+  "knesset": 20,
+  "end": "2014-03-15",
+  "start": "2014-03-15",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "מרצ (מרצ)": {
+    "s": 11
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 20
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 36
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 4
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.thepost.co.il/news/new.aspx?pn6Vq=E&0r9VQ=FDMLL",
+   "https://web.archive.org/web/20140316135657/http://www.thepost.co.il/news/new.aspx?pn6Vq=E&0r9VQ=FDMLL"
+  ]
+ },
+ {
+  "id": "k20-2014-05-01-smith-globes",
+  "knesset": 20,
+  "end": "2014-05-01",
+  "start": "2014-05-01",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 12
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 14
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Balad": {
+    "s": 4
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 0
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 35
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.globes.co.il/en/article-netanyahu-maintains-popularity-1000935854"
+  ]
+ },
+ {
+  "id": "k20-2014-07-03-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-07-03",
+  "start": "2014-07-03",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "מרצ (מרצ)": {
+    "s": 12
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 3
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 21
+   },
+   "[קודמת] Likud Beiteinu": {
+    "s": 28
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/07/03/knesset-channel-poll-likud-beitenu-28-labor-21-bayit-yehudi-18-yesh-atid-13-meretz-12-bennett-up-netanyahu-down/"
+  ]
+ },
+ {
+  "id": "k20-2014-07-07-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-07-07",
+  "start": "2014-07-07",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 11
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 4
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 19
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/07/08/snap-poll-likud-21-labor-19-bayit-yehudi-18-yesh-atid-11-yisrael-beitenu-11-meretz-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-07-09-dialog-haaretz",
+  "knesset": 20,
+  "end": "2014-07-09",
+  "start": "2014-07-09",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 14
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/07/11/haaretz-poll-likud-25-bayit-yehudi-16-labor-15-yisrael-beitenu-14-yesh-atid-13-meretz-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-07-31-smith-globes",
+  "knesset": 20,
+  "end": "2014-07-31",
+  "start": "2014-07-31",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 13
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 13
+   },
+   "מחל (הליכוד)": {
+    "s": 31
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 0
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/01/smithglobes-poll-likud-31-labor-14-bayit-yehudi-13-yisrael-beitenu-13-yesh-atid-11-shas-8/"
+  ]
+ },
+ {
+  "id": "k20-2014-07-31-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-07-31",
+  "start": "2014-07-31",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 30
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 3
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/01/panelsknesset-channel-poll-likud-30-bayit-yehudi-18-labor-15-yesh-atid-10-meretz-10-shas-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-08-07-midgam-channel-2",
+  "knesset": 20,
+  "end": "2014-08-07",
+  "start": "2014-08-07",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 12
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 6
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al+Balad": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/07/midgamchannel-2-poll-likud-23-bayit-yehudi-15-labor-14-yisrael-beitenu-12-yesh-atid-10-shas-8/"
+  ]
+ },
+ {
+  "id": "k20-2014-08-14-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-08-14",
+  "start": "2014-08-14",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 19
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 10
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/14/panelsknesset-channel-poll-likud-28-bayit-yehudi-19-labor-15-yesh-atid-11-meretz-10-yisrael-beitenu-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-08-28-smith-globes",
+  "knesset": 20,
+  "end": "2014-08-28",
+  "start": "2014-08-28",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 14
+   },
+   "כ (כולנו)": {
+    "s": 5
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 12
+   },
+   "מחל (הליכוד)": {
+    "s": 28
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/29/smithglobes-poll-likud-28-bayit-yehudi-14-labor-14-yisrael-beitenu-12-yesh-atid-9-shas-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-08-28-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-08-28",
+  "start": "2014-08-28",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 19
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/28/panelsknesset-channel-poll-likud-27-bayit-yehudi-19-labor-15-yesh-atid-12-yisrael-beitenu-9-meretz-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-08-28-dialog-haaretz",
+  "knesset": 20,
+  "end": "2014-08-28",
+  "start": "2014-08-28",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 4
+   },
+   "[קודמת] Hadash": {
+    "s": 6
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/28/dialoghaaretz-poll-likud-26-bayit-yehudi-17-labor-14-yesh-atid-12-yisrael-beitenu-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-08-29-geocartography-x",
+  "knesset": 20,
+  "end": "2014-08-29",
+  "start": "2014-08-29",
+  "firm": "גאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 10
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 17
+   },
+   "מחל (הליכוד)": {
+    "s": 32
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 5
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 0
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 12
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/29/geocartography-poll-likud-32-bayit-yehudi-18-yisrael-beitenu-17-labor-12-utj-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-08-30-maagar-mochot-channel-1",
+  "knesset": 20,
+  "end": "2014-08-30",
+  "start": "2014-08-30",
+  "firm": "מאגר מוחות",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 12
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 8
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/08/30/maagar-mochotchannel-1-poll-likud-26-bayit-yehudi-17-labor-14-yisrael-beitenu-12-shas-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-10-02-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-10-02",
+  "start": "2014-10-02",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 16
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/10/02/panelsknesset-channel-poll-likud-27-bayit-yehudi-18-labor-16-yesh-atid-10-yisrael-beitenu-9-meretz-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-10-23-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-10-23",
+  "start": "2014-10-23",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 3
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/10/23/panelsknesset-channel-poll-netanyahu-24-bennett-12-herzoglivni-9-saarkachlon-6-lapid-4/"
+  ]
+ },
+ {
+  "id": "k20-2014-10-23-midgam-channel-10",
+  "knesset": 20,
+  "end": "2014-10-23",
+  "start": "2014-10-23",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 12
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/10/23/midgamchannel-10-poll-likud-22-bayit-yehudi-17-yesh-atid-12-labor-12-kachlon-11-yisrael-beitenu-9-meretz-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-10-30-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-10-30",
+  "start": "2014-10-30",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/10/30/panelsknesset-channel-poll-likud-21-bayit-yehudi-16-labor-15-yesh-atidyisrael-beitenumeretzkachlon-9-each/"
+  ]
+ },
+ {
+  "id": "k20-2014-10-31-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-10-31",
+  "start": "2014-10-31",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/10/31/smithglobes-poll-likud-24-bayit-yehudi-15-labor-14-yisrael-beitenu-10-yesh-atidkachlon-9-each/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-13-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-11-13",
+  "start": "2014-11-13",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 9
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Balad": {
+    "s": 4
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/13/panelsknesset-channel-poll-likud-22-bayit-yehudi-17-labor-14-yesh-atid-10-meretz-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-15-maagar-mochot-channel-1",
+  "knesset": 20,
+  "end": "2014-11-15",
+  "start": "2014-11-15",
+  "firm": "מאגר מוחות",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 15
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 3
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/15/maagar-mochotchannel-1-poll-likud-25-bayit-yehudi-15-yisrael-beitenu-15-labor-14-yesh-atid-10-right-religious-bloc-75/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-17-midgam-channel-10",
+  "knesset": 20,
+  "end": "2014-11-17",
+  "start": "2014-11-17",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 14
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 13
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/17/midgamchannel-10-poll-likud-22-bayit-yehudi-17-yesh-atid-14-labor-13-yisrael-beitenu-9-kachlon-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-20-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-11-20",
+  "start": "2014-11-20",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 19
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 20
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 13
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al+Balad": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/20/panelsknesset-channel-poll-likud-20-bayit-yehudi-19-yesh-atid-13-labor-13-kachlon-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-22-tri-bchardei-chadrim",
+  "knesset": 20,
+  "end": "2014-11-22",
+  "start": "2014-11-22",
+  "firm": "טרי",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 6
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Hatnuah": {
+    "s": 3
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 12
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/27/likud-23-bayit-yehudi-16-labor-15-yisrael-beitenu-11-yesh-atid-10-shas-10-kachlon-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-27-smith-globes",
+  "knesset": 20,
+  "end": "2014-11-27",
+  "start": "2014-11-27",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 0
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/27/likud-23-bayit-yehudi-16-labor-15-yisrael-beitenu-11-yesh-atid-10-shas-10-kachlon-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-27-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-11-27",
+  "start": "2014-11-27",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 13
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Hadash": {
+    "s": 4
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al+Balad": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/27/panelsknesset-channel-poll-likud-23-bayit-yehudi-18-labor-14-yesh-atid-13-utj-8-meretz-8/"
+  ]
+ },
+ {
+  "id": "k20-2014-11-30-dialog-haaretz",
+  "knesset": 20,
+  "end": "2014-11-30",
+  "start": "2014-11-30",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 13
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/11/30/dialoghaaretz-poll-likud-24-bayit-yehudi-16-labor-13-kachlon-12-yesh-atid-11-yisrael-beitenu-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-02-midgam-channel-2",
+  "knesset": 20,
+  "end": "2014-12-02",
+  "start": "2014-12-02",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 2",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 13
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/02/channel-2midgam-poll-likud-22-bayit-yehudi-17-labor-13-yisrael-beitenu-10-kachlon-10-yesh-atid-9-shas-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-02-dialog-channel-10",
+  "knesset": 20,
+  "end": "2014-12-02",
+  "start": "2014-12-02",
+  "firm": "דיאלוג",
+  "publisher": "חדשות 10",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 9
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 12
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 13
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/02/dialogchannel-10-poll-likud-22-bayit-yehudi-17-labor-13-yisrael-beitenu-12-kachlon-12-yesh-atid-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-03-kantar-walla",
+  "knesset": 20,
+  "end": "2014-12-03",
+  "start": "2014-12-03",
+  "firm": "טלסקר (קנטר)",
+  "publisher": "וואלה",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 12
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 2
+   },
+   "[קודמת] Hadash": {
+    "s": 3
+   },
+   "[קודמת] Hatnuah": {
+    "s": 5
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 12
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/03/telesekerwalla-poll-likud-23-bayit-yehudi-17-labor-12-yisrael-beitenu-12-yesh-atid-11-kachlon-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-04-smith-globes",
+  "knesset": 20,
+  "end": "2014-12-04",
+  "start": "2014-12-04",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Balad": {
+    "s": 3
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 2
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 15
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/04/smithglobes-poll-likud-23-bayit-yehudi-16-labor-15-yesh-atid-10-kachlon-10-shas-9-utj-7-meretz-7/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-05-unknown-yisrael-hayom",
+  "knesset": 20,
+  "end": "2014-12-05",
+  "start": "2014-12-05",
+  "firm": "מכון לא צוין",
+  "publisher": "ישראל היום",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Balad": {
+    "s": 2
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 12
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/05/22-likud-16-bayit-yehudi-13-kachlon-12-labor-10-yesh-atid-10-yisrael-beitenu/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-05-panels-politics-maariv-panels",
+  "knesset": 20,
+  "end": "2014-12-05",
+  "start": "2014-12-05",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב / ג׳רוזלם פוסט",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "כ (כולנו)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/05/jpostmaariv-panels-poll-21-likud-18-bayit-yehudi-14-labor-11-yesh-atid-11-kachlon-9-yisrael-beitenu/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-05-maagar-mochot-makor-rishon-maagar-mochot",
+  "knesset": 20,
+  "end": "2014-12-05",
+  "start": "2014-12-05",
+  "firm": "מאגר מוחות",
+  "publisher": "מקור ראשון / אנרג׳י",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 13
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 13
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/05/nrgmakor-rishon-maagar-mochot-poll-25-likud-15-bayit-yehudi-13-labor-13-yisrael-beitenu-10-kachlon-9-yesh-atid/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-05-maagar-mochot-maagar-mochot",
+  "knesset": 20,
+  "end": "2014-12-05",
+  "start": "2014-12-05",
+  "firm": "מאגר מוחות",
+  "publisher": null,
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "כ (כולנו)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 4
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 14
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/05/galay-yisraelmaagar-mochot-poll-21-likud-18-bayit-yehudi-14-labor-11-yesh-atid-11-kachlon-9-yisrael-beitenu/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-08-panels-politics-x",
+  "knesset": 20,
+  "end": "2014-12-08",
+  "start": "2014-12-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/poll-joint-livni-herzog-list-could-beat-out-likud/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-08-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-12-08",
+  "start": "2014-12-08",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Hatnuah": {
+    "s": 0
+   },
+   "[קודמת] Israeli Labor Party": {
+    "s": 17
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/08/panelsknesset-channel-poll-likud-21-bayit-yehudi-18-labor-17-yesh-atid-12-yisrael-beitenu-10-kachlon-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-10-unknown-channel-10",
+  "knesset": 20,
+  "end": "2014-12-10",
+  "start": "2014-12-10",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 22
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 13
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 11
+   },
+   "מחל (הליכוד)": {
+    "s": 20
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "https://www.haaretz.com/news/national/1.630827",
+   "https://web.archive.org/web/20141209201925/http://www.haaretz.com/news/national/1.630827"
+  ]
+ },
+ {
+  "id": "k20-2014-12-11-smith-walla-poll",
+  "knesset": 20,
+  "end": "2014-12-11",
+  "start": "2014-12-11",
+  "firm": "סמית׳",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 21
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 18
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/12/smithwalla-poll-labor-21-likud-20-bayit-yehudi-17-yesh-atid-10-yisrael-beitenu-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-11-panels-politics-maariv",
+  "knesset": 20,
+  "end": "2014-12-11",
+  "start": "2014-12-11",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב / ג׳רוזלם פוסט",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 20
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/12/panelsmaariv-poll-labor-livni-24-likud-20-bayit-yehudi-17-kulanu-10-yisrael-beitenu-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-11-midgam-channel-2",
+  "knesset": 20,
+  "end": "2014-12-11",
+  "start": "2014-12-11",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 2",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 8
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/12/midgamchannel-2-poll-labor-livni-24-likud-23-bayit-yehudi-15-kulanu-9-shas-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-12-panels-politics-nrg",
+  "knesset": 20,
+  "end": "2014-12-12",
+  "start": "2014-12-12",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 20
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/12/panelsnrg-poll-labor-livni-24-likud-20-bayit-yehudi-17-yisrael-beitenu-10-kulanu-10/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-12-geocartography-x",
+  "knesset": 20,
+  "end": "2014-12-12",
+  "start": "2014-12-12",
+  "firm": "גאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 18
+   },
+   "ג (יהדות התורה)": {
+    "s": 11
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "טב (הבית היהודי)": {
+    "s": 11
+   },
+   "כ (כולנו)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 8
+   },
+   "שס (ש״ס)": {
+    "s": 10
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/12/geocartography-poll-likud-25-labor-livni-18-kulanu-12-bayit-yehudi-11-utj-11/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-16-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-12-16",
+  "start": "2014-12-16",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 22
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 4
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.facebook.com/permalink.php?story_fbid=10152571872908697&id=270715713696"
+  ]
+ },
+ {
+  "id": "k20-2014-12-17-dialog-dialog",
+  "knesset": 20,
+  "end": "2014-12-17",
+  "start": "2014-12-17",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 21
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 12
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 4
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 3
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/188783#.VJX9EcRCQ"
+  ]
+ },
+ {
+  "id": "k20-2014-12-18-panels-politics-maariv",
+  "knesset": 20,
+  "end": "2014-12-18",
+  "start": "2014-12-18",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב / ג׳רוזלם פוסט",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 4
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/18/81324/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-19-smith-reshet-bet",
+  "knesset": 20,
+  "end": "2014-12-19",
+  "start": "2014-12-19",
+  "firm": "סמית׳",
+  "publisher": "רשת ב׳",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "טב (הבית היהודי)": {
+    "s": 13
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 8
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/20/smithreshet-bet-poll-labor-livni-23-likud-22-bayit-yehudi-13-koolanu-9-yesh-atid-8-yisrael-beitenu-8-yishaiariel-6/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-19-smith-globes",
+  "knesset": 20,
+  "end": "2014-12-19",
+  "start": "2014-12-19",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 8
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al+Balad": {
+    "s": 6
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/188848#.VJX9EcRCQ"
+  ]
+ },
+ {
+  "id": "k20-2014-12-21-geocartography-geocartography",
+  "knesset": 20,
+  "end": "2014-12-21",
+  "start": "2014-12-21",
+  "firm": "גאוקרטוגרפיה",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 10
+   },
+   "טב (הבית היהודי)": {
+    "s": 11
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 27
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 7
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/21/arutz-7geocartography-poll-likud-27-labor-livni-25-bayit-yehudi-11-shas-9-koolanu-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-22-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-12-22",
+  "start": "2014-12-22",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 5
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-Elections/Herzog-Livni-joint-list-leading-Likud-Knesset-Channel-poll-finds-385392"
+  ]
+ },
+ {
+  "id": "k20-2014-12-23-unknown-channel-10",
+  "knesset": 20,
+  "end": "2014-12-23",
+  "start": "2014-12-23",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 22
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 9
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 4
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 6
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://elections.walla.co.il/item/2813338"
+  ]
+ },
+ {
+  "id": "k20-2014-12-24-panels-politics-panels",
+  "knesset": 20,
+  "end": "2014-12-24",
+  "start": "2014-12-24",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב / ג׳רוזלם פוסט",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 4
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 6
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "https://www.jpost.com/Israel-Elections/Yisrael-Beytenu-may-not-make-the-cut-Post-poll-finds-385812"
+  ]
+ },
+ {
+  "id": "k20-2014-12-25-unknown-channel-2",
+  "knesset": 20,
+  "end": "2014-12-25",
+  "start": "2014-12-25",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 2",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 10
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 4
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2014/12/25/channel-2sarid-poll-labor-livni-25-likud-22-bayit-yehudi-17-yisrael-beitenu-10-yesh-atid-9/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-29-midgam-channel-2",
+  "knesset": 20,
+  "end": "2014-12-29",
+  "start": "2014-12-29",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 2",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 8
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 5
+   },
+   "[קודמת] Hadash": {
+    "s": 0
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 6
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/likud-labor-tied-at-24-knesset-seats-each-poll-finds/"
+  ]
+ },
+ {
+  "id": "k20-2014-12-30-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2014-12-30",
+  "start": "2014-12-30",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 8
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.theyeshivaworld.com/news/headlines-breaking-stories/277957/knesset-channel-election-poll.html",
+   "https://www.youtube.com/watch?v=T8Nv2tTi2Lc"
+  ]
+ },
+ {
+  "id": "k20-2014-12-31-unknown-channel-10",
+  "knesset": 20,
+  "end": "2014-12-31",
+  "start": "2014-12-31",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 21
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/189353#.VKkDMcmGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-01-02-panels-politics-galay-israel-radio",
+  "knesset": 20,
+  "end": "2015-01-02",
+  "start": "2015-01-02",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Hadash": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al+Balad": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/right-wing-ultra-orthodox-parties-lead-with-69-mandates-poll-finds/"
+  ]
+ },
+ {
+  "id": "k20-2015-01-02-kantar-walla",
+  "knesset": 20,
+  "end": "2015-01-02",
+  "start": "2015-01-02",
+  "firm": "טלסקר (קנטר)",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://elections.walla.co.il/item/2816094"
+  ]
+ },
+ {
+  "id": "k20-2015-01-06-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2015-01-06",
+  "start": "2015-01-06",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "https://www.haaretz.com/2015-01-07/ty-article/.premium/poll-lapid-up-kahlon-down-no-change-at-the-top/0000017f-db43-df9c-a17f-ff5b90bc0000",
+   "https://www.jpost.com/Breaking-News/Poll-Likud-takes-slight-lead-over-Labor-Hatnua-Yesh-Atid-shows-improvement-386847"
+  ]
+ },
+ {
+  "id": "k20-2015-01-06-kantar-channel-1",
+  "knesset": 20,
+  "end": "2015-01-06",
+  "start": "2015-01-06",
+  "firm": "טלסקר (קנטר)",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 7
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/189567#.VKy4ssmGMXh"
+  ]
+ },
+ {
+  "id": "k20-2015-01-07-dialog-haaretz",
+  "knesset": 20,
+  "end": "2015-01-07",
+  "start": "2015-01-07",
+  "firm": "דיאלוג",
+  "publisher": "הארץ",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 5
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/189611#.VKzpSsmGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-01-09-kantar-walla-maariv",
+  "knesset": 20,
+  "end": "2015-01-09",
+  "start": "2015-01-09",
+  "firm": "טלסקר (קנטר)",
+  "publisher": "מעריב / ג׳רוזלם פוסט",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/189718#.VK_qD5t0zug"
+  ]
+ },
+ {
+  "id": "k20-2015-01-11-kantar-x",
+  "knesset": 20,
+  "end": "2015-01-11",
+  "start": "2015-01-11",
+  "firm": "טלסקר (קנטר)",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 23
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 2
+   },
+   "[קודמת] Hadash": {
+    "s": 3
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 6
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/189845#.VLREVMmGMXh"
+  ]
+ },
+ {
+  "id": "k20-2015-01-13-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2015-01-13",
+  "start": "2015-01-13",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Balad": {
+    "s": 0
+   },
+   "[קודמת] Hadash": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/189889#.VLVXjJt0zug"
+  ]
+ },
+ {
+  "id": "k20-2015-01-14-smith-globes",
+  "knesset": 20,
+  "end": "2015-01-14",
+  "start": "2015-01-14",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Hadash": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] UAL-Ta'al+Balad": {
+    "s": 5
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.globes.co.il/en/article-labor-and-likud-gaining-in-strength-1001001335"
+  ]
+ },
+ {
+  "id": "k20-2015-01-15-unknown-channel-10",
+  "knesset": 20,
+  "end": "2015-01-15",
+  "start": "2015-01-15",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 10
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 20
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k20-2015-01-15-midgam-channel-2",
+  "knesset": 20,
+  "end": "2015-01-15",
+  "start": "2015-01-15",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 2",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 11
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.ynetnews.com/articles/0,7340,L-4615657,00.html"
+  ]
+ },
+ {
+  "id": "k20-2015-01-16-panels-politics-maariv",
+  "knesset": 20,
+  "end": "2015-01-16",
+  "start": "2015-01-16",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "מעריב / ג׳רוזלם פוסט",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 17
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/zionist-camp-up-3-seats-over-likud-in-latest-poll/"
+  ]
+ },
+ {
+  "id": "k20-2015-01-16-kantar-walla",
+  "knesset": 20,
+  "end": "2015-01-16",
+  "start": "2015-01-16",
+  "firm": "טלסקר (קנטר)",
+  "publisher": "וואלה",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 26
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 18
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 8
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://elections.walla.co.il/item/2820405"
+  ]
+ },
+ {
+  "id": "k20-2015-01-20-unknown-nrg",
+  "knesset": 20,
+  "end": "2015-01-20",
+  "start": "2015-01-20",
+  "firm": "מכון לא צוין",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 5
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k20-2015-01-22-kantar-channel-1",
+  "knesset": 20,
+  "end": "2015-01-22",
+  "start": "2015-01-22",
+  "firm": "טלסקר (קנטר)",
+  "publisher": "ערוץ 1",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 24
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 26
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 8
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/190368#.VMF6gSyGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-01-23-unknown-israel-radio",
+  "knesset": 20,
+  "end": "2015-01-23",
+  "start": "2015-01-23",
+  "firm": "מכון לא צוין",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 7
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 25
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 9
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "https://www.timesofisrael.com/new-poll-finds-likud-zionist-camp-neck-and-neck/"
+  ]
+ },
+ {
+  "id": "k20-2015-01-24-panels-politics-x",
+  "knesset": 20,
+  "end": "2015-01-24",
+  "start": "2015-01-24",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": null,
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 22
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 11
+   },
+   "טב (הבית היהודי)": {
+    "s": 13
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 22
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "קץ (יחד)": {
+    "s": 7
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/190412#.VMgFYyyGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-01-26-midgam-midgam",
+  "knesset": 20,
+  "end": "2015-01-26",
+  "start": "2015-01-26",
+  "firm": "מדגם מחקר וייעוץ",
+  "publisher": "חדשות 2",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 26
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 7
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/190531#.VMbAtSyGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-01-27-panels-politics-knesset-channel",
+  "knesset": 20,
+  "end": "2015-01-27",
+  "start": "2015-01-27",
+  "firm": "פאנלס פוליטיקס",
+  "publisher": "ערוץ הכנסת",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 15
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 6
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 6
+   },
+   "פה (יש עתיד)": {
+    "s": 11
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": [
+   "http://knessetjeremy.com/2015/01/27/panelsknesset-channel-poll-labor-livni-25-likud-23-bayit-yehudi-15-united-arab-list-12-yesh-atid-11/"
+  ]
+ },
+ {
+  "id": "k20-2015-01-28-unknown-channel-10",
+  "knesset": 20,
+  "end": "2015-01-28",
+  "start": "2015-01-28",
+  "firm": "מכון לא צוין",
+  "publisher": "חדשות 10",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 6
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 9
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 4
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 10
+   },
+   "שס (ש״ס)": {
+    "s": 6
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 4
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/190637#.VMlMPSyGMXg"
+  ]
+ },
+ {
+  "id": "k20-2015-01-29-smith-globes",
+  "knesset": 20,
+  "end": "2015-01-29",
+  "start": "2015-01-29",
+  "firm": "סמית׳",
+  "publisher": "גלובס",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 8
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 12
+   },
+   "טב (הבית היהודי)": {
+    "s": 16
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 24
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 9
+   },
+   "שס (ש״ס)": {
+    "s": 8
+   },
+   "[קודמת] Otzma Yehudit": {
+    "s": 0
+   },
+   "[קודמת] Yachad": {
+    "s": 0
+   }
+  },
+  "urls": []
+ },
+ {
+  "id": "k20-2015-02-27-unknown-maariv",
+  "knesset": 20,
+  "end": "2015-02-27",
+  "start": "2015-02-27",
+  "firm": "מכון לא צוין",
+  "publisher": "מעריב / ג׳רוזלם פוסט",
+  "seats": {
+   "אמת (המחנה הציוני)": {
+    "s": 25
+   },
+   "ג (יהדות התורה)": {
+    "s": 7
+   },
+   "ודעם (הרשימה המשותפת)": {
+    "s": 13
+   },
+   "טב (הבית היהודי)": {
+    "s": 11
+   },
+   "כ (כולנו)": {
+    "s": 8
+   },
+   "ל (ישראל ביתנו)": {
+    "s": 5
+   },
+   "מחל (הליכוד)": {
+    "s": 23
+   },
+   "מרצ (מרצ)": {
+    "s": 5
+   },
+   "פה (יש עתיד)": {
+    "s": 12
+   },
+   "קץ (יחד)": {
+    "s": 4
+   },
+   "שס (ש״ס)": {
+    "s": 7
+   }
+  },
+  "urls": [
+   "http://www.israelnationalnews.com/News/News.aspx/191920#.VPCmd46GMXg"
+  ]
+ }
+]

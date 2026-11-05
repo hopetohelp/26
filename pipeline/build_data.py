@@ -862,6 +862,15 @@ def build_history(results: list[dict]) -> dict:
             "source": {"page": cfg["page"].replace("en__", "").replace(".wiki", "").replace("_", " "),
                        "sha256": sha256(path), "tableLine": text[:pos].count("\n") + 1},
         })
+    # 2015: סקרים מטבלת ויקיפדיה שאינם בתמלולי האימות (pipeline/history_wiki_2015.py)
+    import history_wiki_2015
+    from historical_data import HIST_FIRM_NAMES, publisher_he
+    prev = {20: "2013-01-22", 19: "2009-02-10"}  # יום הבחירות הקודמות
+    for n in (20, 19):
+        scen = {r["id"] for f in (RAW / "forecast" / "verification").glob(f"pre_k{n}_results*.json")
+                for r in json.loads(f.read_text(encoding="utf-8")) if r.get("scenario")}
+        for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == n), by_n[n], HIST_FIRM_NAMES, publisher_he, slug, prev[n], scen):
+            print(f"::warning::K{n}: {line} — סכום חלקי בקריאת הטבלה; הושמט עד תמלול מהמקור")
     for c in cycles:
         check_predecessors(c["knesset"], c, by_n[c["knesset"]])
     from exit_polls import load as load_exit_polls  # מדגמי ליל הבחירות (raw/exit-polls-history.json)
@@ -878,6 +887,24 @@ def attach_verification(cycles: list[dict]) -> None:
     (differences: מפתח, ערך ויקיפדיה, ערך המקור) מתקן את הערך — המקור גובר, והתיקון מתועד ברשומה.
     סקר שאין לו רשומת אימות מקבל "unverified", כך שכל סקר בכל מחזור נושא את השדה (חוזה הנתונים, 04.11.2026)."""
     rows = {r["id"]: r for r in json.loads((RAW / "forecast" / "polls.json").read_text(encoding="utf-8"))}
+    # תיקון שם מכון/מזמין שגוי בטבלת המקור — ערך קודם, חדש, נימוק ומקור (raw/forecast/verification/pre_meta_fixes.json)
+    from historical_data import HIST_FIRM_NAMES
+    fixes = {f["id"]: f for f in json.loads((RAW / "forecast" / "verification" / "pre_meta_fixes.json").read_text(encoding="utf-8"))}
+    firm_he = {k: he for k, he in HIST_FIRMS.values()}
+    for c in cycles:
+        for p in c["polls"]:
+            f = fixes.get(p["id"])
+            if not f:
+                continue
+            if f["field"] == "firm":
+                assert p["firmKey"] == f["old"], (p["id"], p["firmKey"], f["old"])
+                p["firmKey"] = f["new"]
+                p["firmHe"] = (HIST_FIRM_NAMES if c["knesset"] <= 20 else {}).get(f["new"]) or firm_he[f["new"]]
+                if f.get("publisherNew"):
+                    p["publisherHe"] = f["publisherNew"]
+            else:
+                assert p["publisherHe"] == f["old"], (p["id"], p["publisherHe"], f["old"])
+                p["publisherHe"] = f["new"]
     pre = {}
     for path in sorted((RAW / "forecast" / "verification").glob("pre_k*_results*.json")):
         pre.update({r["id"]: r for r in json.loads(path.read_text(encoding="utf-8"))})

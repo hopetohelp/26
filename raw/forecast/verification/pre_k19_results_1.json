@@ -1,0 +1,229 @@
+[
+ {
+  "id": "k19-2011-05-02-smith-smith",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/143844 ; https://en.globes.co.il/en/article-1000642064",
+  "differences": [
+   {
+    "key": "מרץ (מרצ)",
+    "wikipedia": 3,
+    "source": 4
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (2 May 2011, citing Globes/Smith): YB 18, Kadima 26, Likud 29, NU 5, Jewish Home 'remain with three', Meretz 'gain one seat (to four)', Arab 10, Shas 11, UTJ 5, Labor 8. Globes English (primary, 2 May 2011) gives YB 18, Labor 8, right bloc without YB = 54 (implies JH 4 with Likud 29+Shas 11+UTJ 5+NU 5) and Kadima-led bloc with YB = 56 (Kadima 26+YB 18+Labor 8+Meretz 4). Meretz 4 is stated by INN and consistent with Globes blocs and a 120 total; Wikipedia's Meretz 3 leaves 119. JH kept at 4 (Globes bloc), INN's 'three' is contradicted by Globes."
+ },
+ {
+  "id": "k19-2011-08-05-unknown-maagar",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=53353",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 506,
+  "moe": null,
+  "note": "IMRA: Maagar Mohot (Prof. Yitzchak Katz) for Makor Rishon, week of 1 Aug, published 5 Aug 2011, n=506. Likud 29, Kadima 25, YB 16, Labor 11, Shas 13, UTJ 5, NU 4, Meretz 4, JH 3, Arab 9 - all match. Firm is Maagar Mohot (Wikipedia: unknown). Source also lists Independence (Barak) 1, not in Wikipedia's seats."
+ },
+ {
+  "id": "k19-2011-12-29-smith-smith",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.globes.co.il/news/article.aspx?did=1000719386 (graphic https://images.globes.co.il/Images/NewGlobes/Misc_2/2012/bhirotmazbia2601.jpg)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No URL in queue. Globes/Rafi Smith Jan 2012 graphic shows comparison column 'אומדן מנדטים בדצמבר 2011': Likud 31, Labor 18, YB 14, Kadima 19, Lapid 0, Shas 11, UTJ 6, NU 4, JH 3, Meretz 4, Arab 10 - all match. Fieldwork date not stated."
+ },
+ {
+  "id": "k19-2012-01-10-new-wave-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=55297",
+  "differences": [],
+  "fieldEndSource": "2012-01-10",
+  "sample": 620,
+  "moe": null,
+  "note": "IMRA: New Wave for Makor Rishon, 10 Jan 2012, n=620, published 13 Jan. Likud 28, Labor 15, Lapid 15, Kadima 14, YB 14, Shas 9, UTJ 5, Meretz 5, JH 3, NU 2, Arab 10 - all match. Publisher: Makor Rishon."
+ },
+ {
+  "id": "k19-2012-01-17-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://en.globes.co.il/en/article-1000716497",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Globes English 17 Jan 2012 reporting Geocartography: Likud 33, Kadima 11, Labor 13, Shas 8, YB 16, Arab 11, Meretz 4, NRP 3, UTJ 6, NU 2, Lapid 13 - all match."
+ },
+ {
+  "id": "k19-2012-01-27-smith-smith",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.globes.co.il/news/article.aspx?did=1000719386 (graphic https://images.globes.co.il/Images/NewGlobes/Misc_2/2012/bhirotmazbia2601.jpg)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.5%",
+  "note": "Globes 27.01.2012 graphic 'סקר גלובס - מכון רפי סמית', n=500, error 4.5%: Likud 30, Labor 15, YB 14, Kadima 13, Lapid 11, Shas 10, UTJ 6, NU 5, JH 3, Meretz 3, Arab 10 (Hadash 4, Ra'am-Ta'al 3, Balad 3) - all match."
+ },
+ {
+  "id": "k19-2012-02-17-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=258465 (redirects to section page); https://jewishpress.com/nationalist-camp-grows-to-76-seats-in-recent-poll-likud-opens-big-lead-with-39-seats/",
+  "differences": [],
+  "fieldEndSource": "2012-02-17",
+  "sample": null,
+  "moe": null,
+  "note": "Jewish Press (19 Feb 2012, Jeremy Saltan): Geocartography (Avi Degani) 17 Feb 2012: Likud 39, YB 13, Kadima 12, Labor 12, Shas 9, Lapid 6, NU 5, JH 5, UTJ 5, Meretz 4, Arab 10, Independence 0. Source lists NU and JH separately (5+5); merged they'd be 'fifth largest party with ten seats'. Wikipedia's single key 'טב (הבית היהודי)'=10 equals NU+JH combined; all other numbers match. jpost original URL no longer resolves."
+ },
+ {
+  "id": "k19-2012-02-29-smith-smith",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://en.globes.co.il/en/article-1000729713",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Globes English 1 Mar 2012, Rafi Smith Feb poll: Lapid 11, Likud 29, Kadima 15, YB 15, Labor 14, Meretz 3, NU 4, NRP 4, Shas 10, UTJ 5, Arab 10 - all match."
+ },
+ {
+  "id": "k19-2012-03-05-dialog-dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.haaretz.co.il/magazine/1.1659921 (403, not bypassed); https://www.imra.org.il/story.php?id=55988 ; https://www.imra.org.il/story.php?id=55990 ; https://politico-junkie.blogspot.com/2012/03/israel-poll-shows-public-against.html (repost of Haaretz English)",
+  "differences": [],
+  "fieldEndSource": "2012-03-05",
+  "sample": 497,
+  "moe": "4.5%",
+  "note": "IMRA: Dialogue for Haaretz, 4-5 Mar 2012, n=497, published 9 Mar. Two columns: Kadima headed by Mofaz / by Livni. Wikipedia row = Mofaz column: Likud 35, YB 15, Labor 14, Kadima 12, Shas 9, Lapid 8, UTJ 7, JH/NU 5, Meretz 5, Hadash 5, 'Other Arab parties' 5 - all match; Balad 2 / Ra'am-Ta'al 3 split not given (only combined 5). Livni column: Likud 37, YB 16, Kadima 10, Lapid 7, rest same. At the time Livni led Kadima, so the Mofaz row is a hypothetical scenario.",
+  "scenario": true
+ },
+ {
+  "id": "k19-2012-03-28-dahaf-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=56242",
+  "differences": [],
+  "fieldEndSource": "2012-03-28",
+  "sample": null,
+  "moe": null,
+  "note": "IMRA: Dahaf for Yediot Ahronot, 28 Mar 2012: Kadima 12, Likud 29, Labor 18, Lapid 12, Deri 2, Shas 8, YB 13, JH 2, UTJ 6, Meretz 3, NU 4, Arab 11 - all match. Also Deri party 2 and Barak's Independence 0, not in Wikipedia's seats. Publisher: Yediot Ahronot."
+ },
+ {
+  "id": "k19-2012-03-29-kantar-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=56260",
+  "differences": [],
+  "fieldEndSource": "2012-03-29",
+  "sample": 550,
+  "moe": null,
+  "note": "IMRA: Teleseker for Maariv, n=550, error +/-2 seats; text says carried out 29 Mar, column header says '28 March poll'. Likud 30, Labor 18, Kadima 13, YB 13, Lapid 11, Arab 10, Shas 7, UTJ 6, JH 4, Meretz 4, NU 4 - all match. Publisher: Maariv."
+ },
+ {
+  "id": "k19-2012-04-23-smith-smith",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=267706 (redirects); jpost 'Likud gets double the support of other parties' (27 Apr 2012, read via search index only; page 404 on direct fetch); https://www.pan.am/en/105076 (AFP)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.5%",
+  "note": "JPost/Smith Research (via search-index text of the jpost article): Likud 31, Labor 15, YB 15, Kadima 13, Atid 11, Shas 8, UTJ 6, NU 4, JH 3, Meretz 3; right-center bloc 67, left-center 53 (implies Arab 11). AFP (pan.am): Likud 31, Labour 15, YB 15, Kadima 13, n=500, MoE 4.5. All match. Caveat: jpost page itself could not be loaded directly."
+ },
+ {
+  "id": "k19-2012-04-26-new-wave-the-new-wave-research-new-wave",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=56628",
+  "differences": [
+   {
+    "key": "[קודמת] National Union",
+    "wikipedia": 3,
+    "source": 2
+   },
+   {
+    "key": "[קודמת] The Jewish Home",
+    "wikipedia": 2,
+    "source": 3
+   }
+  ],
+  "fieldEndSource": "2012-04-25",
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "IMRA: New Wave for Yisrael Hayom, Independence Day eve (25 Apr 2012), n=500, published 29 Apr: Likud 31, Labor 17, YB 14, Kadima 13, Lapid 12, Shas 9, UTJ 5, Meretz 4, 'Jewish Home 3', 'Nat'l Union 2', Arab 10. Wikipedia swaps NU/JH. Israel Hayom original not accessible (blocked)."
+ },
+ {
+  "id": "k19-2012-05-01-kantar-tns",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=56679",
+  "differences": [],
+  "fieldEndSource": "2012-05-01",
+  "sample": 550,
+  "moe": null,
+  "note": "IMRA: TNS for Maariv, 1 May 2012, n=550: Likud 31, Labor 18, YB 12, Kadima 11, Lapid 11, Arab 10, Shas 8, UTJ 6, Meretz 5, NU 4, JH 4 - all match."
+ },
+ {
+  "id": "k19-2012-05-01-dialog-dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.haaretz.co.il/news/politi/1.1701222 (403, not bypassed); https://www.imra.org.il/story.php?id=56678",
+  "differences": [],
+  "fieldEndSource": "2012-05-01",
+  "sample": 513,
+  "moe": "4.3%",
+  "note": "IMRA: Dialogue for Haaretz, 1 May 2012, n=513, published 4 May: Likud 32, Labor 19, YB 14, Kadima 11, Lapid 10, Arab parties 10, Shas 8, UTJ 6, Meretz 5, NU/JH 5 - all match; Arab split (Balad 2, Hadash 4, Ra'am-Ta'al 4) not given, only total 10 (matches sum)."
+ },
+ {
+  "id": "k19-2012-05-08-kantar-taylor-nelson-sofres-tns",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=56721",
+  "differences": [],
+  "fieldEndSource": "2012-05-08",
+  "sample": 550,
+  "moe": null,
+  "note": "IMRA: TNS for Maariv, 8 May 2012, n=550: Likud 30, Labor 20, YB 12, Lapid 12, Arab 11, Kadima 10, Shas 7, UTJ 6, Meretz 4, NU 4, JH 4 - all match."
+ },
+ {
+  "id": "k19-2012-05-08-dialog-dialog",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.haaretz.co.il/news/politi/1.1703572 (403, not bypassed); https://www.imra.org.il/story.php?id=56722",
+  "differences": [],
+  "fieldEndSource": "2012-05-08",
+  "sample": 506,
+  "moe": "4.3%",
+  "note": "IMRA: Dialogue for Haaretz, 8 May 2012, n=506, published 9 May: Likud 33, Labor 19, YB 15, Kadima 11, Lapid 6, Arab 10, Shas 8, UTJ 6, Meretz 6, NU/JH 5 - all match (IMRA notes total 119)."
+ },
+ {
+  "id": "k19-2012-05-17-panels-politics-panels",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.nrg.co.il/online/1/ART2/369/292.html (403; makorrishon mirror 403, not bypassed); https://www.israelnationalnews.com/news/155930",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 17 May 2012 (Panels for Knesset Channel): Kadima 3, Lapid 17, Likud 30, Labor 20, YB 12, Shas 6, UTJ 5, 'National Union climbs to 9', JH 3, Meretz 6, right-religious bloc 62. NU 9 contradicts INN's own bloc of 62 (30+12+6+5+3+NU=62 -> NU 6); search-index snippet of the original nrg article says 'ש\"ס, האיחוד הלאומי ומרצ זוכות ל-6 מנדטים' -> NU 6 = Wikipedia. Arab lists (Balad 3, Hadash 4, Ra'am-Ta'al 3) not in any accessible source."
+ },
+ {
+  "id": "k19-2012-07-20-dahaf-dahaf",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php?id=57554",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.4%",
+  "note": "IMRA: Dahaf for Yediot Ahronot, week of 20 Jul 2012, n=500, published 20 Jul: Likud 25, Labor 21, YB 13, Yesh Atid 13, Shas 10, Kadima 7, NU 6, UTJ 4, Arab 11, Meretz 4, JH 4 - all match. Also Independence (Barak) 2, not in Wikipedia's seats."
+ }
+]

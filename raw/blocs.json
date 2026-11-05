@@ -49,7 +49,51 @@
         "https://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=301728"
       ],
       "status": "cross_checked",
-      "reportedTotal": 82
+      "reportedTotal": 82,
+      "predecessors": {
+        "Likud": {
+          "successors": [
+            "מחל"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה בליכוד ביתנו (אוקטובר 2012)",
+          "source": "https://en.wikipedia.org/wiki/Likud_Yisrael_Beiteinu"
+        },
+        "Yisrael Beiteinu": {
+          "successors": [
+            "מחל"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה בליכוד ביתנו (אוקטובר 2012)",
+          "source": "https://en.wikipedia.org/wiki/Likud_Yisrael_Beiteinu"
+        },
+        "National Union": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה ברשימת הבית היהודי (נובמבר 2012)",
+          "source": "https://en.wikipedia.org/wiki/The_Jewish_Home"
+        },
+        "The Jewish Home": {
+          "successors": [
+            "טב"
+          ],
+          "bloc": "netanyahu",
+          "why": "רצה ברשימת הבית היהודי עם האיחוד הלאומי",
+          "source": "https://en.wikipedia.org/wiki/The_Jewish_Home"
+        },
+        "UAL-Ta'al+Hadash+Balad": {
+          "successors": [
+            "עם",
+            "ו",
+            "ד"
+          ],
+          "bloc": "arab",
+          "why": "שלוש הרשימות הערביות (סכום משותף בטבלת המקור)",
+          "source": "https://en.wikipedia.org/wiki/United_Arab_List"
+        }
+      }
     },
     "20": {
       "recommendedNetanyahu": [
@@ -72,7 +116,82 @@
       "crossCheck": [
         "https://www.mako.co.il/news-military/politics-q1_2015/Article-025660aad454c41004.htm"
       ],
-      "reportedTotal": 67
+      "reportedTotal": 67,
+      "predecessors": {
+        "Likud Beiteinu": {
+          "successors": [
+            "מחל",
+            "ל"
+          ],
+          "bloc": "netanyahu",
+          "why": "הליכוד וישראל ביתנו רצו לחוד ב-2015; שתיהן המליצו על נתניהו",
+          "source": "https://en.wikipedia.org/wiki/Likud_Yisrael_Beiteinu"
+        },
+        "Israeli Labor Party": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה במחנה הציוני (העבודה+התנועה, דצמבר 2014)",
+          "source": "https://en.wikipedia.org/wiki/Zionist_Union"
+        },
+        "Hatnuah": {
+          "successors": [
+            "אמת"
+          ],
+          "bloc": "eisenkot",
+          "why": "רצה במחנה הציוני (העבודה+התנועה, דצמבר 2014)",
+          "source": "https://en.wikipedia.org/wiki/Zionist_Union"
+        },
+        "Hadash": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "UAL-Ta'al": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Balad": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצה ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "UAL-Ta'al+Balad": {
+          "successors": [
+            "ודעם"
+          ],
+          "bloc": "arab",
+          "why": "רצו ברשימה המשותפת (ינואר 2015)",
+          "source": "https://en.wikipedia.org/wiki/Joint_List"
+        },
+        "Otzma Yehudit": {
+          "successors": [
+            "קץ"
+          ],
+          "bloc": null,
+          "why": "רצה ביחד, שלא עברה את אחוז החסימה — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Yachad_(political_party)"
+        },
+        "Yachad": {
+          "successors": [
+            "קץ"
+          ],
+          "bloc": null,
+          "why": "לא עברה את אחוז החסימה — אין לה גוש",
+          "source": "https://en.wikipedia.org/wiki/Yachad_(political_party)"
+        }
+      }
     },
     "21": {
       "recommendedNetanyahu": [

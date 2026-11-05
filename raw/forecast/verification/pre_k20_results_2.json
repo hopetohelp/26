@@ -1,0 +1,283 @@
+[
+ {
+  "id": "k20-2014-07-31-panels-politics-knesset-channel",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/political-news/148492; http://knessetjeremy.com/2014/08/01/...",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar HaShabbat 31.7.2014 report of Panels/Knesset Channel poll: Likud 30, Bayit Yehudi 18, Labor 15, Yesh Atid 10, Meretz 10, Shas 9, Yisrael Beiteinu 8, UTJ 7, Hatnuah 4, 'Arab parties 9' (combined). All match Wikipedia; Balad/Hadash/Ta'al split (3/3/3) not given separately, only the total 9."
+ },
+ {
+  "id": "k20-2014-08-07-midgam-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://ch10.co.il/news/63424/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Haredim10 7.8.2014, Channel 2 poll by Mina Tzemach and Mano Geva (Midgam): Likud 23, Yisrael Beiteinu 12, Bayit Yehudi 15, Labor 14, Yesh Atid 10, Shas 8, Kahlon party 7, Hatnua 6, Meretz 6, UTJ 7, Hadash 5, Ra'am-Ta'al+Balad 7 together, Kadima 0. All match."
+ },
+ {
+  "id": "k20-2014-08-14-panels-politics-knesset-channel",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/184050; https://ch10.co.il/en/?p=66492; https://www.kikar.co.il/political-news/149645",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz Sheva (English) and Haredim10 14.8.2014, Panels Politics for Knesset Channel: Likud 28, Bayit Yehudi 19, Labor 15, Yesh Atid 11, Meretz 10, Yisrael Beiteinu 9, Shas 7, UTJ 7, Hatnua 4, Arab parties 10 together, Kadima 0. All match; Arab split (Balad 3/Hadash 4/Ta'al 3) not given. (Kikar's report gives YB 10, summing to 121 - a Kikar error.)"
+ },
+ {
+  "id": "k20-2014-08-28-smith-globes",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/08/29/smithglobes-poll-likud-28-bayit-yehudi-14-labor-14-yisrael-beitenu-12-yesh-atid-9-shas-9/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search). Globes Hebrew/English archives searched; the 28.8 article was not found. Indirect only: INN English 24.9.2014 (israelnationalnews.com/news/185493) says the previous Smith poll gave Yesh Atid 9 and Jewish Home 14 (match) and implies Likud 27 (Wikipedia 28) - too indirect to use."
+ },
+ {
+  "id": "k20-2014-08-28-panels-politics-knesset-channel",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/88109",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 28.8.2014, Panels for Knesset Channel: Likud 27, Bayit Yehudi 19, Labor 15, Yesh Atid 12, Yisrael Beiteinu 9, Meretz 9, Shas 8, UTJ 7, Hatnuah 4, Arab parties 10 together; Kahlon not polled; old 2% threshold. All match; Arab split (Balad 3/Hadash 4/Ta'al 3) not given separately."
+ },
+ {
+  "id": "k20-2014-08-28-dialog-haaretz",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.imra.org.il/story.php?id=64753",
+  "differences": [],
+  "fieldEndSource": "2014-08-27",
+  "sample": 464,
+  "moe": "4.64%",
+  "note": "IMRA 28.8.2014 (Dialog/Camil Fuchs, published in Haaretz 28.8, fieldwork 27.8, n=464, ±4.64): Likud 26, YB 11, Yesh Atid 12, Labor 14, Bayit Yehudi 17, Shas 7, UTJ 8, Hatnua 4, Meretz 7, Arab parties 14, Kadima 0. All match; Arab parties given only as total 14 (Wikipedia 4+6+4=14)."
+ },
+ {
+  "id": "k20-2014-08-29-geocartography-x",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/08/29/geocartography-poll-likud-32-bayit-yehudi-18-yisrael-beitenu-17-labor-12-utj-10/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search). A web-search snippet of a bhol.co.il item (403, not opened) attributes a Likud 32 / Bayit Yehudi 18 / YB 17 / UTJ 10 Geocartography poll to Maariv Sofhashavua; not verified."
+ },
+ {
+  "id": "k20-2014-08-30-maagar-mochot-channel-1",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/08/30/maagar-mochotchannel-1-poll-likud-26-bayit-yehudi-17-labor-14-yisrael-beitenu-12-shas-10/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search). Note: the knessetjeremy URL slug says 'bayit-yehudi-17' while Wikipedia has 18 (aggregator-only, not verified)."
+ },
+ {
+  "id": "k20-2014-10-02-panels-politics-knesset-channel",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/10/02/panelsknesset-channel-poll-likud-27-bayit-yehudi-18-labor-16-yesh-atid-10-yisrael-beitenu-9-meretz-9/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search)."
+ },
+ {
+  "id": "k20-2014-10-23-panels-politics-knesset-channel",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/10/23/panelsknesset-channel-poll-netanyahu-24-bennett-12-herzoglivni-9-saarkachlon-6-lapid-4/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search). Note: knessetjeremy URL slug refers to a PM-preference question (Netanyahu 24, Bennett 12...)."
+ },
+ {
+  "id": "k20-2014-10-23-midgam-channel-10",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/10/23/midgamchannel-10-poll-likud-22-bayit-yehudi-17-yesh-atid-12-labor-12-kachlon-11-yisrael-beitenu-9-meretz-9/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search)."
+ },
+ {
+  "id": "k20-2014-10-30-panels-politics-knesset-channel",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/10/30/panelsknesset-channel-poll-likud-21-bayit-yehudi-16-labor-15-yesh-atidyisrael-beitenumeretzkachlon-9-each/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search)."
+ },
+ {
+  "id": "k20-2014-10-31-panels-politics-knesset-channel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.imra.org.il/story.php?id=65305; https://www.globes.co.il/en/article-poll-netanyahu-should-call-elections-fast-1000989720",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "This row is actually the Rafi Smith/Globes poll published 30.10.2014 (the knessetjeremy URL is 'smithglobes-poll'; firm/publisher in the queue (Panels/Knesset Channel) is wrong). IMRA: Likud 24, YB 10, Yesh Atid 9, Labor 14, Bayit Yehudi 15, Shas 7, UTJ 8, Hatnua 4, Meretz 8, Arab parties 12, Kahlon 9, Kadima 0. Globes' Nov. table gives the October split Hadash 5, Ra'am-Ta'al 4, Balad 3 (but lists UTJ 7 for Oct, vs 8 in IMRA; Globes table sums to 119). All Wikipedia numbers match IMRA. Date of survey/sample not reported."
+ },
+ {
+  "id": "k20-2014-11-13-panels-politics-knesset-channel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.inn.co.il/News/News.aspx/287289",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Arutz 7 13.11.2014, Panels Politics for Knesset Channel: Likud 22, Bayit Yehudi 17, Labor 14, Yesh Atid 10, Meretz 9, Shas 8, UTJ 8, Yisrael Beiteinu 8, Kahlon 7, Hatnuah 4, Hadash 5, Balad 4, Ra'am-Ta'al 4. All match."
+ },
+ {
+  "id": "k20-2014-11-15-maagar-mochot-channel-1",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/11/15/maagar-mochotchannel-1-poll-likud-25-bayit-yehudi-15-yisrael-beitenu-15-labor-14-yesh-atid-10-right-religious-bloc-75/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search)."
+ },
+ {
+  "id": "k20-2014-11-17-midgam-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://ch10.co.il/news/106392/; https://www.israelnationalnews.com/news/187570",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Haredim10 17.11.2014, Channel 10 poll by 'Project HaMidgam' (Dr. Ariel Ayalon) supervised by Prof. Camil Fuchs: Likud 22, Bayit Yehudi 17, Yesh Atid 14, Labor 13, Arab parties 11, Kahlon 9, Yisrael Beiteinu 9, UTJ 8, Meretz 7, Shas 6, Hatnua 4. All match (Arab parties as one number = joint-list key 11). Firm is described as Project HaMidgam/Fuchs, not 'Midgam Research & Consulting'."
+ },
+ {
+  "id": "k20-2014-11-20-panels-politics-knesset-channel",
+  "status": "inconsistent",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/סקר-ערוץ-הכנסת-רק-מנדט-אחד-בין-הבית-היהו/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 20.11.2014, Panels Politics/Knesset Channel: Likud 20, Bayit Yehudi 19, Yesh Atid 13, 'Labor and Yisrael Beiteinu 13 each', Kahlon 9, 'מרץ 8', Meretz 8, UTJ 8, Shas 7, Hatnuah 4, Arab parties 11 together. Text is garbled (sums to 133; Yisrael Beiteinu given as 13 and an extra 'מרץ 8' line, likely meaning YB 8). Everything else matches Wikipedia (Hadash 4 + Ta'al-Balad 7 = 11); Yisrael Beiteinu 8 cannot be confirmed."
+ },
+ {
+  "id": "k20-2014-11-22-tri-bchardei-chadrim",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/11/27/likud-23-bayit-yehudi-16-labor-15-yisrael-beitenu-11-yesh-atid-10-shas-10-kachlon-9/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search). Note: the queue URL is the knessetjeremy post for the 27.11 Smith/Globes poll, not a Tri poll; Behadrei Haredim (bhol.co.il) returns 403 and was not bypassed."
+ },
+ {
+  "id": "k20-2014-11-27-smith-globes",
+  "status": "partial",
+  "sourceLevel": "primary",
+  "source": "https://www.globes.co.il/en/article-poll-netanyahu-should-call-elections-fast-1000989720; http://www.imra.org.il/story.php?id=65589",
+  "differences": [
+   {
+    "key": "שס (ש״ס)",
+    "wikipedia": 10,
+    "source": 7
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Globes (English) 27.11.2014 Rafi Smith poll table: Likud 23, YB 11, Yesh Atid 10, Labor 15, Bayit Yehudi 16, Shas 7, UTJ 7, Hatenuah 0, Meretz 8, Kahlon 9, Hadash 5, Ra'am-Ta'al 3, Balad 3. Only Shas differs (Wikipedia 10). Caution: the Globes table sums to 117, so Shas 7 may be a typo in the source (Wikipedia's 10 gives 120); Hebrew original not found. | הורד ל-partial: טבלת המקור עצמה מסתכמת ב-117, כך שש\"ס 7 אינו ודאי; ההבדל מתועד בלבד."
+ },
+ {
+  "id": "k20-2014-11-27-panels-politics-knesset-channel",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/11/27/panelsknesset-channel-poll-likud-23-bayit-yehudi-18-labor-14-yesh-atid-13-utj-8-meretz-8/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search)."
+ },
+ {
+  "id": "k20-2014-11-30-dialog-haaretz",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.imra.org.il/story.php?id=65604",
+  "differences": [],
+  "fieldEndSource": "2014-11-27",
+  "sample": 535,
+  "moe": "4.1%",
+  "note": "IMRA 30.11.2014 (Dialog/Camil Fuchs for Haaretz, fieldwork 26-27.11, n=535, ±4.1): Likud 24, YB 11, Yesh Atid 11, Labor 13, Bayit Yehudi 16, Shas 6, UTJ 8, Hatnua 4, Meretz 6, Arab parties 9, Kahlon 12, Kadima 0. All match; Arab parties only as total 9 (Wikipedia 0+5+4)."
+ },
+ {
+  "id": "k20-2014-12-02-midgam-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kipa.co.il/חדשות/סקר-ערוץ-2-בנט-מזנק-בעקבות-הקדמת-הבחירו/; https://www.israelnationalnews.com/news/188156",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kipa 2.12.2014, Midgam (Mina Tzemach, Mano Geva) for Channel 2: Likud 22, Bayit Yehudi 17, Labor 13, Yisrael Beiteinu 10, Kahlon 10, Yesh Atid 9, Shas 9, UTJ 8, Meretz 7, Arab parties together 11, Hatnuah 4. All match."
+ },
+ {
+  "id": "k20-2014-12-02-dialog-channel-10",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://knessetjeremy.com/2014/12/02/dialogchannel-10-poll-likud-22-bayit-yehudi-17-labor-13-yisrael-beitenu-12-kachlon-12-yesh-atid-9/",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Only the knessetjeremy aggregator post (Wikipedia's source) was found; no primary or press report located (searched IMRA archive search, kikar, inn, srugim, kipa, maariv, globes, ynet, walla via web search)."
+ },
+ {
+  "id": "k20-2014-12-03-kantar-walla",
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://elections.walla.co.il/item/2807249",
+  "differences": [
+   {
+    "key": "ג (יהדות התורה)",
+    "wikipedia": 8,
+    "source": 7
+   },
+   {
+    "key": "שס (ש״ס)",
+    "wikipedia": 7,
+    "source": 8
+   }
+  ],
+  "fieldEndSource": "2014-12-02",
+  "sample": 500,
+  "moe": null,
+  "note": "Walla! News 3.12.2014, TNS Telesker for Walla, conducted 'last night (Tuesday)' 2.12, n=500, max error 'two seats': Likud 23, Bayit Yehudi 17, Yisrael Beiteinu 12, 'Shas and UTJ get 8 and 7 respectively', Labor 12, Yesh Atid 11, Kahlon 10, Hatnuah 5, Meretz 5, Ra'am-Ta'al 5, Hadash 3, Balad 2, Kadima out. Wikipedia swaps Shas/UTJ (UTJ 8, Shas 7)."
+ }
+]

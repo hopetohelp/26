@@ -1,0 +1,228 @@
+[
+ {
+  "id": "k19-2012-07-31-dialog-dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.haaretz.com/... (403, not bypassed); https://imra.org.il/story.php3?id=57733",
+  "differences": [],
+  "fieldEndSource": "2012-07-31",
+  "sample": null,
+  "moe": "4.1%",
+  "note": "IMRA (3 Aug 2012) relaying Dialog/Haaretz poll carried out 31 Jul 2012, published 3 Aug: Likud 25, Labor 21, Kadima 7, Yesh Atid 12, YB 15, Shas 11, JH/NU 7, UTJ 6, Meretz 4, Arab parties 10, Barak's Independence 2. All match Wikipedia; Arab parties given only as a total (10 = Wikipedia Balad 2+Hadash 4+UAL 4), so per-list Arab numbers unverified. IMRA states sample '5135' (apparent typo) - left null."
+ },
+ {
+  "id": "k19-2012-10-10-dialog-dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "Haaretz premium (403, not bypassed); https://imra.org.il/story.php3?id=58562",
+  "differences": [],
+  "fieldEndSource": "2012-10-10",
+  "sample": null,
+  "moe": null,
+  "note": "IMRA (11 Oct 2012): Dialog for Haaretz, carried out 10 Oct, published 11 Oct: Likud 29, Labor 19, YB 15, Yesh Atid 11, Shas 10, JH/NU 8, Kadima 7, UTJ 6, Meretz 4, Arab parties 11, Independence 0. All match; Arab total 11 = Wikipedia 2+4+5, split not in source."
+ },
+ {
+  "id": "k19-2012-10-11-kantar-teleseker",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://knessetjeremy.com/... (aggregator); https://www.israelnationalnews.com/News/News.aspx/160752 ; timesofisrael & bicom.org.uk/?p=9467 (403 - only search-engine excerpts seen)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No primary found. INN 11 Oct 2012: Maariv poll: Likud 29, Yesh Atid 17, Kadima 6, and 'Yisrael Beiteinu reaching only 12', Labor '16' (INN gives Labor 16 for both polls, though Haaretz/Dialog actually had 19, so INN is unreliable here). Search excerpts of Times of Israel and BICOM: Teleseker-Maariv Likud 29, Labor 17, Yesh Atid 17, YB 13, Shas 10, Kadima 6 (= Wikipedia). knessetjeremy slug 'labor 17/16, YA 17/13, YB 13/12' suggests the 16/12 figures belong to an Olmert/Livni-Kadima scenario. Confirmed (consistent) keys: Likud 29, Yesh Atid 17, Kadima 6, Shas 10; Labor 17 / YB 13 only via excerpts; UTJ, Meretz, Arab lists, NU, JH not verified."
+ },
+ {
+  "id": "k19-2012-10-17-unknown-globes",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.globes.co.il/serveen/globes/docview.asp?did=1000791038 ; https://imra.org.il/story.php3?id=58661",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Globes English 17 Oct 2012: poll by Rafi Smith Institute for Globes, conducted in the two days after Kahlon's announcement: Likud 25, Labor 18, YB 15, Yesh Atid 14, Shas 13 (under Deri; 11 under Yishai), Arab parties 7 + Hadash 4 (=11), Kadima 3, UTJ 6, National Union 4, Jewish Home 5, Meretz 4, Atzmaut 2. All match. Firm is Smith (Wikipedia: unknown). Shas figure is the 'under Deri' variant used in the main table."
+ },
+ {
+  "id": "k19-2012-10-18-dialog-dialog",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "Haaretz premium (403, not bypassed); https://imra.org.il/story.php3?id=58659",
+  "differences": [
+   {
+    "key": "כן (קדימה)",
+    "wikipedia": 9,
+    "source": 8
+   }
+  ],
+  "fieldEndSource": "2012-10-16",
+  "sample": 508,
+  "moe": "4.2%",
+  "note": "IMRA (18 Oct 2012): Dialog for Haaretz, carried out 16 Oct, sample 508, +/-4.2, published 18 Oct: Likud 29, Labor 20, YB 13, Yesh Atid 11, Shas 11, Kadima 8, JH/NU 6, UTJ 6, Meretz 5, Arab parties 11 (sum 120). Wikipedia Kadima 9 makes its row sum 121. Arab split (3+4+4) not in source. Scenario rows (Livni #2 in Labor, Olmert party) not part of this row."
+ },
+ {
+  "id": "k19-2012-10-28-panels-politics-panels",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=58765 (different poll: Panels/mako 27 Oct, 305 resp.: LB 33, Labor 27, YA 18, JH/NU 13, Arab 10, Shas 9, Meretz 5, UTJ 5, Kadima 0); https://www.ynetnews.com/articles/0,7340,L-4298189,00.html ; https://www.israelnationalnews.com/news/161435",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "The queue URL (IMRA 58765) is a different Panels poll for mako/Channel 2. Ynetnews 28 Oct 2012: poll reported by Channel 10, first after merger: Likud-Beiteinu 35, Labor 23, Shas 14, Yesh Atid 13, NU+Jewish Home 9, UTJ 6, Kadima 5, Meretz 4, Arab parties 11, Independence below threshold. INN confirms 35/23/14/13/9/5/4. All match; pollster not named in these reports."
+ },
+ {
+  "id": "k19-2012-10-28-kantar-teleseker",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://imra.org.il/story.php3?id=58773",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "IMRA (29 Oct 2012): Teleseker for Maariv, published 29 Oct, after Likud-YB merger announcement: Likud-YB 43, Labor 20, Yesh Atid 15, Shas 10, JH/NU 8, Arab parties 11, UTJ 6, Kadima 4, Meretz 3, Independence 0. All match. (A second scenario with an Olmert-Livni-Mofaz party is not this row.)"
+ },
+ {
+  "id": "k19-2012-11-08-panels-politics-panels",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/News/News.aspx/161872",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 8 Nov 2012: Panels for Knesset Channel: Likud Beytenu 36, Labor 23, Yesh Atid 13, JH+NU 13, Shas 10, UTJ 5, Meretz 5, Am Shalem 4, Hadash and Arab parties 11; Kadima and Independence below threshold. All match."
+ },
+ {
+  "id": "k19-2012-11-13-panels-politics-panels",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.imra.org.il/story.php3?id=58966",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.3%",
+  "note": "IMRA 13 Nov 2012: Panels Politics, internet sample 500, for MAKO (Channel 2), +/-4.3%: LB 36, Labor 21, Yesh Atid 15, JH/NU 12, Shas 10, UTJ 5, Meretz 5, Am Shalem 3, Arab parties 9, Kadima 2, Independence 2 (not a Wikipedia key). All match."
+ },
+ {
+  "id": "k19-2012-11-18-panels-politics-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://www.bhol.co.il/Article.aspx?id=47008 (not accessed - blocked site); https://www.kikar.co.il/political-news/105442 ; https://www.kikar.co.il/political-news/105709",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar 19 Nov 2012: Panels poll for 'המרכז הישראלי להכשרה פוליטית' (during Pillar of Defense): הליכוד-ביתנו 38, העבודה 22, יש עתיד 13, הבית היהודי 11, ש\"ס 9, יהדות התורה 5, מרצ 5, עם שלם 4, המפלגות הערביות 10, עוצמה לישראל 3; קדימה והעצמאות לא עוברות. All match. Commissioner = Israeli Center for Political Training (Wikipedia: no publisher)."
+ },
+ {
+  "id": "k19-2012-11-18-dialog-dialogue",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "Haaretz premium (403, not bypassed); https://imra.org.il/story.php3?id=59086",
+  "differences": [],
+  "fieldEndSource": "2012-11-18",
+  "sample": 520,
+  "moe": "4.4%",
+  "note": "IMRA 19 Nov 2012: Dialog for Haaretz, carried out 18 Nov, 520 adults, +/-4.4, published 19 Nov: LB 41, Labor 21, Shas 12, Yesh Atid 9, JH/NU 8, UTJ 5, Meretz 4, Kadima 3, Am Shalem 3, Independence 2 (not a Wikipedia key), Otzma 0, Arab parties 12. All match; Arab total 12 = Wikipedia 4+3+5, split not in source."
+ },
+ {
+  "id": "k19-2012-11-22-panels-politics-panels",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.jewishpress.com/... (403 Cloudflare, not bypassed); https://www.kikar.co.il/political-news/105709",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Kikar 22 Nov 2012: Panels poll published today (Thursday) on the Knesset Channel, a day after the ceasefire: הליכוד-ביתנו 33, העבודה 24, הבית היהודי 13, יש עתיד 11, ש\"ס 10, יהדות התורה 6, מרצ 6, עוצמה לישראל 4, עם שלם 3; קדימה והעצמאות לא עוברות. All match; Arab parties (Wikipedia 10) not stated."
+ },
+ {
+  "id": "k19-2012-11-28-dialog-dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.jewishpress.com/... (403 Cloudflare, not bypassed); https://imra.org.il/story.php3?id=59232",
+  "differences": [],
+  "fieldEndSource": "2012-11-27",
+  "sample": 514,
+  "moe": null,
+  "note": "IMRA 28 Nov 2012: Dialog (Camil Fuchs), sample 514, published Haaretz 28 Nov (IMRA says carried out '27 September', evidently 27 Nov): Hatnua 7, LB 39, Labor 18, Shas 11, Yesh Atid 8, JH/NU 8, UTJ 6, Atzmaut 0, Meretz 5, Am Shalem 3, Kadima 2, Otzma 2. All match. Arab parties 11 is IMRA's extrapolation (120-109), not a source figure, so that key is unverified."
+ },
+ {
+  "id": "k19-2012-11-29-smith-smith",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "http://www.globes.co.il/serveen/globes/docview.asp?did=1000802532&fid=1725",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Globes English 29 Nov 2012: Rafi Smith for Globes and Jerusalem Post: Likud-Beytenu 37, Labor 20, Shas 11, Habayit Hayehudi 11, Yesh Atid 10, Hatenuah 6, UTJ 6, Meretz 5, Am Shalem 3, Hadash 4, Balad 4, Ra'am-Ta'al 3; Kadima fails threshold. All match."
+ },
+ {
+  "id": "k19-2012-11-29-new-wave-new-wave",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.walla.co.il/news/israel/2591825 (redirect of news.walla.co.il/item/2591825; original URL redirects to homepage)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 620,
+  "moe": null,
+  "note": "Walla 30 Nov 2012: New Wave poll published in Israel Hayom, sample 620: LB 39, Labor 20, Shas 11, Jewish Home 10, Yesh Atid 10, Hatnua 7, UTJ 5, Meretz 4, Kadima 2, Am Shalem 2, Hadash 4, Balad 3, Ra'am-Ta'al 3 (sum 120). All match; Otzma not mentioned (Wikipedia 0, consistent with sum 120). Published 30 Nov."
+ },
+ {
+  "id": "k19-2012-11-29-dahaf-dahaf",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.walla.co.il/news/israel/2591825",
+  "differences": [],
+  "fieldEndSource": "2012-11-29",
+  "sample": 700,
+  "moe": "3.7%",
+  "note": "Walla 30 Nov 2012: Dahaf (Mina Zemach) for Yedioth Ahronoth, conducted 'yesterday and the day before' (28-29 Nov), 700 respondents, error ~3.7%: LB 37, Labor 19, Shas 11, JH/NU 10, Hatnua 9, Yesh Atid 9, Meretz 5, UTJ 5, Am Shalem 2, Otzma 2, Balad 3, Ra'am-Ta'al 4, Hadash 4, Kadima below threshold. All match."
+ },
+ {
+  "id": "k19-2012-12-05-dialog-dialog",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://news.nana10.co.il/Article/?ArticleID=942519 (404); https://imra.org.il/story.php3?id=59327 ; https://www.israelnationalnews.com/News/News.aspx/162888",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "IMRA 6 Dec 2012: Dialog (Camil Fuchs) for Channel 10, conducted 4 or 5 Dec, broadcast 5 Dec: LB 37, Labor 20, JH/NU 11, Shas 10, Hatnua 9, Yesh Atid 7, UTJ 6, Meretz 4, Am Shalem 3, Kadima 2, Arab parties 11. All match; Arab split (3+3+5) and Otzma 0 not stated in source (Otzma implicit from 120 total). INN 5 Dec 2012 (Channel 10 poll) gives the same Jewish-list numbers (37/20/11/10/9/7/6/4/2/2)."
+ },
+ {
+  "id": "k19-2012-12-06-unknown-meno-geva",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "http://www.iba.org.il/bet/... (403); https://imra.org.il/story.php3?id=59335 ; https://www.israelnationalnews.com/News/News.aspx/162907",
+  "differences": [],
+  "fieldEndSource": "2012-12-05",
+  "sample": 560,
+  "moe": null,
+  "note": "IMRA 6 Dec 2012: Mano Geva poll, 560 adults, carried out 5 Dec, broadcast Israel Radio (Reshet Bet) 'Hakol Diburim' 6 Dec: LB 36, Labor 20, JH/NU 11, Shas 10, Hatnua 9, Yesh Atid 9, UTJ 6, Meretz 3, Otzma 3, Am Shalem 2, Kadima 0, Arab parties 11. All match; Arab split (4+3+4) not in source. Firm is Mano Geva. INN 6 Dec 2012 confirms JH 11, Otzma 3, Am Shalem 2 for the Voice of Israel poll, naming the firm as Midgam (Mano Geva's institute)."
+ },
+ {
+  "id": "k19-2012-12-06-unknown-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "news-israel.net (403), nrg (403); https://imra.org.il/story.php3?id=59340 ; https://www.israelnationalnews.com/News/News.aspx/162942",
+  "differences": [],
+  "fieldEndSource": "2012-12-06",
+  "sample": 511,
+  "moe": null,
+  "note": "IMRA 7 Dec 2012: Maagar Mochot (Prof. Yitzhak Katz) for Channel 2 'Mishal Cham', 511 adults, carried out and broadcast 6 Dec: LB 38, Labor 19, Shas 13, JH/NU 12, Hatnua 10, UTJ 6, Yesh Atid 5, Am Shalem 3, Kadima 2, Meretz 2, Otzma 1 ('1 seat is below the 2% threshold'), Arab parties 9 (sum 120). INN 7 Dec 2012 (Mishal Ham survey) confirms 38/19/13/12/10/6/5/3 and 'the majority-Arab parties were predicted to get 3 seats each' (Hadash, Balad, Ra'am-Ta'al), so all keys match. Caveat: INN says Kadima and Meretz fail the threshold, whereas IMRA lists 2 each (IMRA's list sums to 120; kept IMRA). Firm is Maagar Mochot."
+ },
+ {
+  "id": "k19-2012-12-06-panels-politics-panels",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "http://www.bhol.co.il/Article.aspx?id=47752 (blocked site, not accessed); searched INN (News.aspx 162860-162960), kikar political-news 106540-106720, web search",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No accessible report of a Panels/Knesset Channel poll of ~6 Dec 2012 with these numbers was found."
+ }
+]

@@ -1,0 +1,285 @@
+[
+ {
+  "id": "k20-2014-12-04-smith-globes",
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.globes.co.il/news/article.aspx?did=1000991223 (Globes 04.12.2014, Lilach Weissman; results chart image https://images.globes.co.il/Images/NewGlobes/Misc_2/2014/ilu-550.jpg)",
+  "differences": [
+   {
+    "key": "ל (ישראל ביתנו)",
+    "wikipedia": 11,
+    "source": 10
+   }
+  ],
+  "fieldEndSource": "2014-12-03",
+  "sample": null,
+  "moe": null,
+  "note": "Rafi Smith Institute poll for Globes; chart 'אילו הבחירות לכנסת היו נערכות היום' compares 3 Dec 2014 (red) vs 26 Nov 2014 (blue). 3 Dec: הליכוד 23, ישראל ביתנו 10 (11 was the 26 Nov value), יש עתיד 10, העבודה 15, הבית היהודי 16, ש\"ס 9, יהדות התורה 7, התנועה 2* (על סף אחוז החסימה), מרצ 7, משה כחלון 10, חד\"ש 5, רע\"מ-תע\"ל 3, בל\"ד 3. Text confirms Kahlon up one seat this week. Wikipedia total was 121; with YB 10 it is 120. Separate chart (joint Labor-Hatnua scenario): Likud 22, Labor+Livni 24, JH 16, YB 10, YA 7, Shas 9, UTJ 7, Meretz 5, Kahlon 9, Hadash 5, UAL 3, Balad 3."
+ },
+ {
+  "id": "k20-2014-12-05-unknown-yisrael-hayom",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/99389 (israelhayom.co.il not attempted/blocked per instructions)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 05.12.14 weekend-polls roundup: 'סקר נוסף שנערך עבור ישראל היום הגל החדש': הליכוד 22, הבית היהודי 16, כחלון 13, עבודה 12, ישראל ביתנו 10, יש עתיד 10, יהדות התורה 8, ש\"ס 8, מרצ 6, חד\"ש 5, רע\"מ-תע\"ל 4, התנועה 4, בל\"ד 2. All match. Pollster per Srugim: New Wave (הגל החדש)."
+ },
+ {
+  "id": "k20-2014-12-05-panels-politics-maariv-panels",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/Israel-Elections/Post-poll-60-percent-of-Israelis-dont-want-Netanyahu-anymore-383724",
+  "differences": [],
+  "fieldEndSource": "2014-12-03",
+  "sample": 500,
+  "moe": "4.3%",
+  "note": "JPost 5.12.2014 (Gil Hoffman): Panels Research poll for JPost/Maariv Sof Hashavua taken Wednesday among 500 respondents: Likud 21, Bayit Yehudi 18, Labor 14, Kahlon 11, Yesh Atid 11, Yisrael Beytenu 9, UTJ 8, Meretz 8, Shas 7, Hadash 5, Hatnua 4, UAL 4; Balad and Kadima below threshold. ±4.3%. All match."
+ },
+ {
+  "id": "k20-2014-12-05-maagar-mochot-makor-rishon-maagar-mochot",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/99389",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 05.12.14: Maagar Mochot poll for Makor Rishon: הליכוד 25, הבית היהודי 15, עבודה 13, ישראל ביתנו 13, כחלון 10, סיעות ערביות 10, יש עתיד 9, ש\"ס 7, יהדות התורה 7, מרצ 6, התנועה 4, קדימה לא עוברת. All match (Arab parties reported as a combined 10)."
+ },
+ {
+  "id": "k20-2014-12-05-maagar-mochot-maagar-mochot",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/99389",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 05.12.14: 'סקר מאגר מוחות עבור רדיו גלי ישראל': הליכוד 21, הבית היהודי 18, העבודה 14, יש עתיד 11, כחלון 11, ישראל ביתנו 9, יהדות התורה 8, מרצ 8, ש\"ס 7, חד\"ש 5, התנועה 4, רע\"מ-תע\"ל 4, בל\"ד and Kadima out. All match. Publisher = Galei Yisrael radio. Note: numbers are identical to the same-week Panels/Maariv poll (k20-2014-12-05-panels-politics-maariv-panels); Srugim reports them as two separate polls."
+ },
+ {
+  "id": "k20-2014-12-08-panels-politics-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.ynetnews.com/articles/0,7340,L-4600990,00.html (timesofisrael URL returned 403, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.5%",
+  "note": "Ynetnews/Reuters 08.12.2014: Panels Politics poll commissioned by the Knesset Channel, joint Livni-Herzog scenario: Herzog-Livni 23, Likud 21, Bayit Yehudi 18, Yisrael Beiteinu 9, Yesh Atid 9, Kahlon 9, UTJ 8, Shas 7, Meretz 6, Hadash 5, UAL-Ta'al 5, Balad below threshold. 500 adults, ±4.5%. All match. This is the same Knesset Channel poll as k20-2014-12-08-panels-politics-knesset-channel (that row = separate Labor/Hatnua question). Scenario row: the joint Labor-Hatnua list was hypothetical on 8.12 (merger announced 10.12).",
+  "scenario": true
+ },
+ {
+  "id": "k20-2014-12-08-panels-politics-knesset-channel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.kikar.co.il/political-news/158220 ; https://www.ynetnews.com/articles/0,7340,L-4600990,00.html ; https://www.israelnationalnews.com/news/188373",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.5%",
+  "note": "Kikar HaShabbat on the Panels Politics poll for the Knesset Channel (8.12.2014), separate Labor/Hatnua question: הליכוד 21, הבית היהודי 18, העבודה 17, יש עתיד 12, ישראל ביתנו 10, כחלון 10, יהדות התורה 8, ש\"ס 7, מרצ 7, ערבים 10, התנועה לא עוברת. All match (Arab total 10 = Hadash 5 + UAL 5, Balad 0, not itemised). Same poll as k20-2014-12-08-panels-politics-x (joint-list question). Sample 500, ±4.5% per ynet."
+ },
+ {
+  "id": "k20-2014-12-10-unknown-channel-10",
+  "status": "corrected",
+  "sourceLevel": "press",
+  "source": "https://elections.walla.co.il/item/2809303 ; https://www.israelnationalnews.com/news/188446 ; haaretz URLs not used (blocked, web.archive unreachable)",
+  "differences": [
+   {
+    "key": "[קודמת] UAL-Ta'al",
+    "wikipedia": 5,
+    "source": 4
+   }
+  ],
+  "fieldEndSource": null,
+  "sample": 545,
+  "moe": null,
+  "note": "Walla 10.12.2014: Channel 10 poll published Tuesday (9.12), supervised by Prof. Camil Fuchs, run on the internet panel of Project HaMidgam (Dr. Ariel Ayalon), 545 respondents: רשימה משותפת עבודה-התנועה 22, הליכוד 20, הבית היהודי 15, כחלון 13, ישראל ביתנו 11, יש עתיד 10, ש\"ס 7, יהדות התורה 7, מרצ 6, חד\"ש 5, רע\"ם-תע\"ל 4, בל\"ד לא עוברת. Total 120 (Wikipedia total was 121). Confirmed by Walla 24.12 ('previous Fuchs poll': JH 15, YB 11, Kulanu 13, YA 10, UTJ 7, Meretz 6). INN English gave Likud 18 and Arabs 9 (sums to 118, treated as INN error)."
+ },
+ {
+  "id": "k20-2014-12-11-smith-walla-poll",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://elections.walla.co.il/item/2809708 ; https://www.israelnationalnews.com/news/188533",
+  "differences": [
+   {
+    "key": "מחל (הליכוד)",
+    "wikipedia": 18,
+    "source": 20
+   }
+  ],
+  "fieldEndSource": "2014-12-09",
+  "sample": 500,
+  "moe": null,
+  "note": "Walla 11.12.2014: internal Rafi Smith poll (commissioned by right-wing figures, obtained by Walla), fieldwork 8-9 Dec before the Labor-Hatnua merger, 500 respondents: העבודה 21, הליכוד 20, הבית היהודי 17, ישראל ביתנו 10, יש עתיד 10, כחלון 9, ש\"ס 9, מרצ 6, התנועה לא עוברת. Likud is 20 not 18 (INN also says 20; Wikipedia row sums to 118). UTJ 8 and joint Arab 10 not given. Note: the 21 is Labor alone (pre-merger), stored under אמת. Scenario with Ariel-Yishai list (7) also reported."
+ },
+ {
+  "id": "k20-2014-12-11-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/israel-news/politics-and-diplomacy/poll-labor-livni-alliance-beats-likud-but-netanyahu-may-have-easier-time-forming-coalition-384451 ; https://jpost.com/breaking-news/poll-labor-livni-alliance-beats-likud-but-netanyahu-would-have-easier-time-forming-coalition-384446",
+  "differences": [],
+  "fieldEndSource": "2014-12-10",
+  "sample": null,
+  "moe": null,
+  "note": "JPost 12.12.2014: Panels Research poll taken Wednesday night for JPost/Maariv Sof Hashavua: Center-Left list 24, Likud 20, Bayit Yehudi 17, Yisrael Beytenu 10, Kulanu 10, Yesh Atid 9, UTJ 8, Shas 6, Meretz 6, Hadash 5, 'United Arab List that will include Balad' 5 (so Balad 0). All match."
+ },
+ {
+  "id": "k20-2014-12-11-midgam-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.ynetnews.com/articles/0,7340,L-4602735,00.html",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.5%",
+  "note": "Ynetnews/Reuters 12.12.2014 on a new Channel 2 poll (firm not named): Labor-Hatnua 24, Likud 23, Bayit Yehudi 15, Kulanu 9, Shas 9, Yesh Atid 8, Yisrael Beiteinu 8, UTJ 8, Meretz 5, joint Arab list 11. 500 respondents, ±4.5%. All match."
+ },
+ {
+  "id": "k20-2014-12-12-panels-politics-nrg",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "https://www.makorrishon.co.il/nrg/online/1/ART2/657/691.html (403, not bypassed); compared with https://www.israelnationalnews.com/news/188576 and JPost 384451",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No accessible NRG publication found. The numbers are identical to the Panels poll for Maariv/JPost taken 10.12 and published 12.12 (k20-2014-12-11-panels-politics-maariv; INN 12.12: 'Panels Politics for Maariv' 24/20/17/10...), so this row is probably a duplicate of that poll. A search-engine snippet indicates the NRG article (Panels for Galei Yisrael 'Pe'amayim Hafuch', 12.12) may contain different scenario figures (Herzog-Livni 26, Kulanu 9, YB 8 in a Likud-Jewish Home joint scenario) - not verifiable."
+ },
+ {
+  "id": "k20-2014-12-12-geocartography-x",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://elections.walla.co.il/item/2810071 ; https://www.israelnationalnews.com/news/188583",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Walla 12.12.2014: Geocartography poll 'מהלילה (שישי)': העבודה והתנועה 18, הליכוד 25, ש\"ס 10, יש עתיד 8, כולנו 12, הבית היהודי 11, ישראל ביתנו 9, יהדות התורה 11, מרצ 6, המפלגות הערביות אם יאחדו 10. All match. Previous Geocartography poll was 9 Dec."
+ },
+ {
+  "id": "k20-2014-12-16-panels-politics-knesset-channel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/188725 (facebook URL not used)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 16.12.2014: Panels Politics poll for the Knesset Channel (Tuesday): Likud 22, Labor-Hatnua 22, Jewish Home 15, Kulanu 10, Yesh Atid 10, 'three Arab parties all together' 10, Yisrael Beytenu 9, UTJ 7, Meretz 7, Shas 4, Yachad 4. All match (Arab split Hadash 5/UAL 5/Balad 0 not itemised, total consistent)."
+ },
+ {
+  "id": "k20-2014-12-17-dialog-dialog",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.srugim.co.il/101008 ; https://www.israelnationalnews.com/news/188783",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Srugim 17.12.14: Dialog poll for Haaretz (Prof. Camil Fuchs), separate-lists scenario: העבודה 21, הליכוד 21, הבית היהודי 16, ישראל ביתנו 8, יהדות התורה 8, מרצ 6, רע\"מ-תע\"ל 5, חד\"ש 5, ש\"ס 4, יש עתיד 11 + כולנו 12 (=23 separately); ישי, בל\"ד, קדימה below threshold. All match; Yachad 3 in Wikipedia is a below-threshold value (INN: 'just short of the threshold at 3 seats'). INN English instead says the Arab parties get 15 'five each to UAL, Balad and Hadash' - contradicted by Srugim (Balad out) and by the 120 total; treated as an INN error. Lapid-Kahlon joint list scenario: joint 24, Likud 21, Labor 20."
+ },
+ {
+  "id": "k20-2014-12-18-panels-politics-maariv",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://jpost.com/israel-elections/postmaariv-hashavua-poll-likud-could-finish-in-third-place-385167",
+  "differences": [],
+  "fieldEndSource": "2014-12-17",
+  "sample": 507,
+  "moe": "4.3%",
+  "note": "JPost 19.12.2014: Panels Research poll taken Wednesday for JPost/Maariv Sof Hashavua, main (no Lapid-Kahlon merger) scenario: Labor 23, Likud 21, Bayit Yehudi 16, Yesh Atid 10, Kulanu 10, Yisrael Beytenu 8, UTJ 7, Meretz 7, 'two Arab parties five each' (Hadash/UAL; Balad 0 implied), Shas 4, Ha'am Itanu 4. 507 respondents, ±4.3 pts. All match (Arab parties not named individually)."
+ },
+ {
+  "id": "k20-2014-12-19-smith-reshet-bet",
+  "status": "unavailable",
+  "sourceLevel": null,
+  "source": "knessetjeremy (aggregator) only; searched INN English Dec 19-22 article IDs, Walla elections Dec 19-21, Maariv, web search",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "No primary or press report of a Smith/Reshet Bet poll around 19-20.12.2014 found. Only knessetjeremy title (Labor-Livni 23, Likud 22, JH 13, Kulanu 9, YA 8, YB 8, Yishai/Ariel 6) - looks like a Yishai-Ariel joint-list scenario. INN 27.12 (news/189179) reports a different, later Smith/Reshet Bet poll (Likud 23, Labor 23, JH 17, Kulanu 9, YA 8, YB 8 'down from nine in an identical poll a week ago', Shas 8, Ha'am Itanu 3 below threshold, UTJ 7, Meretz 6, Arabs 11), which does not match this row."
+ },
+ {
+  "id": "k20-2014-12-19-smith-globes",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.globes.co.il/news/article.aspx?did=1000994574 (chart https://images.globes.co.il/Images/NewGlobes/Misc_2/2014/seker-550.20141218T164635.jpg); https://www.israelnationalnews.com/news/188848",
+  "differences": [],
+  "fieldEndSource": "2014-12-17",
+  "sample": null,
+  "moe": null,
+  "note": "Globes 18.12.2014 (Lilach Weissman), Rafi Smith Institute chart dated 17 Dec 2014: הליכוד 23, העבודה והתנועה 23, הבית היהודי 16, ישראל ביתנו 9, כולנו/משה כחלון 9, יש עתיד 8, ש\"ס-דרעי 8, יחד-אלי ישי 0 (text: 2 seats, below threshold), יהדות התורה 7, מרצ 6, חד\"ש 5, בל\"ד ורע\"מ-תע\"ל 6. All match. Published Thursday night 18.12 (INN)."
+ },
+ {
+  "id": "k20-2014-12-21-geocartography-geocartography",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/188929",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN (Arutz Sheva) 21.12.2014 interview with Prof. Avi Degani on Geocartography poll taken over the weekend: Likud 27, Labor 25, Jewish Home 11, Kulanu 9, Shas 9, Yisrael Beytenu 8, Meretz 7, UTJ 7, Yesh Atid 7, Yishai's Ha'am Itanu does not enter - all match. Arab parties (ודעם 10) not mentioned."
+ },
+ {
+  "id": "k20-2014-12-22-panels-politics-knesset-channel",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.jpost.com/israel-elections/herzog-livni-joint-list-leading-likud-knesset-channel-poll-finds-385392",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "JPost 22.12.2014 on Panels Politics poll for Knesset Channel: Herzog-Livni 23, Likud 21, Bayit Yehudi 16, Yesh Atid 11, Kulanu 9, Yisrael Beytenu 7, Meretz 7, UTJ 7, Shas 5, Yachad 4, Hadash 5, UAL-Ta'al 5; only two Arab parties pass (Balad 0). All match."
+ },
+ {
+  "id": "k20-2014-12-23-unknown-channel-10",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "http://elections.walla.co.il/item/2813338",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "Walla 24.12.2014 reporting Channel 10 poll aired Tuesday (23.12), supervised by Prof. Camil Fuchs: העבודה-התנועה 22, הליכוד 21, הבית היהודי 17, ישראל ביתנו 9, כולנו 9, יש עתיד 10, יהדות התורה 7, מרצ 6, ש\"ס 4, העם איתנו (ישי) 4, רע\"ם-תע\"ל 6, חד\"ש 5, בל\"ד לא עוברת. All match."
+ },
+ {
+  "id": "k20-2014-12-24-panels-politics-panels",
+  "status": "match",
+  "sourceLevel": "primary",
+  "source": "https://www.jpost.com/israel-elections/yisrael-beytenu-may-not-make-the-cut-post-poll-finds-385812",
+  "differences": [],
+  "fieldEndSource": "2014-12-24",
+  "sample": 534,
+  "moe": "4.3%",
+  "note": "Panels Research poll for JPost/Maariv Sof Hashavua, conducted Wednesday: Labor 24, Likud 23, Bayit Yehudi 17, Yesh Atid 11, UTJ 7, Koolanu 7, Meretz 7, UAL-Ta'al 6, Hadash 5, Shas 4, Yahad 4, Yisrael Beytenu 5, Balad 0. 534 respondents, ±4.3%. All match."
+ },
+ {
+  "id": "k20-2014-12-25-unknown-channel-2",
+  "status": "match",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/189113",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": null,
+  "moe": null,
+  "note": "INN 25.12.2014: Channel Two/Sarid poll released Thursday: Labor 25, Likud 22, Bayit Yehudi 17, Yisrael Beytenu 10, Yesh Atid 9, Kulanu 7, Meretz 7, UTJ 7, Shas 4, Arab bloc 12; Ha'am Itanu and Kadima out. All match. Pollster per INN: Sarid (Yitzhak Sarid)."
+ },
+ {
+  "id": "k20-2014-12-29-midgam-channel-2",
+  "status": "partial",
+  "sourceLevel": "press",
+  "source": "https://www.israelnationalnews.com/news/189268 (timesofisrael URL returned 403, not bypassed)",
+  "differences": [],
+  "fieldEndSource": null,
+  "sample": 500,
+  "moe": "4.5%",
+  "note": "INN 29.12.2014: Midgam poll for Channel 2 (Monday night), 500 respondents, ±4.5%: Labor 24, Likud 24, Jewish Home 16, Kulanu 10, Yesh Atid 9, Yisrael Beytenu 8, UTJ 7, Shas 6, Meretz 5, UAL 6, 'Hadash and Balad gaining five seats altogether', Ha'am Itanu below threshold. All match except the Hadash/Balad split cannot be verified (source gives combined 5; Wikipedia has Balad 5, Hadash 0)."
+ }
+]
