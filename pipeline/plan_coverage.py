@@ -32,7 +32,8 @@ def poll_status() -> dict[int, collections.Counter]:
         for p in c["polls"]:
             out[int(c["knesset"])][p.get("verificationStatus") or "unverified"] += 1
     for p in (load(DATA / "polls.json", {}) or {}).get("polls", []):
-        out[26]["match" if p.get("verified") else "unverified"] += 1
+        # הסטטוס עצמו: "אומת" = match/corrected; "הוצלב" (secondary) ו"חלקי" (partial) — בנפרד
+        out[26][(p.get("verification") or {}).get("status") or "unverified"] += 1
         if not p.get("urls"):
             out[26]["no_url"] += 1
     return out

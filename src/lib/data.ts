@@ -55,7 +55,8 @@ export const FIELD_STATUS_LABEL: Record<FieldStatus, { text: string; tone: "ok" 
 };
 
 export const VERIFICATION_LABEL: Record<string, { text: string; tone: "ok" | "warn" | "neutral" }> = {
-  secondary: { text: "מקור משני", tone: "neutral" },
+  // אומת ממקור חלופי כשהמקור הראשוני חוסם (הכרעת בעלים 04.11.2026: "הוצלב", לא "אומת")
+  secondary: { text: "הוצלב", tone: "neutral" },
   match: { text: "אומת מול המקור", tone: "ok" },
   corrected: { text: "תוקן לפי המקור", tone: "ok" },
   partial: { text: "אומת חלקית", tone: "neutral" },
