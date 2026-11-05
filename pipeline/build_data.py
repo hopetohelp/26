@@ -869,7 +869,10 @@ def build_history(results: list[dict]) -> dict:
     for n in (20, 19):
         scen = {r["id"] for f in (RAW / "forecast" / "verification").glob(f"pre_k{n}_results*.json")
                 for r in json.loads(f.read_text(encoding="utf-8")) if r.get("scenario")}
-        for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == n), by_n[n], HIST_FIRM_NAMES, publisher_he, slug, prev[n], scen):
+        mp = RAW / "forecast" / "verification" / f"pre_k{n}_manual.json"
+        manual = {(r["end"], r["firm"]): r for r in json.loads(mp.read_text(encoding="utf-8"))} if mp.exists() else {}
+        for line in history_wiki_2015.add_polls(next(c for c in cycles if c["knesset"] == n), by_n[n], HIST_FIRM_NAMES, publisher_he, slug,
+                                                prev[n], scen, manual):
             print(f"::warning::K{n}: {line} — סכום חלקי בקריאת הטבלה; הושמט עד תמלול מהמקור")
     for c in cycles:
         check_predecessors(c["knesset"], c, by_n[c["knesset"]])

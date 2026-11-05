@@ -153,5 +153,53 @@
   "new": "midgam",
   "why": "לפי המקור: מנו גבע / מדגם, 560 משיבים",
   "source": "http://www.iba.org.il/bet/... (403); https://imra.org.il/story.php3?id=59335 ; https://www.israelnationalnews.com/News/News.aspx/162907"
+ },
+ {
+  "id": "k19-2012-03-28-dahaf-x",
+  "field": "publisher",
+  "old": null,
+  "new": "ידיעות אחרונות",
+  "why": "IMRA: סקר דחף עבור ידיעות אחרונות (28.3.2012); בוויקיפדיה לא צוין מזמין",
+  "source": "https://www.imra.org.il/story.php?id=56242"
+ },
+ {
+  "id": "k20-2015-01-11-kantar-x",
+  "field": "publisher",
+  "old": null,
+  "new": "וואלה",
+  "why": "ערוץ 7: סקר TNS שפורסם בוואלה (12.1.2015); בוויקיפדיה לא צוין מזמין",
+  "source": "https://www.israelnationalnews.com/news/189845"
+ },
+ {
+  "id": "k21-2018-02-28-geocartography-israel-hayom",
+  "field": "publisher",
+  "old": "ישראל היום",
+  "new": "הליכוד",
+  "why": "ערוץ 7: סקר פנימי בהזמנת הליכוד שערכה גיאוקרטוגרפיה (פורסם בישראל היום), לא בהזמנת ישראל היום",
+  "source": "https://www.inn.co.il/News/News.aspx/367582"
+ },
+ {
+  "id": "k21-2018-03-16-geocartography-israel-hayom",
+  "field": "publisher",
+  "old": "ישראל היום",
+  "new": "הליכוד",
+  "why": "ערוץ 7 מצטט את ישראל היום: סקר גיאוקרטוגרפיה שנערך עבור הליכוד",
+  "source": "https://www.israelnationalnews.com/news/243243"
+ },
+ {
+  "id": "k21-2018-04-26-geocartography-israel-hayom",
+  "field": "publisher",
+  "old": "ישראל היום",
+  "new": "הליכוד",
+  "why": "ערוץ 7 מצטט את ישראל היום: סקר גיאוקרטוגרפיה שנערך עבור הליכוד",
+  "source": "https://www.israelnationalnews.com/news/244998"
+ },
+ {
+  "id": "k21-2018-12-30-midgam-channel-13",
+  "field": "publisher",
+  "old": "חדשות 13",
+  "new": "חברת החדשות",
+  "why": "ערוץ 7: 'סקר שבוצע על ידי מכון מדגם עבור חדשות 2' (חברת החדשות), לא חדשות 13",
+  "source": "https://www.inn.co.il/news/390384"
  }
 ]
