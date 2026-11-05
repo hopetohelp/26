@@ -120,5 +120,14 @@
   "publisherNew": "גלובס",
   "why": "השורה בוויקיפדיה היא סקר רפי סמית׳/גלובס שפורסם 30.10 (IMRA; הקישור בוויקיפדיה הוא פוסט smithglobes)",
   "source": "http://www.imra.org.il/story.php?id=65305; https://www.globes.co.il/en/article-poll-netanyahu-should-call-elections-fast-1000989720"
+ },
+ {
+  "id": "k19-2011-08-05-unknown-maagar",
+  "field": "firm",
+  "old": "unknown",
+  "new": "maagar_mochot",
+  "publisherNew": "מקור ראשון",
+  "why": "לפי המקור: מאגר מוחות עבור מקור ראשון",
+  "source": "https://www.imra.org.il/story.php?id=53353"
  }
 ]
