@@ -11431,12 +11431,12 @@
     "s": 36
    },
    "שס": {
-    "s": 9
+    "s": 8
    }
   },
-  "status": "match",
-  "sourceLevel": "aggregator",
-  "source": "https://knessetjeremy.com/2020/02/21/45th-poll-of-2020-election-blue-white-36-likud-32-joint-list-14-shas-9-labor-gesher-meretz-8-yisrael-beitenu-8-yamina-7-utj-7/"
+  "status": "corrected",
+  "sourceLevel": "primary",
+  "source": "https://www.maariv.co.il/elections2020/polls/article-749466"
  },
  {
   "id": "k23-2020-02-20-direct-polls-arutz-sheva",

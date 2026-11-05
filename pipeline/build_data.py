@@ -916,6 +916,14 @@ def attach_verification(cycles: list[dict]) -> None:
             r = rows.get(p["id"])
             if r:
                 p["verificationStatus"], p["sourceLevel"] = r["status"], r.get("sourceLevel", "primary")
+                if r["status"] == "corrected":  # המקור גובר (כלל ברזל 5): הערך המתוקן שבקלט המודל מוצג גם באתר, עם ערך קודם/חדש/מקור
+                    for k, v in r["values"].items():
+                        if p["values"].get(k) != v:
+                            p.setdefault("corrections", []).append({"field": k, "from": p["values"].get(k), "to": v, "source": r.get("source")})
+                            p["values"][k] = v
+                    if p.get("corrections"):
+                        p["seatSum"] = sum(e.get("s", 0) for e in [*p["values"].values(), *p.get("unmapped", {}).values()])
+                        p["consistent"] = 118 <= p["seatSum"] <= 122
                 if r["status"] == "match" and p["sourceLevel"] != "primary":
                     p["verificationStatus"] = "cross_checked"  # הכרעת בעלים 05.11.2026 (גם לרשומות האימות הקודמות)
                 continue

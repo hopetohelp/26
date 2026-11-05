@@ -2,7 +2,7 @@
  "asof": "2026-10-28",
  "attempts": {
   "bestVoteAccuracy": 0.92997,
-  "runs": 42,
+  "runs": 61,
   "versions": [
    1,
    2,
@@ -12,7 +12,7 @@
   ]
  },
  "bloc": {
-  "atLeast61": 0.0534,
+  "atLeast61": 0.0535,
   "central": 54,
   "lists": [
    "likud",
@@ -30,7 +30,7 @@
   ]
  },
  "camp": {
-  "atLeast61": 0.0868,
+  "atLeast61": 0.0869,
   "central": 54,
   "lists": [
    "likud",
@@ -73,15 +73,15 @@
      0.93333
     ],
     "23": [
-     0.9506,
+     0.95051,
      0.96667
     ],
     "24": [
-     0.90396,
+     0.90393,
      0.85833
     ],
     "25": [
-     0.96172,
+     0.96176,
      0.95
     ]
    },
@@ -92,7 +92,7 @@
     },
     "V5": {
      "seatAccuracy": 0.908332,
-     "voteAccuracy": 0.929128
+     "voteAccuracy": 0.929112
     }
    },
    "valid": true
@@ -111,7 +111,7 @@
  "horizon": 4,
  "lists": {
   "amcha": {
-   "pass": 0.3073,
+   "pass": 0.3074,
    "seats": 0,
    "seatsMean": 1.46,
    "seatsRange": [
@@ -227,7 +227,7 @@
    "share": 4.42,
    "shareRange": [
     2.85,
-    5.73
+    5.72
    ]
   },
   "reservists": {
@@ -272,7 +272,7 @@
    "share": 6.78,
    "shareRange": [
     5.08,
-    8.48
+    8.49
    ]
   },
   "together": {
@@ -314,7 +314,7 @@
     21,
     26
    ],
-   "share": 16.47,
+   "share": 16.46,
    "shareRange": [
     12.65,
     20.06
@@ -337,7 +337,7 @@
   }
  },
  "params": {
-  "beta": 0.0444,
+  "beta": 0.0447,
   "betaElections": 7,
   "others": 1.43,
   "polls": 77,
@@ -362,17 +362,17 @@
    24,
    25
   ],
-  "wA": 0.5008,
+  "wA": 0.5009,
   "weights": {
    "direct_polls": 0.1243,
    "kantar": 0.125,
-   "maagar_mochot": 0.104,
-   "midgam": 0.1089,
-   "new_mp_tm_sn_a": 0.1089,
-   "new_s_m_l_t": 0.1089,
-   "new_sf_nd": 0.1089,
-   "new_yossi_tatika": 0.1089,
-   "panels_politics": 0.102
+   "maagar_mochot": 0.1041,
+   "midgam": 0.109,
+   "new_mp_tm_sn_a": 0.109,
+   "new_s_m_l_t": 0.109,
+   "new_sf_nd": 0.109,
+   "new_yossi_tatika": 0.109,
+   "panels_politics": 0.1015
   }
  },
  "selection": {
@@ -392,7 +392,7 @@
    },
    "trend": {
     "seatAccuracy": 0.90833,
-    "voteAccuracy": 0.92913
+    "voteAccuracy": 0.92911
    }
   },
   "trainedOn": [
@@ -432,7 +432,7 @@
  "specVersion": 5,
  "variant": "V5",
  "wasted": [
-  2.14,
+  2.13,
   5.03,
   8.2
  ]

@@ -15,17 +15,28 @@
 - `raw/forecast/verification/pre_meta_fixes.json`: תיקון שם מכון/מזמין (ערך קודם, חדש, נימוק, מקור) — 19.
 - תצוגה מקדימה תקינה והוסרה; מוזג ונבדק באתר החי (8 מסכים, 390/1280, יום/לילה).
 
-## PR הנוכחי (סשן `session_01Q5dg3y2qQk1RoVjtveMEY1`) — שורות חלקיות ותיקוני שמות
+## PR 765 (סשן `session_01Q5dg3y2qQk1RoVjtveMEY1`) — שורות חלקיות ותיקוני שמות
 - `pre_k19_manual.json` (21), `pre_k20_manual.json` (6): תמלול מהמקור לשורות שהושמטו; `status: match` + `seats` ⇐ נקלט (11), אחרת תיעוד בלבד. מפתח: (`end`, `firm` = תא הסקר הגולמי בוויקיפדיה).
 - `history_wiki_2015.manual_values`: שמות באנגלית ⇐ אותיות (`single` / `joint`), אחר ⇐ `unmapped`; מפלגות חדשות ב־`raw/blocs.json` predecessors (עצמאות, מפלגת דרעי, הירוקים, קדימה/עם שלם ב־2015 — בלי גוש).
 - `pre_meta_fixes.json` +11.
 - 6 שורות אפר׳ 2019 — המקור עצמו חלקי (נבדק ב־`pre_k21_manual.json`); אין מה להוסיף.
 
-## (ד) — שדרוג למקור ראשי (PR הנוכחי)
+## PR 765 (שורות חלקיות 2015/2013, תיקוני שמות) ו־PR 766 (שדרוג 41 למקור ראשי) — מוזגו ונבדקו באתר החי
+
+## (ד) — שדרוג למקור ראשי (PR 766)
 - `raw/forecast/verification/primary_upgrades.json` (41): נקרא בסוף `forecast_polls.build()`; רק match/corrected שאינם primary; משנה `sourceLevel`/`source` בלבד (נבדק: שאר השדות זהים; forecast/backtest ללא שינוי).
 - 109 לא נמצאו (חסימה/ארכיון שנעלם), 13 "חלשים" (1–5 רשימות במקור) — נשארו "הוצלב".
 - שני פערים פתוחים (לא תוקנו — קלט המודל): k23-2020-02-19-panels-politics-maariv (ש"ס 8 ב־maariv article-749466), k20-2015-02-26-w13 (maariv article-465071: מחנה ציוני 25, בית יהודי 11).
 - לבדוק בהמשך: k19-2013-01-17-18 (פאנלס, "ערוץ הכנסת") תואם מספר־למספר לסקר mako 17.1.2013 — ייתכן שהמזמין שגוי; k20-2015-03-13-0 — המכון לפי mako: מדגם (בנתונים "לא צוין"); k20-2015-02-24-w18 — לפי JPost יחד לא עוברת (אצלנו 4).
+
+## תיקון ש"ס 2020 + הצגת ערכים מתוקנים (PR 767)
+- `k21_k25_windows_results.json`: k23-2020-02-19-panels-politics-maariv ⇐ corrected (ש"ס 9⇐8, maariv article-749466).
+- `attach_verification`: רשומה `corrected` ב־polls.json ⇐ הערכים המתוקנים מוצגים בהיסטוריה (`corrections` עם from/to/source).
+- קלט המודל השתנה ⇐ `python3 pipeline/forecast.py --log` אחרי commit נקי (19 שורות ביומן); `test_forecast` דורש שהאופק המוצג רשום ביומן.
+- k20-2015-02-26-w13 — לא תוקן (זהות לא ודאית).
+
+## עצירה במגבלת השימוש (05.11.2026)
+הסשן עצר כשמגבלת השימוש הגיעה לאזהרה (הוראת המתאם). נותר: שדרוג רשומות `pre_*` ברמת press (~300) למקור ראשי — אותה שיטה: תור ⇐ סוכנים ⇐ קובץ שדרוג. ל־pre_* אין עדיין מנגנון — להוסיף ב־`attach_verification` קריאה של `primary_upgrades.json` גם לרשומות pre (רק `sourceLevel`). תדריך הסוכנים: מקור ראשי = אתר הגוף המפרסם; ≥7 רשימות מודפסות כדי לשדרג; לא עוקפים חסימה.
 
 ## הצעד הבא (לסשן ההמשך)
 1. **(ד) שדרוג "הוצלב" למקור ראשי** (בוצע ל־polls.json: 41/165; נותרו רשומות `pre_*` ברמת press): ~150 רשומות ישנות ב־`raw/forecast/polls.json` (`match` עם `sourceLevel` press/aggregator ⇐ מוצגות "הוצלב") ורשומות `pre_*` ברמת press. לחפש את אתר הגוף המפרסם/דוח לוועדת הבחירות; כשנמצא — לעדכן את רשומת האימות ל־`sourceLevel: primary`. רשומות הקודמות ב־`raw/forecast/verification/k19_k20_*`, `k21_k25_*` נבנות ל־`polls.json` ב־`pipeline/forecast_polls.py` — **שינוי שם עלול לשנות את קלט המודל**: לעדכן רק `sourceLevel` (המודל מסנן לפי `sourceLevels` ב־`pipeline/forecast_k26.json`? לבדוק ש־`test_forecast.py` ו־`backtest.json` לא משתנים).

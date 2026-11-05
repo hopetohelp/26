@@ -100,8 +100,9 @@ describe("ערב הבחירות — אותה שיטה כמו 'המצב היום'
     expect(s.map((x) => x.snapshot.length)).toEqual([14, 10, 10, 9, 9]);
     // ממוצע בין המכונים (הכרעת בעלים 9.10.2026). הערכים נבדקו בחישוב נפרד בפייתון, ובאותו חישוב עם חציון התקבלו הערכים הישנים 37, 14, 7.5, 20, 14.
     const close = (got: number[], want: number[]) => got.forEach((v, i) => expect(v).toBeCloseTo(want[i], 3));
-    close(s.map((x) => x.gap), [38.901, 12.467, 8.1, 20, 12.889]);
-    close(s.map((x) => x.bloc.estimate), [53.637, 55.7, 57.2, 49.778, 60.222]);
+    // 2020: ש"ס 9⇐8 בסקר פאנלס/מעריב 19.2.2020 לפי המקור הראשי (05.11.2026) — ממוצע 10 המכונים זז ב־0.1; 2022: הציונות הדתית 12⇐13 בסקר מדגם/גלי צה"ל 25.10.2022 (תיקון קיים, מוצג עכשיו גם באתר)
+    close(s.map((x) => x.gap), [38.901, 12.467, 8.2, 20, 12.889]);
+    close(s.map((x) => x.bloc.estimate), [53.637, 55.7, 57.1, 49.778, 60.333]);
     expect(s.map((x) => x.bloc.actual)).toEqual([65, 55, 58, 52, 64]);
     expect(s.map((x) => x.misses.map((m) => m.letters).sort())).toEqual([["ז", "נ"], ["כף"], [], [], ["מרצ"]]);
   });
@@ -119,8 +120,8 @@ describe("מכונים ומשפחות לאורך זמן", () => {
     const rows = familyRows(cycles.filter(c => c.knesset >= 21).map((c) => summarizeCycle(c, resultOf(c))));
     const shas = rows.find((r) => r.id === "shas")!;
     expect(shas.under).toBe(5);
-    shas.cells.forEach((x, i) => expect(x.diff).toBeCloseTo([-2.643, -1.9, -0.6, -0.889, -2.556][i], 3));
+    shas.cells.forEach((x, i) => expect(x.diff).toBeCloseTo([-2.643, -1.9, -0.7, -0.889, -2.556][i], 3));
     const bloc = rows.find((r) => r.id === "bloc")!;
-    bloc.cells.forEach((x, i) => expect(x.diff).toBeCloseTo([-11.363, 0.7, -0.8, -2.222, -3.778][i], 3));
+    bloc.cells.forEach((x, i) => expect(x.diff).toBeCloseTo([-11.363, 0.7, -0.9, -2.222, -3.667][i], 3));
   });
 });
