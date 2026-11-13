@@ -110,7 +110,7 @@ def test_average_includes_every_consistent_poll():
     used = [p for p in polls if p["eligibleToShow"] and p["end"] > "2026-09-08"]  # LIST_SUBMISSION_2026
     meta = json.loads((ROOT / "src" / "data" / "meta.json").read_text(encoding="utf-8"))
     assert model["lastPoll"] == max(p["end"] for p in used)
-    assert model["asof"] == max(model["lastPoll"], meta["dataAsOf"][:10])
+    assert model["asof"] == min(max(model["lastPoll"], meta["dataAsOf"][:10]), model["electionDay"])
     assert model["trend"][-1]["date"] == model["asof"]
     assert model["polls"] == len(used) - len(model.get("skipped", []))
 
