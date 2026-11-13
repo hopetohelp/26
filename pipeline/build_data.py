@@ -1030,7 +1030,8 @@ def build_model(polls: list[dict], results: list[dict], build_time: datetime) ->
     gov = [l["id"] for l in LISTS_2026 if l["gov37"]]
     start = (datetime.fromisoformat(LIST_SUBMISSION_2026) + timedelta(days=1)).date().isoformat()
     last_poll = max(p.end for p in inputs)
-    asof = max(last_poll, build_time.date().isoformat())
+    # אחרי יום הבחירות אין סקרים חדשים: התאריך נעצר ביום הבחירות, אחרת חלון 14 הימים מתרוקן
+    asof = min(max(last_poll, build_time.date().isoformat()), "2026-10-27")
     obs_cfg, agg_cfg = M.ObsConfig(), M.AggConfig()
     fit = M.fit_average(inputs, lists, "likud", pairs, start, asof, obs_cfg, agg_cfg, MODEL_SEED)
     backtest = json.loads((OUT / "backtest.json").read_text(encoding="utf-8"))
