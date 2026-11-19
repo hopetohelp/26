@@ -532,18 +532,18 @@ INSERT OR IGNORE INTO survey_access (survey, outside) SELECT 'vote2022', outside
 INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload)
   SELECT 'vote2022', participant, created_at, op_id || '~v2022', json_object('vote2022', json_extract(payload, '$.v2022')) FROM versions WHERE unit = 'vote' AND json_extract(payload, '$.v2022') IS NOT NULL AND json_extract(payload, '$.v2022') NOT IN ('other', 'private');
 -- "רשימה אחרת" ו"מעדיף/ה לא לומר" חוזרות לשני סקרי ההצבעה (הכרעת בעלים 02.11.2026): "רשימה אחרת" אחרי הרשימות, "מעדיף/ה לא לומר" בסוף. פעם אחת — רק אם עוד חסרות
-UPDATE surveys SET def = json_set(def, '$.questions[0].options', (
+UPDATE surveys SET def = json_set(def, '$.questions[0].options', json((
     SELECT json_group_array(json(value)) FROM (
       SELECT value, CASE WHEN json_extract(value, '$.id') IN ('ineligible', 'none', 'blank') THEN 2 ELSE 0 END AS g, key AS k FROM json_each(json_extract(def, '$.questions[0].options'))
       UNION ALL SELECT json_object('id', 'other', 'label', 'רשימה אחרת'), 1, 0
       UNION ALL SELECT json_object('id', 'private', 'label', 'מעדיף/ה לא לומר'), 3, 0
-      ORDER BY g, k))), updated_at = '2026-11-02T13:00:00Z'
+      ORDER BY g, k)))), updated_at = '2026-11-02T13:00:00Z'
   WHERE id IN ('vote', 'vote2022') AND NOT EXISTS (SELECT 1 FROM json_each(json_extract(def, '$.questions[0].options')) WHERE json_extract(value, '$.id') = 'private');
 -- התשובות הקיימות "רשימה אחרת" / "מעדיף/ה לא לומר" מ-2022 מועברות עכשיו (op_id ייחודי ⇐ פעם אחת)
 INSERT OR IGNORE INTO survey_answers (survey, participant, created_at, op_id, payload)
   SELECT 'vote2022', participant, created_at, op_id || '~v2022', json_object('vote2022', json_extract(payload, '$.v2022')) FROM versions WHERE unit = 'vote' AND json_extract(payload, '$.v2022') IN ('other', 'private');
 -- רף להופעה ברשימה: 0.1% מהקולות הכשרים (הכרעת בעלים 02.11.2026); רשימות קטנות יותר ⇐ "רשימה אחרת". ב-2026 כל הרשימות מעל הרף; ב-2022 — 23 רשימות מתחת
-UPDATE surveys SET def = json_set(def, '$.questions[0].options', (SELECT json_group_array(json(value)) FROM (SELECT value FROM json_each(json_extract(def, '$.questions[0].options')) WHERE json_extract(value, '$.id') NOT IN ('ף','ק','ת','ני','קנ','נק','י','קך','נץ','ץ','רז','ך','ז','קי','יק','נז','נר','זץ','יץ','נף','ינ','זך','זנ') ORDER BY key))), updated_at = '2026-11-02T13:10:00Z'
+UPDATE surveys SET def = json_set(def, '$.questions[0].options', json((SELECT json_group_array(json(value)) FROM (SELECT value FROM json_each(json_extract(def, '$.questions[0].options')) WHERE json_extract(value, '$.id') NOT IN ('ף','ק','ת','ני','קנ','נק','י','קך','נץ','ץ','רז','ך','ז','קי','יק','נז','נר','זץ','יץ','נף','ינ','זך','זנ') ORDER BY key)))), updated_at = '2026-11-02T13:10:00Z'
   WHERE id = 'vote2022' AND EXISTS (SELECT 1 FROM json_each(json_extract(def, '$.questions[0].options')) WHERE json_extract(value, '$.id') IN ('ף','ק','ת','ני','קנ','נק','י','קך','נץ','ץ','רז','ך','ז','קי','יק','נז','נר','זץ','יץ','נף','ינ','זך','זנ'));
 UPDATE survey_answers SET payload = json_set(payload, '$.vote2022', 'other') WHERE survey = 'vote2022' AND json_extract(payload, '$.vote2022') IN ('ף','ק','ת','ני','קנ','נק','י','קך','נץ','ץ','רז','ך','ז','קי','יק','נז','נר','זץ','יץ','נף','ינ','זך','זנ');
 -- מספרים סידוריים ושמות (הכרעת בעלים 02.11.2026): 1 — "תוצאות הבחירות" (הניחוש שנסגר, מחוץ לטבלה); 2 — על מי הנשיא יטיל; 3 — בחירות חוזרות; 4 — איך תקום ממשלה; 5, 6 — סקרי ההצבעה. פעם אחת — רק כשהשם הישן עוד שם
