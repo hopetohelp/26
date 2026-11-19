@@ -63,7 +63,7 @@ export interface About {
   /** שם הקובץ בעברית */
   title: string;
   description: string;
-  /** מועד הבנייה האחרונה (כל 4 שעות) — "נכון ל" של הקובץ */
+  /** מועד הבנייה האחרונה (כל יומיים) — "נכון ל" של הקובץ */
   updatedAt: string;
   /** סוג המספר, כמו בחוזה `Explained` */
   kind: string;
@@ -396,7 +396,7 @@ export function buildIndex(mcpUrl: string | null) {
       snapshotId: SNAPSHOT_ID,
       methodVersion: METHOD_VERSION,
       kind: "נתון רשמי",
-      source: "האתר עצמו — נבנה בכל פרסום (כל 4 שעות)",
+      source: "האתר עצמו — נבנה בכל פרסום (כל יומיים)",
       method: methodUrl("numbers"),
       methodAnchor: "numbers",
       screen: SITE,
@@ -429,7 +429,7 @@ export function buildLlmsTxt(mcpUrl: string | null): string {
   const lines: string[] = [];
   lines.push("# בחירות 2026", "");
   lines.push(`> אתר עצמאי לבחירות לכנסת ה-26 (${meta.electionDay}): ארכיון הסקרים של המחזור, ממוצע ומודל, תרחישים, תוצאות אמת 2013–2022, דיוק הסקרים בעבר, ומחשבון מנדטים שמממש את חוק הבחירות (אחוז חסימה ${THRESHOLD_PCT}%, הסכמי עודפים, באדר-עופר). האתר אינו עורך סקרים ואינו ממליץ על אף רשימה.`, "");
-  lines.push(`הנתונים נכונים ל-${meta.dataAsOf} ומתעדכנים אוטומטית כל 4 שעות (חוץ משבת: מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל אין רענון).`, "");
+  lines.push(`הנתונים נכונים ל-${meta.dataAsOf} ומתעדכנים אוטומטית כל יומיים (חוץ משבת: מיום שישי 16:00 עד מוצאי שבת 20:00 שעון ישראל אין רענון).`, "");
   lines.push("## כללים לכל מי שמשתמש בנתונים", "");
   for (const r of Object.values(RULES)) lines.push(`- ${r}`);
   lines.push("");
