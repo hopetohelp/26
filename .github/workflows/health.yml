@@ -1,9 +1,9 @@
 name: בדיקת בריאות
-# כל שעה: בודקת מבחוץ שהשרתים עונים, שכותרות CORS תקינות ושהרשמה/שמירה נדחות בשגיאה ברורה ולא בכשל רשת.
+# אחת ליומיים (הכרעת בעלים 19.11.2026): בודקת מבחוץ שהשרתים עונים, שכותרות CORS תקינות ושהרשמה/שמירה נדחות בשגיאה ברורה ולא בכשל רשת.
 # כשל ⇐ הריצה נכשלת ו-GitHub שולח התראה לבעלים. אין בה סודות והיא לא יוצרת משתתפים או הערות.
 on:
   schedule:
-    - cron: "7 * * * *"
+    - cron: "7 0 * * *"
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,7 +18,10 @@ jobs:
       - id: t
         run: |
           dow=$(TZ=Asia/Jerusalem date +%u); hhmm=$(TZ=Asia/Jerusalem date +%H%M)
-          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$dow" = 5 ] && [ "$((10#$hhmm))" -ge 1600 ] || [ "$dow" = 6 ] && [ "$((10#$hhmm))" -lt 2000 ]; }; then
+          d=$(TZ=Asia/Jerusalem date +%F); day=$(( $(date -u -d "$d" +%s) / 86400 ))
+          if [ "${{ github.event_name }}" = "schedule" ] && [ $((day % 2)) -ne 0 ]; then
+            echo "לא יום ריצה (אחת ליומיים) — מדלגים"; echo "shabbat=true" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "schedule" ] && { [ "$dow" = 5 ] && [ "$((10#$hhmm))" -ge 1600 ] || [ "$dow" = 6 ] && [ "$((10#$hhmm))" -lt 2000 ]; }; then
             echo "שבת — מדלגים"; echo "shabbat=true" >> "$GITHUB_OUTPUT"
           else
             echo "shabbat=false" >> "$GITHUB_OUTPUT"

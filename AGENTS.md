@@ -13,7 +13,7 @@
 אותו תוכן כמו `llms.txt` שבשורש האתר (https://26.hopetohelp.net/llms.txt), בגרסה למי שעובד בקוד: איפה כל קובץ, איך הוא נבנה ואיך בודקים. 🔴 **מקור אמת אחד:** האינדקס, קובצי הנתונים ו-`llms.txt` נבנים כולם מ-`src/lib/openData.ts`, מאותן פונקציות שהמסכים משתמשים בהן. אין עותק נפרד למפתח, לסשן Claude Code או לשרת ה-MCP — כולם קוראים את אותם קבצים. נתון חדש באתר ⇐ מוסיפים אותו לקטלוג `OPEN_FILES`, והוא מופיע אוטומטית באינדקס, ב-`llms.txt` ובבדיקה.
 
 ### איך זה נבנה
-1. `pipeline/build_data.py` — מחומר הגלם (`raw/`) אל `src/data/*.json` (סקרים, מודל, תרחישים, תחזית, תוצאות, היסטוריה). רץ בכל פרסום (`.github/workflows/pages.yml`, כל 4 שעות, חוץ משבת).
+1. `pipeline/build_data.py` — מחומר הגלם (`raw/`) אל `src/data/*.json` (סקרים, מודל, תרחישים, תחזית, תוצאות, היסטוריה). רץ בכל פרסום (`.github/workflows/pages.yml`, כל יומיים, חוץ משבת).
 2. `npm run build` — בונה את האתר ל-`dist/`, ובסופו `scripts/open-data.ts` כותב את `dist/data/*.json`, `dist/data/index.json` ו-`dist/llms.txt`. משתנה הסביבה `MCP_URL` — כתובת שרת ה-MCP (כשיעלה).
 3. בפרסום, אחרי העתקת `dashboard.json` משרת ההשתתפות: `scripts/open-data.ts --dashboard` עוטף אותו ב-`about`, ו-`scripts/check-open-data.ts --with-dashboard` מוודא שכל קובץ שבאינדקס קיים ועדכני.
 

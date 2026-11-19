@@ -1,15 +1,17 @@
 /**
- * לוח הריצות המתוזמנות (הכרעת בעלים 12.10.2026): הסשן המרוכז והרענון של GitHub רצים באותה שעה —
- * בשעות 02, 06, 10, 14, 18 ו-22 שעון ישראל, בדקה 3 — ומושבתים משישי 16:00 עד מוצאי שבת 20:00.
+ * לוח הריצות המתוזמנות (הכרעת בעלים 19.11.2026): הרענון והבדיקות רצים אחת ליומיים —
+ * ב-02:03 שעון ישראל בימים זוגיים (מספר היום מ-1970) — ומושבתים משישי 16:00 עד מוצאי שבת 20:00.
  * מקור אמת אחד: הלוח הזה, ותנאי ה-gate ב-`.github/workflows/pages.yml` (חייבים להתאים), והתזמון של הסשן (CRON_TZ Asia/Jerusalem).
  */
-export const RUN_HOURS = [2, 6, 10, 14, 18, 22];
+export const RUN_HOURS = [2];
 export const RUN_MINUTE = 3;
 
 const parts = (t: number) => {
-  const f = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(t));
+  const f = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", weekday: "short", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(t));
   const get = (type: string) => f.find((p) => p.type === type)?.value ?? "";
-  return { weekday: get("weekday"), hour: Number(get("hour")), minute: Number(get("minute")) };
+  // מספר היום (שעון ישראל) מ-1970 — כמו ב-gate של ה-workflow: `date -u -d <תאריך> +%s` חלקי 86400
+  const dayNumber = Math.round(Date.UTC(Number(get("year")), Number(get("month")) - 1, Number(get("day"))) / 86_400_000);
+  return { weekday: get("weekday"), hour: Number(get("hour")), minute: Number(get("minute")), dayNumber };
 };
 
 /** שבת מושבתת: מיום שישי 16:00 עד שבת 20:00 (שעון ישראל) */
@@ -20,8 +22,8 @@ export function isShabbatWindow(t: number): boolean {
 
 /** האם הרגע t הוא רגע ריצה מתוזמן (לא בשבת) */
 export function isRunSlot(t: number): boolean {
-  const { hour, minute } = parts(t);
-  return minute === RUN_MINUTE && RUN_HOURS.includes(hour) && !isShabbatWindow(t);
+  const { hour, minute, dayNumber } = parts(t);
+  return minute === RUN_MINUTE && RUN_HOURS.includes(hour) && dayNumber % 2 === 0 && !isShabbatWindow(t);
 }
 
 /** הריצה המתוזמנת הבאה אחרי הרגע now (באלפיות שנייה), או null אם לא נמצאה בשבועיים */

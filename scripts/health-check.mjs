@@ -41,10 +41,10 @@ for (const origin of ORIGINS) for (const [name, url, opts, want] of checks) {
     console.log(`❌ ${name} (${origin}): ${e instanceof Error ? e.message : e}`);
   }
 }
-// הנתונים הפתוחים באתר החי (data/index.json, llms.txt): כל קובץ שבאינדקס עונה, עטוף ב-about, ולא ישן מ-36 שעות
-// (הפרסום רץ כל 4 שעות; בשבת אין פרסום — מיום שישי 16:00 עד מוצאי שבת 20:00 — ולכן הסף רחב מהפער הארוך ביותר).
+// הנתונים הפתוחים באתר החי (data/index.json, llms.txt): כל קובץ שבאינדקס עונה, עטוף ב-about, ולא ישן מ-120 שעות
+// (הפרסום רץ אחת ליומיים; כשהריצה נופלת בשבת היא מדולגת והפער מגיע לארבעה ימים, ולכן הסף רחב מהפער הארוך ביותר).
 const SITES = process.env.SITE_URL ? [process.env.SITE_URL] : ["https://26.hopetohelp.net/", "https://hopetohelp.github.io/26/"];
-const MAX_AGE_H = 36;
+const MAX_AGE_H = 120;
 for (const SITE of SITES) try {
   const idx = await (await fetch(SITE + "data/index.json", { signal: AbortSignal.timeout(15000) })).json();
   const age = (Date.now() - Date.parse(idx.about.updatedAt)) / 3_600_000;
